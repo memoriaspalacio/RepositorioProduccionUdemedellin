@@ -342,6 +342,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      propertyPath: _grid
+      value: 
+      objectReference: {fileID: 1677300877}
+    - target: {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: _damager
       value: 
       objectReference: {fileID: 578597209}
@@ -939,6 +943,10 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      propertyPath: _grid
+      value: 
+      objectReference: {fileID: 1677300877}
     - target: {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: _damager
       value: 
@@ -2102,6 +2110,10 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      propertyPath: _grid
+      value: 
+      objectReference: {fileID: 1677300877}
     - target: {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: _damager
       value: 
@@ -3818,6 +3830,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      propertyPath: _grid
+      value: 
+      objectReference: {fileID: 1677300877}
+    - target: {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: _damager
       value: 
       objectReference: {fileID: 578597209}
@@ -4023,6 +4039,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      propertyPath: _grid
+      value: 
+      objectReference: {fileID: 1677300877}
+    - target: {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: _damager
       value: 
       objectReference: {fileID: 578597209}
@@ -4216,6 +4236,10 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      propertyPath: _grid
+      value: 
+      objectReference: {fileID: 1677300877}
     - target: {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: _damager
       value: 
