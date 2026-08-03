@@ -103,7 +103,7 @@ public class MeshGrid : MonoBehaviour
         return new Vector2Int(x, z);
     }
 
-    public Vector3 CellToWorldCenter(
+    public Vector3 CellToWorldCenter( //Obtiene la posición global correspondiente al centro de la celda
         Vector2Int cell,
         float playerHeightOffset = 0f)
     {

@@ -9,7 +9,14 @@ public class GridPlayerMovement : MonoBehaviour
     [SerializeField] private float heightOffset = 1f;
     [SerializeField] private bool rotateTowardsMovement = true;
 
+    [Header("Ritmo")]
+    [SerializeField] private bool requireRhythm = true;
+    [SerializeField] private bool rhythmWindowOpen = true;
+
+    public bool RhythmWindowOpen => rhythmWindowOpen;
+
     private Vector2Int currentCell;
+    public Vector2Int CurrentCell => currentCell;
 
     private void Start()
     {
@@ -50,6 +57,12 @@ public class GridPlayerMovement : MonoBehaviour
 
     private void TryMove(Vector2Int direction)
     {
+        if (!CanMoveOnRhythm())
+        {
+            OnMoveMissedRhythm();
+            return;
+        }
+
         if (!grid.TryGetNeighbour(
                 currentCell,
                 direction,
@@ -75,6 +88,29 @@ public class GridPlayerMovement : MonoBehaviour
         }
 
         MoveToCurrentCell();
+    }
+
+    private bool CanMoveOnRhythm()
+    {
+        if (!requireRhythm)
+            return true;
+
+        return rhythmWindowOpen;
+    }
+
+    public void SetRhythmWindow(bool isOpen)
+    {
+        rhythmWindowOpen = isOpen;
+    }
+
+    public void SetRequireRhythm(bool value)
+    {
+        requireRhythm = value;
+    }
+
+    private void OnMoveMissedRhythm()
+    {
+        Debug.Log("Movimiento rechazado: fuera del ritmo.");
     }
 
     private void MoveToCurrentCell()

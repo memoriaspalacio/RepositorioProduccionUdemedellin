@@ -4168,6 +4168,8 @@ MonoBehaviour:
   grid: {fileID: 1677300877}
   heightOffset: 1
   rotateTowardsMovement: 1
+  requireRhythm: 0
+  rhythmWindowOpen: 0
 --- !u!1001 &1900921022
 PrefabInstance:
   m_ObjectHideFlags: 0
