@@ -83,5 +83,6 @@ public class GridPlayerMovement : MonoBehaviour
             currentCell,
             heightOffset
         );
+        Debug.Log("Player esta en" + currentCell);
     }
 }

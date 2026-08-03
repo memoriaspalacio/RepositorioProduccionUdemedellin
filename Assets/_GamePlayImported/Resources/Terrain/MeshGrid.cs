@@ -1,24 +1,35 @@
 using UnityEngine;
 
+//ExecuteAlways permite que el script funcione tanto en Play Mode como en el editor de Unity
 [ExecuteAlways]
 public class MeshGrid : MonoBehaviour
 {
+    //Tamaño de cada casilla de la cuadricula en unidades de Unity
     [Header("Tamaño de las casillas")]
-    [Min(0.1f)]
+    [Min(0.1f)] //El inspector no permite un valor mas bajo que 0.1f
     [SerializeField] private float cellSize = 2f;
 
     [Header("Visualización")]
     [SerializeField] private bool showGrid = true;
-    [SerializeField] private Color gridColor = Color.cyan;
+    [SerializeField] private Color gridColor = Color.cyan; //Color cuadricula
 
     [Header("Detección del suelo")]
-    [SerializeField] private LayerMask groundLayer = ~0;
-    [SerializeField] private float raycastHeight = 100f;
+    [SerializeField] private LayerMask groundLayer = ~0; // El valor ~0 incluye todas las capas.
+                                                         // ~ normalmente es para indicar excepcion pero con 0 se invierte
+    [SerializeField] private float raycastHeight = 100f; //Altura adicional desde la que comienza cada raycast
+                                                         //Un valor alto permite detectar terrenos con grandes diferencias
 
-    private Renderer groundRenderer;
+    private Renderer groundRenderer; //Renderer usado para calcular los límites de la cuadrícula del modelo del terreno
+                                     
 
-    public float CellSize => cellSize;
+    public float CellSize => cellSize; // propiedad de solo lectura,
+                                       // => es el equivalente de usar get
 
+
+    //Devuelve la cantidad de columnas de la cuadricula.
+    //Las columnas se calculan dividiendo el tamaño global del Renderer
+    //en el eje X entre el tamaño de las casillas
+    // FloorToInt descarta cualquier espacio sobrante que no alcance
     public int Columns
     {
         get
@@ -27,6 +38,8 @@ public class MeshGrid : MonoBehaviour
             return Mathf.Max(1, Mathf.FloorToInt(bounds.size.x / cellSize));
         }
     }
+
+    //Lo mismo que Columns pero en el eje y
 
     public int Rows
     {
@@ -53,7 +66,7 @@ public class MeshGrid : MonoBehaviour
         FindRenderer();
     }
 
-    private void FindRenderer()
+    private void FindRenderer()//Busca el componente renderer del objeto atachado al script y a sus hijos
     {
         groundRenderer = GetComponent<Renderer>();
 
@@ -61,7 +74,7 @@ public class MeshGrid : MonoBehaviour
             groundRenderer = GetComponentInChildren<Renderer>();
     }
 
-    private Bounds GetBounds()
+    private Bounds GetBounds() //Bounds: Tipo de dato que almacena los limites de un renderer encerrado en una caja imaginaria
     {
         if (groundRenderer == null)
             FindRenderer();
@@ -72,7 +85,7 @@ public class MeshGrid : MonoBehaviour
         return new Bounds(transform.position, Vector3.one);
     }
 
-    public Vector2Int WorldToCell(Vector3 worldPosition)
+    public Vector2Int WorldToCell(Vector3 worldPosition) //Convierte una posición del mundo en una posición de la cuadrícula
     {
         Bounds bounds = GetBounds();
 
