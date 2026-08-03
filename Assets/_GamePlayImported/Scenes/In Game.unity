@@ -337,6 +337,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5670109539508268688, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsTrigger
       value: 1
@@ -365,10 +369,14 @@ PrefabInstance:
       propertyPath: '_patrolPoints.Array.data[3]'
       value: 
       objectReference: {fileID: 83724197}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1973748756}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!1001 &233945029
 PrefabInstance:
@@ -792,6 +800,38 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2222111361405018444, guid: 88f2fd29f58b9734683512546acec310, type: 3}
   m_PrefabInstance: {fileID: 547373708}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &302381881 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+  m_PrefabInstance: {fileID: 1701658448}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &302381882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302381881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80b5df1c26913eb4985e8fb65c14f73f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.Character3DGridNPCBehaviour
+  _height: 0
+  _isGrounded: 0
+  _isFalling: 0
+  _canMove: 0
+  _canAction: 0
+  grid: {fileID: 1677300877}
+  heightOffset: 1
+  gridMoveSpeed: 5
+  rotateTowardsMovement: 1
+  patrolPoints: []
+  patrolPointWaitTime: 2
+  requireRhythm: 0
+  rhythmWindowOpen: 0
+  currentCell: {x: 0, y: 0}
+  isMoving: 0
 --- !u!1001 &339825356
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -939,6 +979,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5670109539508268688, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsTrigger
       value: 1
@@ -967,11 +1011,53 @@ PrefabInstance:
       propertyPath: '_patrolPoints.Array.data[3]'
       value: 
       objectReference: {fileID: 448029382}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1177545186}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+--- !u!1 &406492257 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+  m_PrefabInstance: {fileID: 1788141263}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &406492258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 406492257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80b5df1c26913eb4985e8fb65c14f73f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.Character3DGridNPCBehaviour
+  _height: 0
+  _isGrounded: 0
+  _isFalling: 0
+  _canMove: 0
+  _canAction: 0
+  grid: {fileID: 1677300877}
+  heightOffset: 1
+  gridMoveSpeed: 5
+  rotateTowardsMovement: 1
+  patrolPoints:
+  - {fileID: 448029382}
+  - {fileID: 83724197}
+  - {fileID: 498901818}
+  - {fileID: 2010973881}
+  - {fileID: 1153580271}
+  - {fileID: 848731688}
+  patrolPointWaitTime: 2
+  requireRhythm: 0
+  rhythmWindowOpen: 0
+  currentCell: {x: 13, y: 11}
+  isMoving: 0
 --- !u!4 &448029382 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6334107189900776747, guid: c696b0e1ce06db34f972f411c4a83140, type: 3}
@@ -1268,6 +1354,38 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7754119931500877804, guid: 5f18e6dcc9ab9764fb39399dbdf1047c, type: 3}
   m_PrefabInstance: {fileID: 84795594}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &507454857 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+  m_PrefabInstance: {fileID: 874239382}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &507454858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 507454857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80b5df1c26913eb4985e8fb65c14f73f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.Character3DGridNPCBehaviour
+  _height: 0
+  _isGrounded: 0
+  _isFalling: 0
+  _canMove: 0
+  _canAction: 0
+  grid: {fileID: 1677300877}
+  heightOffset: 1
+  gridMoveSpeed: 5
+  rotateTowardsMovement: 1
+  patrolPoints: []
+  patrolPointWaitTime: 2
+  requireRhythm: 0
+  rhythmWindowOpen: 0
+  currentCell: {x: 0, y: 0}
+  isMoving: 0
 --- !u!1001 &547373708
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2106,6 +2224,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5670109539508268688, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsTrigger
       value: 1
@@ -2134,10 +2256,14 @@ PrefabInstance:
       propertyPath: '_patrolPoints.Array.data[3]'
       value: 
       objectReference: {fileID: 83724197}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 507454858}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!4 &945279209 stripped
 Transform:
@@ -2888,6 +3014,38 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6334107189900776747, guid: c696b0e1ce06db34f972f411c4a83140, type: 3}
   m_PrefabInstance: {fileID: 1104604829}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1177545185 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+  m_PrefabInstance: {fileID: 400208558}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1177545186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1177545185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80b5df1c26913eb4985e8fb65c14f73f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.Character3DGridNPCBehaviour
+  _height: 0
+  _isGrounded: 0
+  _isFalling: 0
+  _canMove: 0
+  _canAction: 0
+  grid: {fileID: 1677300877}
+  heightOffset: 1
+  gridMoveSpeed: 5
+  rotateTowardsMovement: 1
+  patrolPoints: []
+  patrolPointWaitTime: 2
+  requireRhythm: 0
+  rhythmWindowOpen: 0
+  currentCell: {x: 0, y: 0}
+  isMoving: 0
 --- !u!1001 &1206862090
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3673,7 +3831,7 @@ MonoBehaviour:
   gridColor: {r: 0, g: 1, b: 1, a: 1}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 8
   raycastHeight: 100
 --- !u!1001 &1681844631
 PrefabInstance:
@@ -3825,6 +3983,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5670109539508268688, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsTrigger
       value: 1
@@ -3853,10 +4015,14 @@ PrefabInstance:
       propertyPath: '_patrolPoints.Array.data[3]'
       value: 
       objectReference: {fileID: 83724197}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 302381882}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!1 &1739950738
 GameObject:
@@ -3970,6 +4136,38 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1739950738}
   m_Mesh: {fileID: -2898334459140654917, guid: 7b5a098d913a3c74692a2a9963dbd3ba, type: 3}
+--- !u!1 &1754972455 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+  m_PrefabInstance: {fileID: 1900921022}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1754972456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1754972455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80b5df1c26913eb4985e8fb65c14f73f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.Character3DGridNPCBehaviour
+  _height: 0
+  _isGrounded: 0
+  _isFalling: 0
+  _canMove: 0
+  _canAction: 0
+  grid: {fileID: 1677300877}
+  heightOffset: 1
+  gridMoveSpeed: 5
+  rotateTowardsMovement: 1
+  patrolPoints: []
+  patrolPointWaitTime: 2
+  requireRhythm: 0
+  rhythmWindowOpen: 0
+  currentCell: {x: 0, y: 0}
+  isMoving: 0
 --- !u!1001 &1788141263
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3984,11 +4182,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.86
+      value: -1.13
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 6.63
+      value: 12.41
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4062,10 +4260,18 @@ PrefabInstance:
       propertyPath: '_patrolPoints.Array.data[3]'
       value: 
       objectReference: {fileID: 2010973881}
-    m_RemovedComponents: []
+    - target: {fileID: 9218756904726253827, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 406492258}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!1001 &1790171673
 PrefabInstance:
@@ -4234,6 +4440,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5670109539508268688, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsTrigger
       value: 1
@@ -4262,10 +4472,14 @@ PrefabInstance:
       propertyPath: '_patrolPoints.Array.data[3]'
       value: 
       objectReference: {fileID: 2010973881}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6776868070930699215, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1754972456}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!1 &1915679370
 GameObject:
@@ -4536,6 +4750,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 804c25ed8de72c7438dd28018db8c804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1973748755 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+  m_PrefabInstance: {fileID: 170456648}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1973748756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1973748755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80b5df1c26913eb4985e8fb65c14f73f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.Character3DGridNPCBehaviour
+  _height: 0
+  _isGrounded: 0
+  _isFalling: 0
+  _canMove: 0
+  _canAction: 0
+  grid: {fileID: 1677300877}
+  heightOffset: 1
+  gridMoveSpeed: 5
+  rotateTowardsMovement: 1
+  patrolPoints: []
+  patrolPointWaitTime: 2
+  requireRhythm: 0
+  rhythmWindowOpen: 0
+  currentCell: {x: 0, y: 0}
+  isMoving: 0
 --- !u!1001 &2003718845
 PrefabInstance:
   m_ObjectHideFlags: 0
