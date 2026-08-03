@@ -1034,30 +1034,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 406492257}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80b5df1c26913eb4985e8fb65c14f73f, type: 3}
+  m_Script: {fileID: 11500000, guid: 48bfead67aea22b4b875e12c2c1d4b14, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.Character3DGridNPCBehaviour
+  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.Character3DNavMeshGridNPCBehaviour
   _height: 0
   _isGrounded: 0
   _isFalling: 0
   _canMove: 0
   _canAction: 0
+  _state: 0
+  _grid: {fileID: 1677300877}
+  _prioritizeLongestAxis: 1
+  _gridStepInterval: 0.5
+  _instantGridMovement: 1
   grid: {fileID: 1677300877}
-  heightOffset: 1
-  gridMoveSpeed: 5
-  rotateTowardsMovement: 1
   patrolPoints:
   - {fileID: 448029382}
-  - {fileID: 83724197}
-  - {fileID: 498901818}
-  - {fileID: 2010973881}
   - {fileID: 1153580271}
-  - {fileID: 848731688}
   patrolPointWaitTime: 2
+  minimumCellsBeforePause: 2
+  maximumCellsBeforePause: 5
+  pauseDuration: 1
+  timeBetweenCells: 1
   requireRhythm: 0
   rhythmWindowOpen: 0
-  currentCell: {x: 13, y: 11}
-  isMoving: 0
+  navMeshSampleDistance: 2
+  currentCell: {x: 0, y: 0}
+  movementConsumedThisWindow: 0
+  movedCells: 0
+  cellsBeforePause: 0
 --- !u!4 &448029382 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6334107189900776747, guid: c696b0e1ce06db34f972f411c4a83140, type: 3}
