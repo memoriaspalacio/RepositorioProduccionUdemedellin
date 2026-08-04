@@ -49,10 +49,7 @@ public class GridPlayerMovement : MonoBehaviour
 
         if (grid == null)
         {
-            Debug.LogError(
-                "No se encontró un objeto con el script MeshGrid.",
-                this
-            );
+            Debug.LogError( "No se encontró un objeto con el script MeshGrid.", this );
 
             enabled = false;
             return;
@@ -75,28 +72,30 @@ public class GridPlayerMovement : MonoBehaviour
             currentCell,
             heightOffset
         );
+
+        BeatManager.Instance.OnBeat.AddListener(ReadMovementInput);
     }
 
-    private void Update()
-    {
+    private void Update() {
         ReadRotationInput();
         ReadAttackInput();
 
         if (!isMoving)
-            ReadMovementInput();
+            //ReadMovementInput()
+            ;
     }
 
     private void ReadMovementInput()
     {
         Vector2Int direction = Vector2Int.zero;
 
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKey(KeyCode.W))
             direction = Vector2Int.up;
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (Input.GetKey(KeyCode.S))
             direction = Vector2Int.down;
-        else if (Input.GetKeyDown(KeyCode.A))
+        else if (Input.GetKey(KeyCode.A))
             direction = Vector2Int.left;
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKey(KeyCode.D))
             direction = Vector2Int.right;
 
         if (direction != Vector2Int.zero)
@@ -182,7 +181,7 @@ public class GridPlayerMovement : MonoBehaviour
             RotateTowards(direction);
 
         if (_anim != null)
-            _anim.SetTrigger("OnJump");
+            // _anim.SetTrigger("OnJump"); ## Desactivado porque se veia feo mientras se ajustaba movimiento por ritmo
 
         StartCoroutine(
             MoveToCell(previousCell, nextCell)

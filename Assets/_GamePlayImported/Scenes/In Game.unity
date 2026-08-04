@@ -2788,7 +2788,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatManager
   musicSource: {fileID: 327550374}
-  bpm: 120
+  bpm: 180
   beatsPerMeasure: 4
   speedMultiplier: 1
   showDebugLogs: 0
