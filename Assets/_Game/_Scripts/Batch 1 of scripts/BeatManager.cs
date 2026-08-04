@@ -205,7 +205,7 @@ public class BeatManager : MonoBehaviour {
     /// Attach a UI Image to see this work.
     /// </summary>
     private void FlashMetronome() {
-        // TODO: Flash a UI element or screen overlay
+        // EVERYTHING: Flash a UI element or screen overlay
         // For now, just changes background color briefly
         Camera.main.backgroundColor = CurrentBeat % beatsPerMeasure == 0
             ? Color.red   // Downbeat (first beat of measure)
