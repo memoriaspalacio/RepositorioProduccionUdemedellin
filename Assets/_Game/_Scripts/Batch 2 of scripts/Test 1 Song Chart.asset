@@ -18,7 +18,7 @@ MonoBehaviour:
     noteType: 0
     powerChordId: 
     measure: 1
-    beat: 2
+    beat: 3
     isHeld: 0
     holdEndMeasure: 0
     holdEndBeat: 0
@@ -28,8 +28,8 @@ MonoBehaviour:
     key: 20
     noteType: 1
     powerChordId: '"Suplex"'
-    measure: 0
-    beat: 0
+    measure: 2
+    beat: 1
     isHeld: 0
     holdEndMeasure: 0
     holdEndBeat: 0

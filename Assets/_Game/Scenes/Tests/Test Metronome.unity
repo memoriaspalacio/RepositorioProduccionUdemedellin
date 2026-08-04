@@ -193,7 +193,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
 --- !u!4 &63705342
 Transform:
@@ -774,7 +774,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
 --- !u!4 &908113836
 Transform:
@@ -865,7 +865,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1075755260
 Transform:
@@ -1043,6 +1043,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoteFeedbackUI
   inputJudge: {fileID: 1140715653}
+  noteKeys: 12000000140000001800000019000000
   circles:
   - {fileID: 344145092}
   - {fileID: 1155226554}
@@ -1069,7 +1070,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e73bf1e1a49ee6489712c3b1cd9c7ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputJudge
-  noteKeys: 12000000140000001800000019000000
+  songChart: {fileID: 11400000, guid: 426b5f81d917936458299ebebe685c28, type: 2}
   perfectWindowSeconds: 0.2
   hitWindowSeconds: 0.24
   logJudgements: 0
@@ -1463,7 +1464,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1408135158
 Transform:
@@ -1554,7 +1555,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1577467356
 Transform:

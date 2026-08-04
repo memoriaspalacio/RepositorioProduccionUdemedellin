@@ -1,26 +1,23 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Prototype input judgement system for the beat-synced rhythm mechanic.
-///
-/// Listens to BeatManager for timing and checks key presses against a fixed
-/// 4-beat test pattern (ding, ding, ding, clap - one required key per beat),
+/// The input judgement system for the beat-synced rhythm mechanic. Reads its
+/// notes from a SongChart, converts each note's authored Measure:Beat into an
+/// absolute time via ChartTiming, and checks key presses against those times -
 /// reporting Perfect / Hit / Miss via OnNoteJudged.
 ///
-/// This is deliberately hardcoded to a 4-note loop so we can validate the core
-/// timing math (windows, early/late detection, expiry) in isolation before
-/// building the real chart-driven note spawner. The judging logic here
-/// (PendingNote, Judge(), the window checks) is the part that carries forward
-/// largely unchanged once notes come from a real chart instead of a fixed loop.
+/// Notes don't need arming ahead of time: on every key press, this scans
+/// forward from the earliest unresolved note for the closest match within the
+/// hit window. That's what lets an early press register just as correctly as
+/// a late one, with no beat-by-beat lookahead step required.
 /// </summary>
 public class InputJudge : MonoBehaviour {
 
-    [Header("Lane Setup")]
-    [Tooltip("One key per beat in the 4-beat loop, in order. Index 0-2 = dings, index 3 = clap. " +
-             "Must match the order of the circles in NoteFeedbackUI.")]
-    [SerializeField] private Key[] noteKeys = { Key.D, Key.F, Key.J, Key.K };
+    [Header("Chart")]
+    [SerializeField] private SongChart songChart;
 
     [Header("Judgement Windows (seconds, each side of the expected beat)")]
     [SerializeField] private double perfectWindowSeconds = 0.05;
@@ -29,20 +26,18 @@ public class InputJudge : MonoBehaviour {
     [Header("Debug")]
     [SerializeField] private bool logJudgements = true;
 
-    /// <summary>Fired whenever a note is judged: (laneIndex, result).</summary>
-    public event Action<int, JudgementResult> OnNoteJudged;
+    /// <summary>Fired whenever a note is judged: (note, result).</summary>
+    public event Action<NoteData, JudgementResult> OnNoteJudged;
 
-    private struct PendingNote {
-        public bool active;
+    private struct ScheduledNote {
+        public NoteData data;
         public double expectedTime;
         public bool judged;
     }
 
-    private PendingNote[] pendingNotes;
-
-    private void Awake() {
-        pendingNotes = new PendingNote[noteKeys.Length];
-    }
+    private ScheduledNote[] scheduledNotes;
+    private HashSet<Key> usedKeys;
+    private int expiryScanIndex;
 
     private void Start() {
         if (BeatManager.Instance == null) {
@@ -51,37 +46,38 @@ public class InputJudge : MonoBehaviour {
             return;
         }
 
-        BeatManager.Instance.OnBeat.AddListener(HandleBeat);
-        BeatManager.Instance.StartMusic();
-
-        // Arm the very first note by hand. Every note after this gets armed one
-        // beat ahead of time by HandleBeat below (so its window opens before
-        // it's due) - but there's no "beat before beat 1" to do that for us.
-        pendingNotes[0] = new PendingNote {
-            active = true,
-            expectedTime = BeatManager.Instance.SecPerBeat,
-            judged = false
-        };
-    }
-
-    private void OnDisable() {
-        if (BeatManager.Instance != null) {
-            BeatManager.Instance.OnBeat.RemoveListener(HandleBeat);
+        if (songChart == null) {
+            Debug.LogError("InputJudge: No SongChart assigned.");
+            enabled = false;
+            return;
         }
+
+        BuildSchedule();
+        BeatManager.Instance.StartMusic();
     }
 
     /// <summary>
-    /// Fires every beat. Arms the *next* beat's note early, so its hit window
-    /// is already open before it's actually due - this previews how the real
-    /// chart spawner will look ahead and pre-arm upcoming notes.
+    /// Converts every note's Measure:Beat into an absolute time once, up
+    /// front, and sorts by that time. This is the only place tempo enters the
+    /// picture - everything after this works purely in seconds.
     /// </summary>
-    private void HandleBeat() {
-        int nextIdx = BeatManager.Instance.CurrentBeat % noteKeys.Length;
-        pendingNotes[nextIdx] = new PendingNote {
-            active = true,
-            expectedTime = BeatManager.Instance.CurrentSongTime + BeatManager.Instance.SecPerBeat,
-            judged = false
-        };
+    private void BuildSchedule() {
+        IReadOnlyList<NoteData> notes = songChart.Notes;
+        scheduledNotes = new ScheduledNote[notes.Count];
+        usedKeys = new HashSet<Key>();
+
+        for (int i = 0; i < notes.Count; i++) {
+            NoteData note = notes[i];
+            double time = ChartTiming.ToSeconds(
+                note.Measure, note.Beat,
+                BeatManager.Instance.SecPerBeat, BeatManager.Instance.BeatsPerMeasure);
+
+            scheduledNotes[i] = new ScheduledNote { data = note, expectedTime = time, judged = false };
+            usedKeys.Add(note.Key);
+        }
+
+        Array.Sort(scheduledNotes, (a, b) => a.expectedTime.CompareTo(b.expectedTime));
+        expiryScanIndex = 0;
     }
 
     private void Update() {
@@ -94,48 +90,62 @@ public class InputJudge : MonoBehaviour {
     private void CheckForInput() {
         if (Keyboard.current == null) return;
 
-        for (int i = 0; i < noteKeys.Length; i++) {
-            if (Keyboard.current[noteKeys[i]].wasPressedThisFrame) {
-                HandlePress(i);
+        foreach (Key key in usedKeys) {
+            if (Keyboard.current[key].wasPressedThisFrame) {
+                HandlePress(key);
             }
         }
     }
 
-    private void HandlePress(int laneIndex) {
-        ref PendingNote note = ref pendingNotes[laneIndex];
-        if (!note.active || note.judged) return; // nothing due on this key right now
+    private void HandlePress(Key key) {
+        double now = BeatManager.Instance.CurrentSongTime;
+        int bestIndex = -1;
+        double bestDelta = double.MaxValue;
 
-        double delta = Math.Abs(BeatManager.Instance.CurrentSongTime - note.expectedTime);
+        for (int i = expiryScanIndex; i < scheduledNotes.Length; i++) {
+            ref ScheduledNote note = ref scheduledNotes[i];
+            if (note.expectedTime - now > hitWindowSeconds) break; // sorted by time - nothing further is in range
 
-        if (delta <= perfectWindowSeconds) {
-            Judge(laneIndex, JudgementResult.Perfect);
-        } else if (delta <= hitWindowSeconds) {
-            Judge(laneIndex, JudgementResult.Hit);
+            if (note.judged || note.data.Key != key) continue;
+
+            double delta = Math.Abs(now - note.expectedTime);
+            if (delta <= hitWindowSeconds && delta < bestDelta) {
+                bestDelta = delta;
+                bestIndex = i;
+            }
         }
-        // Outside the hit window entirely -> ignore. The note isn't judged yet,
-        // so a too-early press just doesn't count; the player can still press
-        // again once the window actually opens. Expiry below handles true misses.
+
+        if (bestIndex == -1) return; // nothing due for this key right now
+
+        Judge(bestIndex, bestDelta <= perfectWindowSeconds ? JudgementResult.Perfect : JudgementResult.Hit);
     }
 
     private void CheckForExpiredNotes() {
-        for (int i = 0; i < pendingNotes.Length; i++) {
-            ref PendingNote note = ref pendingNotes[i];
-            if (!note.active || note.judged) continue;
+        double now = BeatManager.Instance.CurrentSongTime;
 
-            double delta = BeatManager.Instance.CurrentSongTime - note.expectedTime;
-            if (delta > hitWindowSeconds) {
-                Judge(i, JudgementResult.Miss);
+        while (expiryScanIndex < scheduledNotes.Length) {
+            ref ScheduledNote note = ref scheduledNotes[expiryScanIndex];
+
+            if (!note.judged) {
+                if (now - note.expectedTime > hitWindowSeconds) {
+                    Judge(expiryScanIndex, JudgementResult.Miss);
+                } else {
+                    break; // earliest unresolved note isn't expired yet
+                }
             }
+
+            expiryScanIndex++;
         }
     }
 
-    private void Judge(int laneIndex, JudgementResult result) {
-        pendingNotes[laneIndex].judged = true;
+    private void Judge(int index, JudgementResult result) {
+        scheduledNotes[index].judged = true;
+        NoteData data = scheduledNotes[index].data;
 
         if (logJudgements) {
-            Debug.Log($"Lane {laneIndex} ({noteKeys[laneIndex]}): {result}");
+            Debug.Log($"{data.Key} @ M{data.Measure}:B{data.Beat}: {result}");
         }
 
-        OnNoteJudged?.Invoke(laneIndex, result);
+        OnNoteJudged?.Invoke(data, result);
     }
 }
