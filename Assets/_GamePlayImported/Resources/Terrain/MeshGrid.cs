@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 //ExecuteAlways permite que el script funcione tanto en Play Mode como en el editor de Unity
 [ExecuteAlways]
@@ -20,7 +21,7 @@ public class MeshGrid : MonoBehaviour
                                                          //Un valor alto permite detectar terrenos con grandes diferencias
 
     private Renderer groundRenderer; //Renderer usado para calcular los límites de la cuadrícula del modelo del terreno
-                                     
+    private readonly Dictionary<Vector2Int, GameObject> occupiedCells = new Dictionary<Vector2Int, GameObject>();
 
     public float CellSize => cellSize; // propiedad de solo lectura,
                                        // => es el equivalente de usar get
@@ -228,5 +229,116 @@ public class MeshGrid : MonoBehaviour
         }
 
         return new Vector3(x, bounds.max.y, z);
+    }
+
+
+    //Detectar si esta ocupado una celda
+
+    public bool IsCellOccupied(Vector2Int cell)
+    {
+        CleanDestroyedOccupant(cell);
+
+        return occupiedCells.ContainsKey(cell);
+    }
+
+    public bool IsCellOccupiedByOther(
+        Vector2Int cell,
+        GameObject requester)
+    {
+        CleanDestroyedOccupant(cell);
+
+        if (!occupiedCells.TryGetValue(
+                cell,
+                out GameObject occupant))
+        {
+            return false;
+        }
+
+        return occupant != requester;
+    }
+
+    public bool TryOccupyCell(
+        Vector2Int cell,
+        GameObject occupant)
+    {
+        if (occupant == null)
+            return false;
+
+        if (!IsCellInside(cell))
+            return false;
+
+        CleanDestroyedOccupant(cell);
+
+        if (occupiedCells.TryGetValue(
+                cell,
+                out GameObject currentOccupant))
+        {
+            return currentOccupant == occupant;
+        }
+
+        occupiedCells.Add(cell, occupant);
+        return true;
+    }
+
+    public bool TryMoveOccupant(
+        Vector2Int previousCell,
+        Vector2Int nextCell,
+        GameObject occupant)
+    {
+        if (occupant == null)
+            return false;
+
+        if (!IsCellInside(nextCell))
+            return false;
+
+        if (IsCellOccupiedByOther(nextCell, occupant))
+            return false;
+
+        ReleaseCell(previousCell, occupant);
+        occupiedCells[nextCell] = occupant;
+
+        return true;
+    }
+
+    public void ReleaseCell(
+        Vector2Int cell,
+        GameObject occupant)
+    {
+        CleanDestroyedOccupant(cell);
+
+        if (!occupiedCells.TryGetValue(
+                cell,
+                out GameObject currentOccupant))
+        {
+            return;
+        }
+
+        if (currentOccupant == occupant)
+            occupiedCells.Remove(cell);
+    }
+
+    public GameObject GetCellOccupant(Vector2Int cell)
+    {
+        CleanDestroyedOccupant(cell);
+
+        occupiedCells.TryGetValue(
+            cell,
+            out GameObject occupant
+        );
+
+        return occupant;
+    }
+
+    private void CleanDestroyedOccupant(Vector2Int cell)
+    {
+        if (!occupiedCells.TryGetValue(
+                cell,
+                out GameObject occupant))
+        {
+            return;
+        }
+
+        if (occupant == null)
+            occupiedCells.Remove(cell);
     }
 }

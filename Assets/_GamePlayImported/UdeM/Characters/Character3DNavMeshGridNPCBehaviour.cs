@@ -4,7 +4,8 @@ using UnityEngine.AI;
 
 namespace UdeM.Characters
 {
-    public class Character3DNavMeshGridNPCBehaviour : Character3DNavMeshBehaviour
+    public class Character3DNavMeshGridNPCBehaviour
+        : Character3DNavMeshBehaviour
     {
         [Header("Cuadrícula")]
         [SerializeField] private MeshGrid grid;
@@ -48,6 +49,7 @@ namespace UdeM.Characters
         private float nextPatrolTime;
 
         private int actionState;
+        private bool cellRegistered;
 
         private const int PATROLLING = 2;
         private const int ATTACKING = 3;
@@ -76,7 +78,7 @@ namespace UdeM.Characters
         {
             base.Start();
 
-            ValidatePauseValues();
+            ValidateValues();
 
             if (grid == null)
                 grid = FindFirstObjectByType<MeshGrid>();
@@ -103,7 +105,25 @@ namespace UdeM.Characters
                 return;
             }
 
-            currentCell = grid.WorldToCell(transform.position);
+            currentCell = grid.WorldToCell(
+                transform.position
+            );
+
+            if (!grid.TryOccupyCell(
+                    currentCell,
+                    gameObject))
+            {
+                Debug.LogError(
+                    $"La celda inicial {currentCell} " +
+                    "ya está ocupada.",
+                    this
+                );
+
+                enabled = false;
+                return;
+            }
+
+            cellRegistered = true;
 
             ConfigureNavigator();
             ConfigureVision();
@@ -128,6 +148,19 @@ namespace UdeM.Characters
             base.OnFinishMove();
         }
 
+        protected virtual void OnDestroy()
+        {
+            ReleaseCurrentCell();
+        }
+
+        private void OnDisable()
+        {
+            if (!gameObject.scene.isLoaded)
+                return;
+
+            ReleaseCurrentCell();
+        }
+
         private void ConfigureNavigator()
         {
             _navigator.isStopped = true;
@@ -143,7 +176,8 @@ namespace UdeM.Characters
 
         private void ConfigureVision()
         {
-            Transform visionTransform = transform.Find("Vision");
+            Transform visionTransform =
+                transform.Find("Vision");
 
             if (visionTransform == null)
                 return;
@@ -162,10 +196,13 @@ namespace UdeM.Characters
             vision.Initialize(this);
         }
 
-        private void ValidatePauseValues()
+        private void ValidateValues()
         {
             minimumCellsBeforePause =
-                Mathf.Max(1, minimumCellsBeforePause);
+                Mathf.Max(
+                    1,
+                    minimumCellsBeforePause
+                );
 
             maximumCellsBeforePause =
                 Mathf.Max(
@@ -173,10 +210,17 @@ namespace UdeM.Characters
                     maximumCellsBeforePause
                 );
 
-            pauseDuration = Mathf.Max(0f, pauseDuration);
-            timeBetweenCells = Mathf.Max(0f, timeBetweenCells);
+            pauseDuration =
+                Mathf.Max(0f, pauseDuration);
+
+            timeBetweenCells =
+                Mathf.Max(0f, timeBetweenCells);
+
             navMeshSampleDistance =
-                Mathf.Max(0.1f, navMeshSampleDistance);
+                Mathf.Max(
+                    0.1f,
+                    navMeshSampleDistance
+                );
         }
 
         private void TryPerformGridAction()
@@ -186,20 +230,29 @@ namespace UdeM.Characters
 
             Vector2Int destinationCell;
 
-            if (actionState == ATTACKING && target != null)
+            if (actionState == ATTACKING &&
+                target != null)
             {
                 destinationCell =
-                    grid.WorldToCell(target.transform.position);
+                    grid.WorldToCell(
+                        target.transform.position
+                    );
 
-                if (TryAttackAdjacentTarget(destinationCell))
+                if (TryAttackAdjacentTarget(
+                        destinationCell))
+                {
                     return;
+                }
             }
             else
             {
                 actionState = PATROLLING;
 
-                if (!TryGetPatrolDestination(out destinationCell))
+                if (!TryGetPatrolDestination(
+                        out destinationCell))
+                {
                     return;
+                }
             }
 
             if (destinationCell == currentCell)
@@ -208,11 +261,13 @@ namespace UdeM.Characters
                 return;
             }
 
-            TryMoveOneCellTowards(destinationCell);
+            TryMoveOneCellTowards(
+                destinationCell
+            );
         }
 
         private bool TryAttackAdjacentTarget(
-    Vector2Int targetCell)
+            Vector2Int targetCell)
         {
             Vector2Int difference =
                 targetCell - currentCell;
@@ -224,15 +279,22 @@ namespace UdeM.Characters
             if (cellDistance != 1)
                 return false;
 
-            Vector2Int attackDirection = new Vector2Int(
-                System.Math.Sign(difference.x),
-                System.Math.Sign(difference.y)
+            Vector2Int attackDirection =
+                new Vector2Int(
+                    System.Math.Sign(difference.x),
+                    System.Math.Sign(difference.y)
+                );
+
+            FaceGridDirection(
+                attackDirection
             );
 
-            FaceGridDirection(attackDirection);
-
-            if (!Attack(attackDirection, targetCell))
+            if (!Attack(
+                    attackDirection,
+                    targetCell))
+            {
                 return false;
+            }
 
             if (requireRhythm)
                 movementConsumedThisWindow = true;
@@ -243,27 +305,42 @@ namespace UdeM.Characters
             return true;
         }
 
+        protected virtual bool Attack(
+            Vector2Int direction,
+            Vector2Int targetCell)
+        {
+            return false;
+        }
+
         protected void FaceGridDirection(
             Vector2Int direction)
         {
-            Vector3 worldDirection = new Vector3(
-                direction.x,
-                0f,
-                direction.y
-            );
+            Vector3 worldDirection =
+                new Vector3(
+                    direction.x,
+                    0f,
+                    direction.y
+                );
 
             if (worldDirection == Vector3.zero)
                 return;
 
-            transform.rotation = Quaternion.LookRotation(
-                worldDirection,
-                Vector3.up
-            );
+            transform.rotation =
+                Quaternion.LookRotation(
+                    worldDirection,
+                    Vector3.up
+                );
         }
 
         private bool CanPerformGridAction()
         {
-            if (grid == null || _navigator == null)
+            if (grid == null ||
+                _navigator == null)
+            {
+                return false;
+            }
+
+            if (!cellRegistered)
                 return false;
 
             if (!_canMove)
@@ -285,11 +362,8 @@ namespace UdeM.Characters
                    !movementConsumedThisWindow;
         }
 
-        protected virtual bool Attack(Vector2Int direction, Vector2Int targetCell)
-        {
-            return false;
-        }
-        private bool TryGetPatrolDestination( out Vector2Int destinationCell)
+        private bool TryGetPatrolDestination(
+            out Vector2Int destinationCell)
         {
             destinationCell = currentCell;
 
@@ -305,7 +379,8 @@ namespace UdeM.Characters
                 patrolIndex = 0;
             }
 
-            Transform patrolPoint = patrolPoints[patrolIndex];
+            Transform patrolPoint =
+                patrolPoints[patrolIndex];
 
             if (patrolPoint == null)
             {
@@ -314,7 +389,9 @@ namespace UdeM.Characters
             }
 
             destinationCell =
-                grid.WorldToCell(patrolPoint.position);
+                grid.WorldToCell(
+                    patrolPoint.position
+                );
 
             return true;
         }
@@ -325,19 +402,21 @@ namespace UdeM.Characters
             Vector2Int difference =
                 destinationCell - currentCell;
 
-            Vector2Int primaryDirection;
-            Vector2Int secondaryDirection;
-
             CalculateDirections(
                 difference,
-                out primaryDirection,
-                out secondaryDirection
+                out Vector2Int primaryDirection,
+                out Vector2Int secondaryDirection
             );
 
-            if (TryMoveInDirection(primaryDirection))
+            if (TryMoveInDirection(
+                    primaryDirection))
+            {
                 return true;
+            }
 
-            return TryMoveInDirection(secondaryDirection);
+            return TryMoveInDirection(
+                secondaryDirection
+            );
         }
 
         private void CalculateDirections(
@@ -354,27 +433,31 @@ namespace UdeM.Characters
             if (Mathf.Abs(difference.x) >=
                 Mathf.Abs(difference.y))
             {
-                primaryDirection = new Vector2Int(
-                    horizontalDirection,
-                    0
-                );
+                primaryDirection =
+                    new Vector2Int(
+                        horizontalDirection,
+                        0
+                    );
 
-                secondaryDirection = new Vector2Int(
-                    0,
-                    verticalDirection
-                );
+                secondaryDirection =
+                    new Vector2Int(
+                        0,
+                        verticalDirection
+                    );
             }
             else
             {
-                primaryDirection = new Vector2Int(
-                    0,
-                    verticalDirection
-                );
+                primaryDirection =
+                    new Vector2Int(
+                        0,
+                        verticalDirection
+                    );
 
-                secondaryDirection = new Vector2Int(
-                    horizontalDirection,
-                    0
-                );
+                secondaryDirection =
+                    new Vector2Int(
+                        horizontalDirection,
+                        0
+                    );
             }
         }
 
@@ -395,6 +478,14 @@ namespace UdeM.Characters
             if (nextCell == currentCell)
                 return false;
 
+            if (grid.IsCellOccupiedByOther(
+                    nextCell,
+                    gameObject))
+            {
+                OnCellBlocked(nextCell);
+                return false;
+            }
+
             if (!TryGetNavMeshPosition(
                     nextCell,
                     out Vector3 destination))
@@ -405,19 +496,54 @@ namespace UdeM.Characters
             if (!_navigator.isOnNavMesh)
                 return false;
 
+            Vector2Int previousCell =
+                currentCell;
+
+            if (!grid.TryMoveOccupant(
+                    previousCell,
+                    nextCell,
+                    gameObject))
+            {
+                OnCellBlocked(nextCell);
+                return false;
+            }
+
             _navigator.ResetPath();
 
             bool warpSucceeded =
                 _navigator.Warp(destination);
 
             if (!warpSucceeded)
+            {
+                bool rollbackSucceeded =
+                    grid.TryMoveOccupant(
+                        nextCell,
+                        previousCell,
+                        gameObject
+                    );
+
+                if (!rollbackSucceeded)
+                {
+                    Debug.LogError(
+                        "No se pudo restaurar la celda " +
+                        "del enemigo después de fallar Warp.",
+                        this
+                    );
+
+                    cellRegistered = false;
+                }
+
                 return false;
+            }
 
             currentCell = nextCell;
             _state = STANDBY;
 
             if (requireRhythm)
-                movementConsumedThisWindow = true;
+            {
+                movementConsumedThisWindow =
+                    true;
+            }
 
             RegisterCellMovement();
             HandleDestinationReached();
@@ -430,13 +556,17 @@ namespace UdeM.Characters
             out Vector3 navMeshPosition)
         {
             Vector3 cellPosition =
-                grid.CellToWorldCenter(cell, 0f);
+                grid.CellToWorldCenter(
+                    cell,
+                    0f
+                );
 
-            Vector3 sampleOrigin = new Vector3(
-                cellPosition.x,
-                transform.position.y,
-                cellPosition.z
-            );
+            Vector3 sampleOrigin =
+                new Vector3(
+                    cellPosition.x,
+                    transform.position.y,
+                    cellPosition.z
+                );
 
             if (!NavMesh.SamplePosition(
                     sampleOrigin,
@@ -444,20 +574,28 @@ namespace UdeM.Characters
                     navMeshSampleDistance,
                     NavMesh.AllAreas))
             {
-                navMeshPosition = Vector3.zero;
+                navMeshPosition =
+                    Vector3.zero;
+
                 return false;
             }
 
             Vector2Int sampledCell =
-                grid.WorldToCell(hit.position);
+                grid.WorldToCell(
+                    hit.position
+                );
 
             if (sampledCell != cell)
             {
-                navMeshPosition = Vector3.zero;
+                navMeshPosition =
+                    Vector3.zero;
+
                 return false;
             }
 
-            navMeshPosition = hit.position;
+            navMeshPosition =
+                hit.position;
+
             return true;
         }
 
@@ -465,7 +603,8 @@ namespace UdeM.Characters
         {
             movedCells++;
 
-            if (movedCells >= cellsBeforePause)
+            if (movedCells >=
+                cellsBeforePause)
             {
                 movedCells = 0;
 
@@ -483,10 +622,11 @@ namespace UdeM.Characters
 
         private void SelectNewCellsBeforePause()
         {
-            cellsBeforePause = Random.Range(
-                minimumCellsBeforePause,
-                maximumCellsBeforePause + 1
-            );
+            cellsBeforePause =
+                Random.Range(
+                    minimumCellsBeforePause,
+                    maximumCellsBeforePause + 1
+                );
         }
 
         private void HandleDestinationReached()
@@ -495,7 +635,9 @@ namespace UdeM.Characters
                 target != null)
             {
                 Vector2Int targetCell =
-                    grid.WorldToCell(target.transform.position);
+                    grid.WorldToCell(
+                        target.transform.position
+                    );
 
                 if (currentCell == targetCell)
                     OnPlayerCellReached();
@@ -527,7 +669,9 @@ namespace UdeM.Characters
             }
 
             Vector2Int patrolCell =
-                grid.WorldToCell(patrolPoint.position);
+                grid.WorldToCell(
+                    patrolPoint.position
+                );
 
             if (currentCell != patrolCell)
                 return;
@@ -535,12 +679,14 @@ namespace UdeM.Characters
             AdvancePatrolPoint();
 
             nextPatrolTime =
-                Time.time + patrolPointWaitTime;
+                Time.time +
+                patrolPointWaitTime;
 
-            nextMovementTime = Mathf.Max(
-                nextMovementTime,
-                nextPatrolTime
-            );
+            nextMovementTime =
+                Mathf.Max(
+                    nextMovementTime,
+                    nextPatrolTime
+                );
         }
 
         private void AdvancePatrolPoint()
@@ -554,34 +700,69 @@ namespace UdeM.Characters
 
             patrolIndex++;
 
-            if (patrolIndex >= patrolPoints.Count)
+            if (patrolIndex >=
+                patrolPoints.Count)
+            {
                 patrolIndex = 0;
+            }
+        }
+
+        private void ReleaseCurrentCell()
+        {
+            if (!cellRegistered ||
+                grid == null)
+            {
+                return;
+            }
+
+            grid.ReleaseCell(
+                currentCell,
+                gameObject
+            );
+
+            cellRegistered = false;
+        }
+
+        protected virtual void OnCellBlocked(
+            Vector2Int blockedCell)
+        {
+            Debug.Log(
+                $"El enemigo no puede entrar en " +
+                $"{blockedCell}: la celda está ocupada.",
+                this
+            );
         }
 
         protected virtual void OnPlayerCellReached()
         {
             Debug.Log(
-                $"El enemigo alcanzó la celda del jugador: {currentCell}",
+                $"El enemigo alcanzó la celda " +
+                $"del jugador: {currentCell}.",
                 this
             );
         }
 
-        public void SetRhythmWindow(bool isOpen)
+        public void SetRhythmWindow(
+            bool isOpen)
         {
             rhythmWindowOpen = isOpen;
 
             if (!isOpen)
                 return;
 
-            movementConsumedThisWindow = false;
+            movementConsumedThisWindow =
+                false;
 
             TryPerformGridAction();
         }
 
-        public void SetRequireRhythm(bool value)
+        public void SetRequireRhythm(
+            bool value)
         {
             requireRhythm = value;
-            movementConsumedThisWindow = false;
+
+            movementConsumedThisWindow =
+                false;
 
             if (!requireRhythm)
                 TryPerformGridAction();
@@ -621,9 +802,11 @@ namespace UdeM.Characters
             TryPerformGridAction();
         }
 
-        private class GridVisionBehaviour : MonoBehaviour
+        private class GridVisionBehaviour
+            : MonoBehaviour
         {
-            private Character3DNavMeshGridNPCBehaviour owner;
+            private Character3DNavMeshGridNPCBehaviour
+                owner;
 
             public void Initialize(
                 Character3DNavMeshGridNPCBehaviour npc)
@@ -631,7 +814,8 @@ namespace UdeM.Characters
                 owner = npc;
             }
 
-            private void OnTriggerEnter(Collider other)
+            private void OnTriggerEnter(
+                Collider other)
             {
                 if (owner == null)
                     return;
@@ -644,7 +828,8 @@ namespace UdeM.Characters
                 }
             }
 
-            private void OnTriggerStay(Collider other)
+            private void OnTriggerStay(
+                Collider other)
             {
                 if (owner == null)
                     return;
@@ -657,7 +842,8 @@ namespace UdeM.Characters
                 }
             }
 
-            private void OnTriggerExit(Collider other)
+            private void OnTriggerExit(
+                Collider other)
             {
                 if (owner == null)
                     return;
