@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GridPlayerMovement : MonoBehaviour
 {
-    [Header("Cuadrícula")]
+    [Header("Cuadrï¿½cula")]
     [SerializeField] private MeshGrid grid;
 
     [Header("Jugador")]
@@ -49,7 +49,7 @@ public class GridPlayerMovement : MonoBehaviour
 
         if (grid == null)
         {
-            Debug.LogError( "No se encontró un objeto con el script MeshGrid.", this );
+            Debug.LogError( "No se encontrï¿½ un objeto con el script MeshGrid.", this );
 
             enabled = false;
             return;
@@ -60,7 +60,7 @@ public class GridPlayerMovement : MonoBehaviour
         if (!grid.TryOccupyCell(currentCell, gameObject))
         {
             Debug.LogError(
-                $"La celda inicial {currentCell} está ocupada.",
+                $"La celda inicial {currentCell} estï¿½ ocupada.",
                 this
             );
 
@@ -160,7 +160,7 @@ public class GridPlayerMovement : MonoBehaviour
         if (grid.IsCellOccupiedByOther(nextCell, gameObject))
         {
             Debug.Log(
-                $"No puedes moverte. La celda {nextCell} está ocupada.",
+                $"No puedes moverte. La celda {nextCell} estï¿½ ocupada.",
                 this
             );
 
@@ -213,7 +213,7 @@ public class GridPlayerMovement : MonoBehaviour
     protected virtual void ExecuteAttack()
     {
         Debug.Log(
-            $"El jugador atacó desde la celda {currentCell}.",
+            $"El jugador ataca desde la celda {currentCell}.",
             this
         );
     }
@@ -278,7 +278,7 @@ public class GridPlayerMovement : MonoBehaviour
     private void OnActionMissedRhythm(string actionName)
     {
         Debug.Log(
-            $"Acción rechazada: {actionName} fuera del ritmo.",
+            $"Acciï¿½n rechazada: {actionName} fuera del ritmo.",
             this
         );
     }
