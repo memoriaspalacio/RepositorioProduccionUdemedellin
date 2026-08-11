@@ -7,7 +7,7 @@ namespace UdeM.Characters
     public class Character3DNavMeshGridNPCBehaviour
         : Character3DNavMeshBehaviour
     {
-        [Header("Cuadrícula")]
+        [Header("Cuadricula")]
         [SerializeField] private MeshGrid grid;
 
         [Header("Patrulla")]
@@ -63,6 +63,9 @@ namespace UdeM.Characters
         protected GameObject CurrentTarget => target;
         protected Vector2Int CurrentGridCell => currentCell;
 
+        private bool movementStopped;
+        private float movementStopUntil;
+
         protected override void Awake()
         {
             base.Awake();
@@ -86,7 +89,7 @@ namespace UdeM.Characters
             if (grid == null)
             {
                 Debug.LogError(
-                    "No se encontró un objeto con MeshGrid.",
+                    "No se encontrï¿½ un objeto con MeshGrid.",
                     this
                 );
 
@@ -97,7 +100,7 @@ namespace UdeM.Characters
             if (_navigator == null)
             {
                 Debug.LogError(
-                    "No se encontró un NavMeshAgent.",
+                    "No se encontrï¿½ un NavMeshAgent.",
                     this
                 );
 
@@ -115,7 +118,7 @@ namespace UdeM.Characters
             {
                 Debug.LogError(
                     $"La celda inicial {currentCell} " +
-                    "ya está ocupada.",
+                    "ya estï¿½ ocupada.",
                     this
                 );
 
@@ -141,6 +144,23 @@ namespace UdeM.Characters
 
             if (!requireRhythm)
                 TryPerformGridAction();
+        }
+
+        public void StopMovementFor(float seconds)
+        {
+            movementStopped = true;
+            movementStopUntil = Mathf.Max(
+                movementStopUntil,
+                Time.time + seconds
+            );
+
+            if (_navigator != null &&
+                _navigator.isOnNavMesh)
+            {
+                _navigator.ResetPath();
+            }
+
+            _state = STANDBY;
         }
 
         protected override void OnFinishMove()
@@ -334,6 +354,15 @@ namespace UdeM.Characters
 
         private bool CanPerformGridAction()
         {
+            // Bloqueo temporal completo del movimiento
+            if (movementStopped)
+            {
+                if (Time.time < movementStopUntil)
+                    return false;
+
+                movementStopped = false;
+            }
+
             if (grid == null ||
                 _navigator == null)
             {
@@ -359,7 +388,7 @@ namespace UdeM.Characters
                 return true;
 
             return rhythmWindowOpen &&
-                   !movementConsumedThisWindow;
+                !movementConsumedThisWindow;
         }
 
         private bool TryGetPatrolDestination(
@@ -526,7 +555,7 @@ namespace UdeM.Characters
                 {
                     Debug.LogError(
                         "No se pudo restaurar la celda " +
-                        "del enemigo después de fallar Warp.",
+                        "del enemigo despuï¿½s de fallar Warp.",
                         this
                     );
 
@@ -728,7 +757,7 @@ namespace UdeM.Characters
         {
             Debug.Log(
                 $"El enemigo no puede entrar en " +
-                $"{blockedCell}: la celda está ocupada.",
+                $"{blockedCell}: la celda estï¿½ ocupada.",
                 this
             );
         }
@@ -736,7 +765,7 @@ namespace UdeM.Characters
         protected virtual void OnPlayerCellReached()
         {
             Debug.Log(
-                $"El enemigo alcanzó la celda " +
+                $"El enemigo alcanzï¿½ la celda " +
                 $"del jugador: {currentCell}.",
                 this
             );
@@ -801,6 +830,8 @@ namespace UdeM.Characters
 
             TryPerformGridAction();
         }
+
+        
 
         private class GridVisionBehaviour
             : MonoBehaviour

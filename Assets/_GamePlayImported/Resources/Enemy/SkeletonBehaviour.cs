@@ -7,6 +7,7 @@ namespace UdeM.Characters
         : Character3DNavMeshGridNPCBehaviour
     {
         [SerializeField] private Animator animator;
+        
 
         [SerializeField]
         private string reloadTrigger =
@@ -28,6 +29,8 @@ namespace UdeM.Characters
                 animator = GetComponentInChildren<Animator>();
         }
 
+        
+
         protected override bool Attack(
             Vector2Int direction,
             Vector2Int targetCell)
@@ -46,12 +49,17 @@ namespace UdeM.Characters
             Vector2Int direction,
             Vector2Int targetCell)
         {
+            
+            
             isPreparingAttack = true;
 
             FaceGridDirection(direction);
 
+            StopMovementFor(2.10f);
+
             if (animator != null)
                 animator.SetTrigger(reloadTrigger);
+                StopMovementFor(2.10f);
 
             yield return new WaitForSeconds(reloadTime);
 
@@ -77,7 +85,7 @@ namespace UdeM.Characters
                         animator.SetTrigger(attackTrigger);
 
                     Debug.Log(
-                        $"El esqueleto atacó la celda " +
+                        $"El esqueleto atacï¿½ la celda " +
                         $"{currentTargetCell}.",
                         this
                     );
