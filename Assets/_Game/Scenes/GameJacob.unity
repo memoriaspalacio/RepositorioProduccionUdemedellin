@@ -3231,6 +3231,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 38335279662569219, guid: 34d3f526198dae440bb2ce6005d86055, type: 3}
   m_PrefabInstance: {fileID: 1206862090}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &1251406699 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 7792116119601143675, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
+  m_PrefabInstance: {fileID: 233945029}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1268057318 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4661435515762813124, guid: e289bf5debb17f6459818c207d781953, type: 3}
@@ -4707,6 +4712,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxLife: 30
   currentLife: 30
+  anim: {fileID: 1251406699}
+  playerMovement: {fileID: 1792752530}
 --- !u!1 &1812008341
 GameObject:
   m_ObjectHideFlags: 0

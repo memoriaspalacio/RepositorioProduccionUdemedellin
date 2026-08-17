@@ -3,9 +3,11 @@ using UnityEngine;
 
 public class GridPlayerMovement : MonoBehaviour
 {
-
+    
     private float hitValue;
     private float hitPlayer;
+    private bool isDead = false;
+
     [Header("Cuadricula")]
     [SerializeField] private MeshGrid grid;
 
@@ -89,8 +91,15 @@ public class GridPlayerMovement : MonoBehaviour
             ;
     }
 
+    public void SetDead()
+    {
+        isDead = true;
+    }
+
     private void ReadMovementInput()
     {
+        if (isDead)
+            return;
         Vector2Int direction = Vector2Int.zero;
 
         if (Input.GetKey(KeyCode.W))
@@ -146,6 +155,8 @@ public class GridPlayerMovement : MonoBehaviour
 
     private void TryMove(Vector2Int direction)
     {
+        if (isDead)
+            return;
         if (!CanActOnRhythm())
         {
             OnActionMissedRhythm("movimiento");
@@ -196,6 +207,8 @@ public class GridPlayerMovement : MonoBehaviour
 
     private void TryAttack()
     {
+        if (isDead)
+            return;
         if (!CanActOnRhythm())
         {
             OnActionMissedRhythm("ataque");
