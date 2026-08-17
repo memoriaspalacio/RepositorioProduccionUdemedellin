@@ -718,6 +718,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5593976134881640356, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1792752530}
+    - targetCorrespondingSourceObject: {fileID: 5593976134881640356, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1792752532}
   m_SourcePrefab: {fileID: 100100000, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
 --- !u!4 &297737453 stripped
 Transform:
@@ -1195,6 +1198,7 @@ MonoBehaviour:
   reloadTrigger: onReload
   attackTrigger: onAttack
   reloadTime: 2
+  playerHealth: {fileID: 1792752532}
 --- !u!1 &422656232
 GameObject:
   m_ObjectHideFlags: 0
@@ -4672,6 +4676,20 @@ MonoBehaviour:
   attackCooldown: 0.3
   requireRhythm: 0
   rhythmWindowOpen: 0
+--- !u!114 &1792752532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619254479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b4be2b2dc459634a9b71d146d56fef6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  maxLife: 30
+  currentLife: 30
 --- !u!1 &1812008341
 GameObject:
   m_ObjectHideFlags: 0

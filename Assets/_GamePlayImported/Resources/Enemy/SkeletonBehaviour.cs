@@ -7,7 +7,8 @@ namespace UdeM.Characters
         : Character3DNavMeshGridNPCBehaviour
     {
         [SerializeField] private Animator animator;
-        
+        private float hitValue;
+        private float hitEnemy;
 
         [SerializeField]
         private string reloadTrigger =
@@ -21,6 +22,8 @@ namespace UdeM.Characters
 
         private bool isPreparingAttack;
 
+        public PlayerHealth playerHealth;
+
         protected override void Start()
         {
             base.Start();
@@ -29,7 +32,12 @@ namespace UdeM.Characters
                 animator = GetComponentInChildren<Animator>();
         }
 
-        
+        private float HitFunction()
+        {
+            hitValue = Random.Range(1, 7);
+
+            return hitValue;
+        }
 
         protected override bool Attack(
             Vector2Int direction,
@@ -89,6 +97,11 @@ namespace UdeM.Characters
                         $"{currentTargetCell}.",
                         this
                     );
+                    hitEnemy = HitFunction();
+                    playerHealth.Damage(hitEnemy);
+                    
+
+
                 }
             }
 
