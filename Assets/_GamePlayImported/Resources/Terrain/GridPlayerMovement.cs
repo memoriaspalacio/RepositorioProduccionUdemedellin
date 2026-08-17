@@ -3,7 +3,10 @@ using UnityEngine;
 
 public class GridPlayerMovement : MonoBehaviour
 {
-    [Header("Cuadr�cula")]
+
+    private float hitValue;
+    private float hitPlayer;
+    [Header("Cuadricula")]
     [SerializeField] private MeshGrid grid;
 
     [Header("Jugador")]
@@ -35,6 +38,7 @@ public class GridPlayerMovement : MonoBehaviour
 
     public bool RhythmWindowOpen => rhythmWindowOpen;
     public Vector2Int CurrentCell => currentCell;
+    private Vector2Int facingDirection = Vector2Int.up;
     public bool IsMoving => isMoving;
 
     private void Start()
@@ -49,7 +53,7 @@ public class GridPlayerMovement : MonoBehaviour
 
         if (grid == null)
         {
-            Debug.LogError( "No se encontr� un objeto con el script MeshGrid.", this );
+            Debug.LogError( "No se encontro un objeto con el script MeshGrid.", this );
 
             enabled = false;
             return;
@@ -120,6 +124,8 @@ public class GridPlayerMovement : MonoBehaviour
     }
     private void RotateTowards(Vector2Int direction)
     {
+        facingDirection = direction;
+
         Vector3 lookDirection = new Vector3(
             direction.x,
             0f,
@@ -212,10 +218,44 @@ public class GridPlayerMovement : MonoBehaviour
 
     protected virtual void ExecuteAttack()
     {
-        Debug.Log(
-            $"El jugador ataca desde la celda {currentCell}.",
-            this
-        );
+        Vector2Int attackCell = currentCell + facingDirection;
+
+        if (!grid.IsCellInside(attackCell))
+            return;
+
+        GameObject target = grid.GetCellOccupant(attackCell);
+
+        if (target == null)
+        {
+            Debug.Log(
+                $"No hubo impacto. La celda {attackCell} está vacía.",
+                this
+            );
+
+            return;
+        }
+
+        EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
+
+        if (enemyHealth == null)
+        {
+            Debug.Log(
+                $"La celda {attackCell} está ocupada, pero {target.name} no tiene EnemyHealth.",
+                this
+            );
+
+            return;
+        }
+
+        hitPlayer = HitFunction();
+
+        enemyHealth.Damage(hitPlayer);
+    }
+
+    private float HitFunction()
+    {
+        hitValue = Random.Range(4, 8);
+        return hitValue;
     }
 
     private IEnumerator MoveToCell(

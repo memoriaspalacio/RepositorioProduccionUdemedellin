@@ -1199,6 +1199,20 @@ MonoBehaviour:
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
+--- !u!114 &406492266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 406492257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e05b8e2759a98ea48bbee85f6b3d0331, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  maxLife: 20
+  currentLife: 20
 --- !u!1 &422656232
 GameObject:
   m_ObjectHideFlags: 0
@@ -4545,6 +4559,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
       addedObject: {fileID: 406492262}
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 406492266}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!1001 &1790171673
 PrefabInstance:
