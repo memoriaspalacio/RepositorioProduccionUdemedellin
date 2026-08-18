@@ -6,9 +6,12 @@ namespace UdeM.Characters
     public class SkeletonBehaviour
         : Character3DNavMeshGridNPCBehaviour
     {
+        private bool isDead = false;
+
         [SerializeField] private Animator animator;
         private float hitValue;
         private float hitEnemy;
+
 
         [SerializeField]
         private string reloadTrigger =
@@ -32,6 +35,18 @@ namespace UdeM.Characters
                 animator = GetComponentInChildren<Animator>();
         }
 
+        public void SetDead()
+        {
+            if (isDead)
+                return;
+
+            isDead = true;
+            isPreparingAttack = false;
+            behaviourEnabled = false;
+
+            StopAllCoroutines();
+        }
+
         private float HitFunction()
         {
             hitValue = Random.Range(1, 7);
@@ -43,6 +58,9 @@ namespace UdeM.Characters
             Vector2Int direction,
             Vector2Int targetCell)
         {
+            if (isDead)
+                return false;
+
             if (isPreparingAttack)
                 return false;
 
@@ -57,8 +75,10 @@ namespace UdeM.Characters
             Vector2Int direction,
             Vector2Int targetCell)
         {
-            
-            
+
+            if (isDead)
+                yield break;
+
             isPreparingAttack = true;
 
             FaceGridDirection(direction);

@@ -1213,6 +1213,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   maxLife: 20
   currentLife: 20
+  anim: {fileID: 1350811594}
+  skeletonEnemy: {fileID: 406492262}
 --- !u!1 &422656232
 GameObject:
   m_ObjectHideFlags: 0
@@ -3389,6 +3391,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a218690403c7594187e452e3558d5dc, type: 3}
+--- !u!95 &1350811594 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5180268599392299982, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+  m_PrefabInstance: {fileID: 1788141263}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1381215274
 PrefabInstance:
   m_ObjectHideFlags: 0

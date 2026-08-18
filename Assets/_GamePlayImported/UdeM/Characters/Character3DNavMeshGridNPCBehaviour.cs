@@ -7,6 +7,8 @@ namespace UdeM.Characters
     public class Character3DNavMeshGridNPCBehaviour
         : Character3DNavMeshBehaviour
     {
+        protected bool behaviourEnabled = true;
+
         [Header("Cuadricula")]
         [SerializeField] private MeshGrid grid;
 
@@ -141,10 +143,14 @@ namespace UdeM.Characters
         protected override void Update()
         {
             base.Update();
+            if (!behaviourEnabled)
+                return;
 
             if (!requireRhythm)
                 TryPerformGridAction();
         }
+
+        
 
         public void StopMovementFor(float seconds)
         {
@@ -245,6 +251,9 @@ namespace UdeM.Characters
 
         private void TryPerformGridAction()
         {
+            if (!behaviourEnabled)
+                return;
+
             if (!CanPerformGridAction())
                 return;
 
@@ -329,6 +338,7 @@ namespace UdeM.Characters
             Vector2Int direction,
             Vector2Int targetCell)
         {
+            
             return false;
         }
 
@@ -800,6 +810,8 @@ namespace UdeM.Characters
         public virtual void PlayerDetected(
             GameObject detectedTarget)
         {
+            if (!behaviourEnabled)
+                return;
             if (detectedTarget == null)
                 return;
 
