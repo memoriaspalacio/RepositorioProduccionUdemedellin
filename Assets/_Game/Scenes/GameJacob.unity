@@ -4779,8 +4779,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b4be2b2dc459634a9b71d146d56fef6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  maxLife: 30
-  currentLife: 30
+  maxLife: 200
+  currentLife: 200
   anim: {fileID: 1251406699}
   playerMovement: {fileID: 1792752530}
 --- !u!1 &1812008341
