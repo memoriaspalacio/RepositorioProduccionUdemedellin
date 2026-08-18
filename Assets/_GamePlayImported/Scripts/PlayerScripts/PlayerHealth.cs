@@ -25,6 +25,7 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log("Player ha muerto");
         playerMovement.SetDead();
         anim.SetTrigger("onDeath");
+        ScreensInGame.singleton.ScreenLostActive();
         
     }
 

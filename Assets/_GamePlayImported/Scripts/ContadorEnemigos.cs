@@ -6,7 +6,7 @@ public class ContadorEnemigos : MonoBehaviour
 {
 
     [SerializeField] private List<GameObject> _enemies = new List<GameObject>();
-    [SerializeField] private GameObject _victory;
+    //[SerializeField] private GameObject _victory;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +30,12 @@ public class ContadorEnemigos : MonoBehaviour
         if (_enemies.Count == 0)
         {
             Debug.Log("Gané");
-            _victory.SetActive(true);
+            ActiveExit();
         }
+    }
+
+    private void ActiveExit()
+    {
+        Debug.Log("Salida Activada");
     }
 }
