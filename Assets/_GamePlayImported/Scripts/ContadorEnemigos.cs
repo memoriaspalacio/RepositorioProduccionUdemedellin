@@ -5,23 +5,24 @@ using UnityEngine;
 public class ContadorEnemigos : MonoBehaviour
 {
 
-    [SerializeField] private List<GameObject> _enemies = new List<GameObject>();
+    [SerializeField] private List<GameObject> _enemies = new List<GameObject>(); //lista para almacenar enemigos
+    
+    
     //[SerializeField] private GameObject _victory;
     // Start is called before the first frame update
+
+    
     void Start()
     {
-        _enemies.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
+        _enemies.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));//al comenzar la escena busca todos los objetos con tag Enemy
+        
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        EnemyDied();
-    }
     
-    public void EnemyDied()
+
+    public void EnemyDied(GameObject enemy)
     {
-        _enemies.RemoveAll(enemy => enemy == null);
+        _enemies.Remove(enemy);
         CheckForWinCondition();
     }
 
@@ -36,6 +37,9 @@ public class ContadorEnemigos : MonoBehaviour
 
     private void ActiveExit()
     {
+        
+        
         Debug.Log("Salida Activada");
+        ScreensInGame.singleton.ScreenWinActive();
     }
 }

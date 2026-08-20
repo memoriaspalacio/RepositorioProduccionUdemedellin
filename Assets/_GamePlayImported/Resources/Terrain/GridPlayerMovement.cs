@@ -29,16 +29,14 @@ public class GridPlayerMovement : MonoBehaviour
     [Min(0f)]
     [SerializeField] private float attackCooldown = 0.3f;
 
-    [Header("Ritmo")]
-    [SerializeField] private bool requireRhythm = true;
-    [SerializeField] private bool rhythmWindowOpen = true;
+    
 
     private Animator _anim;
     private Vector2Int currentCell;
     private bool isMoving;
     private float nextAttackTime;
 
-    public bool RhythmWindowOpen => rhythmWindowOpen;
+    
     public Vector2Int CurrentCell => currentCell;
     private Vector2Int facingDirection = Vector2Int.up;
     public bool IsMoving => isMoving;
@@ -91,11 +89,12 @@ public class GridPlayerMovement : MonoBehaviour
             ;
     }
 
+    // Marca al jugador como muerto para impedir que realice acciones.
     public void SetDead()
     {
         isDead = true;
     }
-
+    // Lee WASD y determina hacia que direccion quiere moverse el jugador.
     private void ReadMovementInput()
     {
         if (isDead)
@@ -115,6 +114,7 @@ public class GridPlayerMovement : MonoBehaviour
             TryMove(direction);
     }
 
+    // Lee las flechas del teclado para cambiar la direccion del personaje
     private void ReadRotationInput()
     {
         Vector2Int direction = Vector2Int.zero;
@@ -131,6 +131,8 @@ public class GridPlayerMovement : MonoBehaviour
         if (direction != Vector2Int.zero)
             RotateTowards(direction);
     }
+
+    // Rota al personaje hacia la dirección indicada.
     private void RotateTowards(Vector2Int direction)
     {
         facingDirection = direction;
@@ -146,22 +148,18 @@ public class GridPlayerMovement : MonoBehaviour
             Vector3.up
         );
     }
-
+    // Detecta cuando el jugador presiona la tecla de ataque
     private void ReadAttackInput()
     {
         if (Input.GetKeyDown(attackKey))
             TryAttack();
     }
-
+    // Comprueba si el movimiento es posible y comienza el desplazamiento a la nueva celda.
     private void TryMove(Vector2Int direction)
     {
         if (isDead)
             return;
-        if (!CanActOnRhythm())
-        {
-            OnActionMissedRhythm("movimiento");
-            return;
-        }
+        
 
         if (isMoving)
             return;
@@ -205,15 +203,12 @@ public class GridPlayerMovement : MonoBehaviour
         );
     }
 
+    // Comprueba si el jugador puede atacar y ejecuta el ataque
     private void TryAttack()
     {
         if (isDead)
             return;
-        if (!CanActOnRhythm())
-        {
-            OnActionMissedRhythm("ataque");
-            return;
-        }
+        
 
         if (isMoving)
             return;
@@ -229,6 +224,7 @@ public class GridPlayerMovement : MonoBehaviour
         ExecuteAttack();
     }
 
+    // Ataca la celda frente al jugador y aplica daño si contiene un enemigo
     protected virtual void ExecuteAttack()
     {
         Vector2Int attackCell = currentCell + facingDirection;
@@ -264,13 +260,13 @@ public class GridPlayerMovement : MonoBehaviour
 
         enemyHealth.Damage(hitPlayer);
     }
-
+    // Genera y devuelve el daño que realizará el jugador
     private float HitFunction()
     {
         hitValue = Random.Range(4, 8);
         return hitValue;
     }
-
+    // Mueve suavemente al jugador desde su celda actual hasta la celda destino
     private IEnumerator MoveToCell(
     Vector2Int previousCell,
     Vector2Int nextCell)
@@ -310,29 +306,21 @@ public class GridPlayerMovement : MonoBehaviour
         isMoving = false;
     }
 
-    private bool CanActOnRhythm()
+    private void OnCollisionEnter(Collision collision)
     {
-        if (!requireRhythm)
-            return true;
-
-        return rhythmWindowOpen;
+        if (CompareTag("exit"))
+        {
+            ScreensInGame.singleton.ScreenWinActive();
+        }
     }
 
-    public void SetRhythmWindow(bool isOpen)
+    private void OnTriggerEnter(Collider other)
     {
-        rhythmWindowOpen = isOpen;
+        if (CompareTag("exit"))
+        {
+            ScreensInGame.singleton.ScreenWinActive();
+        }
     }
 
-    public void SetRequireRhythm(bool value)
-    {
-        requireRhythm = value;
-    }
 
-    private void OnActionMissedRhythm(string actionName)
-    {
-        Debug.Log(
-            $"Acci�n rechazada: {actionName} fuera del ritmo.",
-            this
-        );
-    }
 }
