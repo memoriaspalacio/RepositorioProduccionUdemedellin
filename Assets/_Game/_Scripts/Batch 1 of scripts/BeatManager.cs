@@ -75,7 +75,7 @@ public class BeatManager : MonoBehaviour {
             if (showDebugLogs) {
                 Debug.Log($"BeatManager initialized | BPM: {bpm} | Speed: {speedMultiplier}x | Sec/Beat: {SecPerBeat:F3}");
             }
-            if (musicSource == null) musicSource.Play();
+            if (musicSource != null) musicSource.Play();
             yield return null;
             if (musicSource == null) musicSource.Pause();
         }

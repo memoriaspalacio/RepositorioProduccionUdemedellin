@@ -802,9 +802,9 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 0f1b59446695ae84f83b17843e6b3082, type: 3}
+  m_Resource: {fileID: 8300000, guid: 253df3fa6f5c31a439460e98cef8c86c, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0
+  m_Volume: 1
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -2744,7 +2744,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 0b1349a27ef250e478b04436ce6beece, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -2886,7 +2886,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e73bf1e1a49ee6489712c3b1cd9c7ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputJudge
-  noteKeys: 12000000140000001800000019000000
+  noteKeys: 2500000012000000210000000f000000
   perfectWindowSeconds: 0.2
   hitWindowSeconds: 0.24
   logJudgements: 0
@@ -2903,7 +2903,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatManager
   musicSource: {fileID: 327550374}
-  bpm: 180
+  bpm: 120
   beatsPerMeasure: 4
   speedMultiplier: 1
   showDebugLogs: 0
@@ -5037,7 +5037,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 0f1b59446695ae84f83b17843e6b3082, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0
   m_Pitch: 1
   Loop: 0
   Mute: 0
