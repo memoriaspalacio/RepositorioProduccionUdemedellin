@@ -20,7 +20,7 @@ public class InputJudge : MonoBehaviour {
     [Header("Lane Setup")]
     [Tooltip("One key per beat in the 4-beat loop, in order. Index 0-2 = dings, index 3 = clap. " +
              "Must match the order of the circles in NoteFeedbackUI.")]
-    [SerializeField] private Key[] noteKeys = { Key.D, Key.F, Key.J, Key.K };
+    [SerializeField] private Key[] noteKeys = { Key.W, Key.A, Key.S, Key.D };
 
     [Header("Judgement Windows (seconds, each side of the expected beat)")]
     [SerializeField] private double perfectWindowSeconds = 0.05;
@@ -96,12 +96,38 @@ public class InputJudge : MonoBehaviour {
 
         for (int i = 0; i < noteKeys.Length; i++) {
             if (Keyboard.current[noteKeys[i]].wasPressedThisFrame) {
-                HandlePress(i);
+                HandlePress();
+                break;
             }
         }
     }
+    private void HandlePress()
+    {
+        double currentTime = BeatManager.Instance.CurrentSongTime;
 
-    private void HandlePress(int laneIndex) {
+        for (int i = 0; i < pendingNotes.Length; i++)
+        {
+            ref PendingNote note = ref pendingNotes[i];
+
+            if (!note.active || note.judged)
+                continue;
+
+            double delta = Math.Abs(currentTime - note.expectedTime);
+
+            if (delta <= perfectWindowSeconds)
+            {
+                Judge(i, JudgementResult.Perfect);
+                return;
+            }
+
+            if (delta <= hitWindowSeconds)
+            {
+                Judge(i, JudgementResult.Hit);
+                return;
+            }
+        }
+    }
+    /*private void HandlePress(int laneIndex) {
         ref PendingNote note = ref pendingNotes[laneIndex];
         if (!note.active || note.judged) return; // nothing due on this key right now
 
@@ -115,7 +141,7 @@ public class InputJudge : MonoBehaviour {
         // Outside the hit window entirely -> ignore. The note isn't judged yet,
         // so a too-early press just doesn't count; the player can still press
         // again once the window actually opens. Expiry below handles true misses.
-    }
+    }*/
 
     private void CheckForExpiredNotes() {
         for (int i = 0; i < pendingNotes.Length; i++) {
