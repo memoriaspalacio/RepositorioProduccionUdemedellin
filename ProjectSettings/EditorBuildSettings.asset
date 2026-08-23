@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Game/Scenes/GameJacob.unity
+    path: Assets/_Juego Actual/Scenes/Sprint 1 Game Completado.unity
     guid: 3d0d6398e64b3234da9b28987814591c
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
