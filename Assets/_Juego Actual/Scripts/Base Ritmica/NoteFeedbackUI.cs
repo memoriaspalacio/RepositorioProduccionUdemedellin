@@ -1,18 +1,23 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
-/// Flashes one of 4 UI circles based on judgement results coming from InputJudge.
-/// Green = Hit, Gold = Perfect, Red = Miss. Purely cosmetic - all the actual
-/// timing logic lives in InputJudge, this just reacts to it.
+/// Flashes one of several UI circles based on judgement results coming from
+/// InputJudge. Green = Hit, Gold = Perfect, Red = Miss. Purely cosmetic - all
+/// the actual timing logic lives in InputJudge, this just reacts to it.
 /// </summary>
 public class NoteFeedbackUI : MonoBehaviour {
 
     [Header("Wiring")]
     [SerializeField] private InputJudge inputJudge;
 
-    [Tooltip("One circle per lane, in the same order as InputJudge's noteKeys.")]
+    [Tooltip("Which key each circle represents, in the same order as Circles.")]
+    [SerializeField] private Key[] noteKeys = { Key.D, Key.F, Key.J, Key.K };
+
+    [Tooltip("One circle per key, in the same order as Note Keys.")]
     [SerializeField] private Image[] circles = new Image[4];
 
     [Header("Colors")]
@@ -46,7 +51,8 @@ public class NoteFeedbackUI : MonoBehaviour {
         }
     }
 
-    private void HandleJudged(int laneIndex, JudgementResult result) {
+    private void HandleJudged(NoteData note, JudgementResult result) {
+        int laneIndex = Array.IndexOf(noteKeys, note.Key);
         if (laneIndex < 0 || laneIndex >= circles.Length || circles[laneIndex] == null) return;
 
         if (flashRoutines[laneIndex] != null) {

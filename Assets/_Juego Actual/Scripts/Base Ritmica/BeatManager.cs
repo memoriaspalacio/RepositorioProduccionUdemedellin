@@ -44,6 +44,11 @@ public class BeatManager : MonoBehaviour {
     public float SecPerBeat => 60f / (bpm * speedMultiplier);
     public bool IsPlaying => musicSource != null && musicSource.isPlaying;
 
+    /// <summary>How many beats make up one measure. Exposed so other systems
+    /// (like the chart's Measure:Beat conversion) don't have to hardcode a
+    /// number that could drift out of sync with this one.</summary>
+    public int BeatsPerMeasure => beatsPerMeasure;
+
     /// <summary>
     /// Continuous time in seconds since the song started, driven off AudioSettings.dspTime
     /// so it won't drift the way Update()-accumulated time can. Everything that needs to
@@ -63,8 +68,8 @@ public class BeatManager : MonoBehaviour {
     private IEnumerator Start() {
         if (musicSource == null) {
             Debug.LogError("BeatManager: No AudioSource assigned! Please assign your music source.");
-            
-        } else { 
+
+        } else {
             // Initialize timing
             nextBeatTime = AudioSettings.dspTime;
             nextHalfBeatTime = AudioSettings.dspTime;
@@ -81,7 +86,7 @@ public class BeatManager : MonoBehaviour {
         }
     }
 
-    bool myFix = false;
+    bool myFix = true;
 
     private void Update() {
         if (!IsPlaying) return;
@@ -96,7 +101,7 @@ public class BeatManager : MonoBehaviour {
             if (myFix) {
                 TriggerBeat();
                 myFix = false;
-            } else myFix = true;   
+            } else myFix = true;
         }
     }
 
@@ -124,7 +129,7 @@ public class BeatManager : MonoBehaviour {
                 OnVerse?.Invoke(verseNumber);
 
                 if (showDebugLogs) {
-                    Debug.Log($"▓▓▓ VERSE {verseNumber + 1 } ▓▓▓");
+                    Debug.Log($"▓▓▓ VERSE {verseNumber + 1} ▓▓▓");
                 }
             }
         }
