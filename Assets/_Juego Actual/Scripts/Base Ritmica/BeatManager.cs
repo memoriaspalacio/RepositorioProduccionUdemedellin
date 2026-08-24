@@ -71,6 +71,7 @@ public class BeatManager : MonoBehaviour {
 
         } else {
             // Initialize timing
+            songStartDspTime = AudioSettings.dspTime;
             nextBeatTime = AudioSettings.dspTime;
             nextHalfBeatTime = AudioSettings.dspTime;
 

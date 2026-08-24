@@ -4043,39 +4043,14 @@ GameObject:
   m_Component:
   - component: {fileID: 1140715655}
   - component: {fileID: 1140715654}
-  - component: {fileID: 1140715653}
-  - component: {fileID: 1140715652}
+  - component: {fileID: 1140715656}
   m_Layer: 0
-  m_Name: Batch 1 of SCRIPTS
+  m_Name: Beat SCRIPTS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1140715652
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1140715648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7d934e0285a0244fa35279b8ac814e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NoteFeedbackUI
---- !u!114 &1140715653
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1140715648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e73bf1e1a49ee6489712c3b1cd9c7ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InputJudge
 --- !u!114 &1140715654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4138,13 +4113,26 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1140715648}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -75.27, y: -1.86, z: -6.98}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1776775017}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1140715656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1140715648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfc661b33e28ed4418a9f6ad6790c92b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
+  logActions: 1
 --- !u!4 &1153580271 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6334107189900776747, guid: c696b0e1ce06db34f972f411c4a83140, type: 3}
@@ -5704,7 +5692,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1776775017}
   m_Layer: 7
-  m_Name: Metronomo (Test)
+  m_Name: Metronomo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6014,6 +6002,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridPlayerMovement
   grid: {fileID: 1677300877}
+  beatJudge: {fileID: 0}
   heightOffset: 1
   rotateTowardsMovement: 1
   moveDuration: 0.15

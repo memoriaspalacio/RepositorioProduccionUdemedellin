@@ -11,6 +11,9 @@ public class GridPlayerMovement : MonoBehaviour
     [Header("Cuadricula")]
     [SerializeField] private MeshGrid grid;
 
+    [Header("Ritmo")]
+    [SerializeField] private BeatActionJudge beatJudge;
+
     [Header("Jugador")]
     [SerializeField] private float heightOffset = 1f;
     [SerializeField] private bool rotateTowardsMovement = true;
@@ -59,6 +62,16 @@ public class GridPlayerMovement : MonoBehaviour
             return;
         }
 
+        if (beatJudge == null)
+            beatJudge = FindFirstObjectByType<BeatActionJudge>();
+
+        if (beatJudge == null) {
+            Debug.LogError("No se encontro un objeto con el script BeatActionJudge.", this);
+
+            enabled = false;
+            return;
+        }
+
         currentCell = grid.WorldToCell(transform.position);
 
         if (!grid.TryOccupyCell(currentCell, gameObject))
@@ -76,8 +89,6 @@ public class GridPlayerMovement : MonoBehaviour
             currentCell,
             heightOffset
         );
-
-        BeatManager.Instance.OnBeat.AddListener(ReadMovementInput);
     }
 
     private void Update() {
@@ -85,8 +96,7 @@ public class GridPlayerMovement : MonoBehaviour
         ReadAttackInput();
 
         if (!isMoving)
-            //ReadMovementInput()
-            ;
+            ReadMovementInput();
     }
 
     // Marca al jugador como muerto para impedir que realice acciones.
@@ -101,17 +111,22 @@ public class GridPlayerMovement : MonoBehaviour
             return;
         Vector2Int direction = Vector2Int.zero;
 
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W))
             direction = Vector2Int.up;
-        else if (Input.GetKey(KeyCode.S))
+        else if (Input.GetKeyDown(KeyCode.S))
             direction = Vector2Int.down;
-        else if (Input.GetKey(KeyCode.A))
+        else if (Input.GetKeyDown(KeyCode.A))
             direction = Vector2Int.left;
-        else if (Input.GetKey(KeyCode.D))
+        else if (Input.GetKeyDown(KeyCode.D))
             direction = Vector2Int.right;
 
-        if (direction != Vector2Int.zero)
-            TryMove(direction);
+        if (direction == Vector2Int.zero)
+            return;
+
+        if (!beatJudge.TryConsumeBeat())
+            return;
+
+        TryMove(direction);
     }
 
     // Lee las flechas del teclado para cambiar la direccion del personaje
