@@ -119,10 +119,11 @@ public class GridPlayerMovement : MonoBehaviour
     private void Update()
     {
         ReadRotationInput();
-        ReadAttackInput();
+        
 
         if (!isMoving)
             ReadMovementInput();
+            ReadAttackInput();
     }
 
     // Marca al jugador como muerto para bloquear nuevas acciones.
@@ -150,6 +151,7 @@ public class GridPlayerMovement : MonoBehaviour
 
         if (direction == Vector2Int.zero)
             return;
+       
 
         if (!beatJudge.TryConsumeBeat())
             return;
