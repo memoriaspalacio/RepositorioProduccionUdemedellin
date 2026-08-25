@@ -10,11 +10,11 @@ public class MeshGrid : MonoBehaviour
     [Min(0.1f)] //El inspector no permite un valor mas bajo que 0.1f
     [SerializeField] private float cellSize = 2f;
 
-    [Header("Visualización")]
+    [Header("Visualizacion")]
     [SerializeField] private bool showGrid = true;
     [SerializeField] private Color gridColor = Color.cyan; //Color cuadricula
 
-    [Header("Detección del suelo")]
+    [Header("Deteccion del suelo")]
     [SerializeField] private LayerMask groundLayer = ~0; // El valor ~0 incluye todas las capas.
                                                          // ~ normalmente es para indicar excepcion pero con 0 se invierte
     [SerializeField] private float raycastHeight = 100f; //Altura adicional desde la que comienza cada raycast
@@ -50,24 +50,27 @@ public class MeshGrid : MonoBehaviour
             return Mathf.Max(1, Mathf.FloorToInt(bounds.size.z / cellSize));
         }
     }
-
+    // Busca el Renderer necesario al inicializar el componente.
     private void Awake()
     {
         FindRenderer();
     }
 
+    // Actualiza la referencia al Renderer cuando el componente se habilita.
     private void OnEnable()
     {
         FindRenderer();
     }
 
+    // Valida valores editados desde el Inspector y actualiza referencias.
     private void OnValidate()
     {
         cellSize = Mathf.Max(0.1f, cellSize);
         FindRenderer();
     }
 
-    private void FindRenderer()//Busca el componente renderer del objeto atachado al script y a sus hijos
+    // Busca el Renderer en este objeto o en alguno de sus hijos.
+    private void FindRenderer()
     {
         groundRenderer = GetComponent<Renderer>();
 
@@ -75,7 +78,8 @@ public class MeshGrid : MonoBehaviour
             groundRenderer = GetComponentInChildren<Renderer>();
     }
 
-    private Bounds GetBounds() //Bounds: Tipo de dato que almacena los limites de un renderer encerrado en una caja imaginaria
+    // Devuelve los limites usados como referencia para construir la cuadricula.
+    private Bounds GetBounds()
     {
         if (groundRenderer == null)
             FindRenderer();
@@ -86,7 +90,8 @@ public class MeshGrid : MonoBehaviour
         return new Bounds(transform.position, Vector3.one);
     }
 
-    public Vector2Int WorldToCell(Vector3 worldPosition) //Convierte una posición del mundo en una posición de la cuadrícula
+    // Convierte una posicion del mundo a una celda valida de la cuadricula.
+    public Vector2Int WorldToCell(Vector3 worldPosition)
     {
         Bounds bounds = GetBounds();
 
@@ -104,14 +109,22 @@ public class MeshGrid : MonoBehaviour
         return new Vector2Int(x, z);
     }
 
-    public Vector3 CellToWorldCenter( //Obtiene la posición global correspondiente al centro de la celda
+    // Convierte una celda a la posicion central correspondiente en el mundo.
+    public Vector3 CellToWorldCenter(
         Vector2Int cell,
         float playerHeightOffset = 0f)
     {
         Bounds bounds = GetBounds();
 
-        float x = bounds.min.x + cell.x * cellSize + cellSize * 0.5f;
-        float z = bounds.min.z + cell.y * cellSize + cellSize * 0.5f;
+        float x =
+            bounds.min.x +
+            cell.x * cellSize +
+            cellSize * 0.5f;
+
+        float z =
+            bounds.min.z +
+            cell.y * cellSize +
+            cellSize * 0.5f;
 
         Vector3 rayOrigin = new Vector3(
             x,
@@ -127,7 +140,8 @@ public class MeshGrid : MonoBehaviour
                 groundLayer,
                 QueryTriggerInteraction.Ignore))
         {
-            return hit.point + Vector3.up * playerHeightOffset;
+            return hit.point +
+                   Vector3.up * playerHeightOffset;
         }
 
         return new Vector3(
@@ -137,6 +151,7 @@ public class MeshGrid : MonoBehaviour
         );
     }
 
+    // Comprueba si una celda se encuentra dentro de los limites de la cuadricula.
     public bool IsCellInside(Vector2Int cell)
     {
         return cell.x >= 0 &&
@@ -145,6 +160,7 @@ public class MeshGrid : MonoBehaviour
                cell.y < Rows;
     }
 
+    // Calcula una celda vecina y comprueba que siga dentro de los limites.
     public bool TryGetNeighbour(
         Vector2Int currentCell,
         Vector2Int direction,
@@ -154,6 +170,7 @@ public class MeshGrid : MonoBehaviour
         return IsCellInside(neighbour);
     }
 
+    // Dibuja la cuadricula sobre la superficie detectada dentro del editor.
     private void OnDrawGizmos()
     {
         if (!showGrid || cellSize <= 0f)
@@ -170,17 +187,25 @@ public class MeshGrid : MonoBehaviour
 
         for (int x = 0; x <= Columns; x++)
         {
-            float worldX = bounds.min.x + x * cellSize;
+            float worldX =
+                bounds.min.x + x * cellSize;
 
-            Vector3 previous = GetGroundPoint(
-                worldX,
-                bounds.min.z
-            );
+            Vector3 previous =
+                GetGroundPoint(
+                    worldX,
+                    bounds.min.z
+                );
 
             for (int z = 1; z <= Rows; z++)
             {
-                float worldZ = bounds.min.z + z * cellSize;
-                Vector3 current = GetGroundPoint(worldX, worldZ);
+                float worldZ =
+                    bounds.min.z + z * cellSize;
+
+                Vector3 current =
+                    GetGroundPoint(
+                        worldX,
+                        worldZ
+                    );
 
                 Gizmos.DrawLine(previous, current);
                 previous = current;
@@ -189,17 +214,25 @@ public class MeshGrid : MonoBehaviour
 
         for (int z = 0; z <= Rows; z++)
         {
-            float worldZ = bounds.min.z + z * cellSize;
+            float worldZ =
+                bounds.min.z + z * cellSize;
 
-            Vector3 previous = GetGroundPoint(
-                bounds.min.x,
-                worldZ
-            );
+            Vector3 previous =
+                GetGroundPoint(
+                    bounds.min.x,
+                    worldZ
+                );
 
             for (int x = 1; x <= Columns; x++)
             {
-                float worldX = bounds.min.x + x * cellSize;
-                Vector3 current = GetGroundPoint(worldX, worldZ);
+                float worldX =
+                    bounds.min.x + x * cellSize;
+
+                Vector3 current =
+                    GetGroundPoint(
+                        worldX,
+                        worldZ
+                    );
 
                 Gizmos.DrawLine(previous, current);
                 previous = current;
@@ -207,7 +240,10 @@ public class MeshGrid : MonoBehaviour
         }
     }
 
-    private Vector3 GetGroundPoint(float x, float z)
+    // Obtiene la altura del suelo para un punto usado al dibujar la cuadricula.
+    private Vector3 GetGroundPoint(
+        float x,
+        float z)
     {
         Bounds bounds = GetBounds();
 
@@ -228,19 +264,21 @@ public class MeshGrid : MonoBehaviour
             return hit.point + Vector3.up * 0.05f;
         }
 
-        return new Vector3(x, bounds.max.y, z);
+        return new Vector3(
+            x,
+            bounds.max.y,
+            z
+        );
     }
 
-
-    //Detectar si esta ocupado una celda
-
+    // Comprueba si una celda tiene algun ocupante registrado.
     public bool IsCellOccupied(Vector2Int cell)
     {
         CleanDestroyedOccupant(cell);
-
         return occupiedCells.ContainsKey(cell);
     }
 
+    // Comprueba si una celda esta ocupada por un objeto diferente al solicitante.
     public bool IsCellOccupiedByOther(
         Vector2Int cell,
         GameObject requester)
@@ -257,6 +295,7 @@ public class MeshGrid : MonoBehaviour
         return occupant != requester;
     }
 
+    // Registra un GameObject como ocupante de una celda disponible.
     public bool TryOccupyCell(
         Vector2Int cell,
         GameObject occupant)
@@ -280,6 +319,7 @@ public class MeshGrid : MonoBehaviour
         return true;
     }
 
+    // Traslada el registro de ocupacion de una celda hacia otra.
     public bool TryMoveOccupant(
         Vector2Int previousCell,
         Vector2Int nextCell,
@@ -291,15 +331,24 @@ public class MeshGrid : MonoBehaviour
         if (!IsCellInside(nextCell))
             return false;
 
-        if (IsCellOccupiedByOther(nextCell, occupant))
+        if (IsCellOccupiedByOther(
+                nextCell,
+                occupant))
+        {
             return false;
+        }
 
-        ReleaseCell(previousCell, occupant);
+        ReleaseCell(
+            previousCell,
+            occupant
+        );
+
         occupiedCells[nextCell] = occupant;
 
         return true;
     }
 
+    // Libera una celda cuando pertenece al ocupante indicado.
     public void ReleaseCell(
         Vector2Int cell,
         GameObject occupant)
@@ -317,7 +366,9 @@ public class MeshGrid : MonoBehaviour
             occupiedCells.Remove(cell);
     }
 
-    public GameObject GetCellOccupant(Vector2Int cell)
+    // Devuelve el GameObject registrado actualmente en una celda.
+    public GameObject GetCellOccupant(
+        Vector2Int cell)
     {
         CleanDestroyedOccupant(cell);
 
@@ -329,7 +380,9 @@ public class MeshGrid : MonoBehaviour
         return occupant;
     }
 
-    private void CleanDestroyedOccupant(Vector2Int cell)
+    // Elimina referencias destruidas que hayan quedado registradas en una celda.
+    private void CleanDestroyedOccupant(
+        Vector2Int cell)
     {
         if (!occupiedCells.TryGetValue(
                 cell,

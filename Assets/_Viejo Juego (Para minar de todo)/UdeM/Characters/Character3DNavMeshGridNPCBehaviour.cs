@@ -4,70 +4,112 @@ using UnityEngine.AI;
 
 namespace UdeM.Characters
 {
-    public class Character3DNavMeshGridNPCBehaviour
-        : Character3DNavMeshBehaviour
+    public class Character3DNavMeshGridNPCBehaviour : Character3DNavMeshBehaviour
     {
+        // Indica si la logica principal del NPC esta habilitada.
         protected bool behaviourEnabled = true;
 
-        [Header("Cuadricula")]
-        [SerializeField] private MeshGrid grid;
-
+        // Guarda los puntos que forman la ruta de patrulla.
         [Header("Patrulla")]
         [SerializeField] private List<Transform> patrolPoints;
+
+        // Define cuanto espera el NPC al llegar a un punto de patrulla.
         [SerializeField] private float patrolPointWaitTime = 2f;
 
+        // Define el minimo de celdas antes de una pausa de movimiento.
         [Header("Movimiento por celdas")]
         [Min(1)]
         [SerializeField] private int minimumCellsBeforePause = 1;
 
+        // Define el maximo de celdas antes de una pausa de movimiento.
         [Min(1)]
         [SerializeField] private int maximumCellsBeforePause = 3;
 
+        // Define la duracion de una pausa despues de varias celdas.
         [Min(0f)]
         [SerializeField] private float pauseDuration = 1f;
 
+        // Define el tiempo minimo entre acciones de movimiento.
         [Min(0f)]
         [SerializeField] private float timeBetweenCells = 0.1f;
 
+        // Indica si el NPC necesita una ventana de ritmo para actuar.
         [Header("Ritmo")]
         [SerializeField] private bool requireRhythm = true;
+
+        // Indica si la ventana actual de ritmo permite una accion.
         [SerializeField] private bool rhythmWindowOpen = false;
 
+        // Define la distancia usada para buscar una posicion valida en NavMesh.
         [Header("NavMesh")]
         [Min(0.1f)]
         [SerializeField] private float navMeshSampleDistance = 2f;
 
+        // Guarda la celda ocupada actualmente por el NPC.
         [Header("Estado")]
         [SerializeField] private Vector2Int currentCell;
+
+        // Indica si la accion de la ventana de ritmo ya fue consumida.
         [SerializeField] private bool movementConsumedThisWindow;
+
+        // Cuenta las celdas recorridas desde la ultima pausa.
         [SerializeField] private int movedCells;
+
+        // Guarda cuantas celdas se recorreran antes de la siguiente pausa.
         [SerializeField] private int cellsBeforePause;
 
-        private GameObject visionObject;
+        // Guarda el objetivo detectado actualmente por el NPC.
         private GameObject target;
 
+        // Guarda el indice actual dentro de los puntos de patrulla.
         private int patrolIndex;
+
+        // Guarda el proximo instante permitido para moverse.
         private float nextMovementTime;
+
+        // Guarda el proximo instante permitido para continuar la patrulla.
         private float nextPatrolTime;
 
+        // Guarda el estado actual entre patrulla y ataque.
         private int actionState;
+
+        // Indica si la celda actual esta registrada como ocupada.
         private bool cellRegistered;
 
+        // Representa el estado de patrulla del NPC.
         private const int PATROLLING = 2;
+
+        // Representa el estado de ataque del NPC.
         private const int ATTACKING = 3;
 
+        // Expone la celda actual para otros sistemas.
         public Vector2Int CurrentCell => currentCell;
+
+        // Expone el estado actual de la ventana de ritmo.
         public bool RhythmWindowOpen => rhythmWindowOpen;
+
+        // Expone si el NPC se encuentra patrullando.
         public bool IsPatrolling => actionState == PATROLLING;
+
+        // Expone si el NPC se encuentra atacando.
         public bool IsAttacking => actionState == ATTACKING;
 
-        protected MeshGrid Grid => grid;
+        // Expone la cuadricula a las clases derivadas.
+        protected MeshGrid Grid => _grid;
+
+        // Expone el objetivo actual a las clases derivadas.
         protected GameObject CurrentTarget => target;
+
+        // Expone la celda actual a las clases derivadas.
         protected Vector2Int CurrentGridCell => currentCell;
 
+        // Indica si existe un bloqueo temporal de movimiento.
         private bool movementStopped;
+
+        // Guarda el instante en que termina el bloqueo temporal.
         private float movementStopUntil;
 
+        // Inicializa el estado de patrulla y el contador de movimiento.
         protected override void Awake()
         {
             base.Awake();
@@ -79,19 +121,20 @@ namespace UdeM.Characters
             SelectNewCellsBeforePause();
         }
 
+        // Configura referencias, ocupacion de celda, navegacion y vision.
         protected override void Start()
         {
             base.Start();
 
             ValidateValues();
 
-            if (grid == null)
-                grid = FindFirstObjectByType<MeshGrid>();
+            if (_grid == null)
+                _grid = FindFirstObjectByType<MeshGrid>();
 
-            if (grid == null)
+            if (_grid == null)
             {
                 Debug.LogError(
-                    "No se encontr� un objeto con MeshGrid.",
+                    "No se encontro un objeto con MeshGrid.",
                     this
                 );
 
@@ -102,7 +145,7 @@ namespace UdeM.Characters
             if (_navigator == null)
             {
                 Debug.LogError(
-                    "No se encontr� un NavMeshAgent.",
+                    "No se encontro un NavMeshAgent.",
                     this
                 );
 
@@ -110,17 +153,12 @@ namespace UdeM.Characters
                 return;
             }
 
-            currentCell = grid.WorldToCell(
-                transform.position
-            );
+            currentCell = _grid.WorldToCell(transform.position);
 
-            if (!grid.TryOccupyCell(
-                    currentCell,
-                    gameObject))
+            if (!_grid.TryOccupyCell(currentCell, gameObject))
             {
                 Debug.LogError(
-                    $"La celda inicial {currentCell} " +
-                    "ya est� ocupada.",
+                    $"La celda inicial {currentCell} ya esta ocupada.",
                     this
                 );
 
@@ -140,9 +178,11 @@ namespace UdeM.Characters
                 TryPerformGridAction();
         }
 
+        // Ejecuta acciones automaticas cuando el NPC no depende del ritmo.
         protected override void Update()
         {
             base.Update();
+
             if (!behaviourEnabled)
                 return;
 
@@ -150,8 +190,7 @@ namespace UdeM.Characters
                 TryPerformGridAction();
         }
 
-        
-
+        // Bloquea temporalmente el movimiento y limpia cualquier destino activo.
         public void StopMovementFor(float seconds)
         {
             movementStopped = true;
@@ -169,16 +208,13 @@ namespace UdeM.Characters
             _state = STANDBY;
         }
 
-        protected override void OnFinishMove()
-        {
-            base.OnFinishMove();
-        }
-
+        // Libera la celda registrada cuando el objeto es destruido.
         protected virtual void OnDestroy()
         {
             ReleaseCurrentCell();
         }
 
+        // Libera la celda registrada cuando el componente se desactiva.
         private void OnDisable()
         {
             if (!gameObject.scene.isLoaded)
@@ -187,6 +223,7 @@ namespace UdeM.Characters
             ReleaseCurrentCell();
         }
 
+        // Configura el NavMeshAgent para el movimiento por celdas.
         private void ConfigureNavigator()
         {
             _navigator.isStopped = true;
@@ -200,6 +237,7 @@ namespace UdeM.Characters
             _state = STANDBY;
         }
 
+        // Configura el componente encargado de detectar al jugador.
         private void ConfigureVision()
         {
             Transform visionTransform =
@@ -208,27 +246,24 @@ namespace UdeM.Characters
             if (visionTransform == null)
                 return;
 
-            visionObject = visionTransform.gameObject;
-
             GridVisionBehaviour vision =
-                visionObject.GetComponent<GridVisionBehaviour>();
+                visionTransform.GetComponent<GridVisionBehaviour>();
 
             if (vision == null)
             {
                 vision =
-                    visionObject.AddComponent<GridVisionBehaviour>();
+                    visionTransform.gameObject
+                        .AddComponent<GridVisionBehaviour>();
             }
 
             vision.Initialize(this);
         }
 
+        // Ajusta los valores configurables para mantener rangos validos.
         private void ValidateValues()
         {
             minimumCellsBeforePause =
-                Mathf.Max(
-                    1,
-                    minimumCellsBeforePause
-                );
+                Mathf.Max(1, minimumCellsBeforePause);
 
             maximumCellsBeforePause =
                 Mathf.Max(
@@ -243,12 +278,10 @@ namespace UdeM.Characters
                 Mathf.Max(0f, timeBetweenCells);
 
             navMeshSampleDistance =
-                Mathf.Max(
-                    0.1f,
-                    navMeshSampleDistance
-                );
+                Mathf.Max(0.1f, navMeshSampleDistance);
         }
 
+        // Decide si debe atacar, patrullar o avanzar hacia una celda.
         private void TryPerformGridAction()
         {
             if (!behaviourEnabled)
@@ -263,25 +296,17 @@ namespace UdeM.Characters
                 target != null)
             {
                 destinationCell =
-                    grid.WorldToCell(
-                        target.transform.position
-                    );
+                    _grid.WorldToCell(target.transform.position);
 
-                if (TryAttackAdjacentTarget(
-                        destinationCell))
-                {
+                if (TryAttackAdjacentTarget(destinationCell))
                     return;
-                }
             }
             else
             {
                 actionState = PATROLLING;
 
-                if (!TryGetPatrolDestination(
-                        out destinationCell))
-                {
+                if (!TryGetPatrolDestination(out destinationCell))
                     return;
-                }
             }
 
             if (destinationCell == currentCell)
@@ -290,13 +315,11 @@ namespace UdeM.Characters
                 return;
             }
 
-            TryMoveOneCellTowards(
-                destinationCell
-            );
+            TryMoveOneCellTowards(destinationCell);
         }
 
-        private bool TryAttackAdjacentTarget(
-            Vector2Int targetCell)
+        // Intenta atacar cuando el objetivo se encuentra en una celda vecina.
+        private bool TryAttackAdjacentTarget(Vector2Int targetCell)
         {
             Vector2Int difference =
                 targetCell - currentCell;
@@ -314,16 +337,10 @@ namespace UdeM.Characters
                     System.Math.Sign(difference.y)
                 );
 
-            FaceGridDirection(
-                attackDirection
-            );
+            FaceGridDirection(attackDirection);
 
-            if (!Attack(
-                    attackDirection,
-                    targetCell))
-            {
+            if (!Attack(attackDirection, targetCell))
                 return false;
-            }
 
             if (requireRhythm)
                 movementConsumedThisWindow = true;
@@ -334,16 +351,16 @@ namespace UdeM.Characters
             return true;
         }
 
+        // Permite que las clases derivadas definan su propia accion de ataque.
         protected virtual bool Attack(
             Vector2Int direction,
             Vector2Int targetCell)
         {
-            
             return false;
         }
 
-        protected void FaceGridDirection(
-            Vector2Int direction)
+        // Orienta el NPC hacia una direccion expresada en coordenadas de cuadricula.
+        protected void FaceGridDirection(Vector2Int direction)
         {
             Vector3 worldDirection =
                 new Vector3(
@@ -362,9 +379,9 @@ namespace UdeM.Characters
                 );
         }
 
+        // Comprueba si el NPC puede realizar una nueva accion de cuadricula.
         private bool CanPerformGridAction()
         {
-            // Bloqueo temporal completo del movimiento
             if (movementStopped)
             {
                 if (Time.time < movementStopUntil)
@@ -373,7 +390,7 @@ namespace UdeM.Characters
                 movementStopped = false;
             }
 
-            if (grid == null ||
+            if (_grid == null ||
                 _navigator == null)
             {
                 return false;
@@ -401,6 +418,7 @@ namespace UdeM.Characters
                 !movementConsumedThisWindow;
         }
 
+        // Obtiene la celda del punto de patrulla actualmente seleccionado.
         private bool TryGetPatrolDestination(
             out Vector2Int destinationCell)
         {
@@ -428,15 +446,13 @@ namespace UdeM.Characters
             }
 
             destinationCell =
-                grid.WorldToCell(
-                    patrolPoint.position
-                );
+                _grid.WorldToCell(patrolPoint.position);
 
             return true;
         }
 
-        private bool TryMoveOneCellTowards(
-            Vector2Int destinationCell)
+        // Intenta avanzar una celda hacia el destino indicado.
+        private bool TryMoveOneCellTowards(Vector2Int destinationCell)
         {
             Vector2Int difference =
                 destinationCell - currentCell;
@@ -447,17 +463,13 @@ namespace UdeM.Characters
                 out Vector2Int secondaryDirection
             );
 
-            if (TryMoveInDirection(
-                    primaryDirection))
-            {
+            if (TryMoveInDirection(primaryDirection))
                 return true;
-            }
 
-            return TryMoveInDirection(
-                secondaryDirection
-            );
+            return TryMoveInDirection(secondaryDirection);
         }
 
+        // Calcula primero el eje con mayor distancia hacia el destino.
         private void CalculateDirections(
             Vector2Int difference,
             out Vector2Int primaryDirection,
@@ -500,13 +512,13 @@ namespace UdeM.Characters
             }
         }
 
-        private bool TryMoveInDirection(
-            Vector2Int direction)
+        // Intenta ocupar y mover el NPC hacia una celda vecina valida.
+        private bool TryMoveInDirection(Vector2Int direction)
         {
             if (direction == Vector2Int.zero)
                 return false;
 
-            if (!grid.TryGetNeighbour(
+            if (!_grid.TryGetNeighbour(
                     currentCell,
                     direction,
                     out Vector2Int nextCell))
@@ -517,7 +529,7 @@ namespace UdeM.Characters
             if (nextCell == currentCell)
                 return false;
 
-            if (grid.IsCellOccupiedByOther(
+            if (_grid.IsCellOccupiedByOther(
                     nextCell,
                     gameObject))
             {
@@ -538,7 +550,7 @@ namespace UdeM.Characters
             Vector2Int previousCell =
                 currentCell;
 
-            if (!grid.TryMoveOccupant(
+            if (!_grid.TryMoveOccupant(
                     previousCell,
                     nextCell,
                     gameObject))
@@ -555,7 +567,7 @@ namespace UdeM.Characters
             if (!warpSucceeded)
             {
                 bool rollbackSucceeded =
-                    grid.TryMoveOccupant(
+                    _grid.TryMoveOccupant(
                         nextCell,
                         previousCell,
                         gameObject
@@ -565,7 +577,7 @@ namespace UdeM.Characters
                 {
                     Debug.LogError(
                         "No se pudo restaurar la celda " +
-                        "del enemigo despu�s de fallar Warp.",
+                        "del enemigo despues de fallar Warp.",
                         this
                     );
 
@@ -579,10 +591,7 @@ namespace UdeM.Characters
             _state = STANDBY;
 
             if (requireRhythm)
-            {
-                movementConsumedThisWindow =
-                    true;
-            }
+                movementConsumedThisWindow = true;
 
             RegisterCellMovement();
             HandleDestinationReached();
@@ -590,15 +599,13 @@ namespace UdeM.Characters
             return true;
         }
 
+        // Busca una posicion del NavMesh que pertenezca a la celda indicada.
         private bool TryGetNavMeshPosition(
             Vector2Int cell,
             out Vector3 navMeshPosition)
         {
             Vector3 cellPosition =
-                grid.CellToWorldCenter(
-                    cell,
-                    0f
-                );
+                _grid.CellToWorldCenter(cell, 0f);
 
             Vector3 sampleOrigin =
                 new Vector3(
@@ -613,40 +620,31 @@ namespace UdeM.Characters
                     navMeshSampleDistance,
                     NavMesh.AllAreas))
             {
-                navMeshPosition =
-                    Vector3.zero;
-
+                navMeshPosition = Vector3.zero;
                 return false;
             }
 
             Vector2Int sampledCell =
-                grid.WorldToCell(
-                    hit.position
-                );
+                _grid.WorldToCell(hit.position);
 
             if (sampledCell != cell)
             {
-                navMeshPosition =
-                    Vector3.zero;
-
+                navMeshPosition = Vector3.zero;
                 return false;
             }
 
-            navMeshPosition =
-                hit.position;
-
+            navMeshPosition = hit.position;
             return true;
         }
 
+        // Registra una celda recorrida y programa la siguiente pausa o movimiento.
         private void RegisterCellMovement()
         {
             movedCells++;
 
-            if (movedCells >=
-                cellsBeforePause)
+            if (movedCells >= cellsBeforePause)
             {
                 movedCells = 0;
-
                 nextMovementTime =
                     Time.time + pauseDuration;
 
@@ -659,6 +657,7 @@ namespace UdeM.Characters
             }
         }
 
+        // Selecciona una cantidad aleatoria de celdas antes de la siguiente pausa.
         private void SelectNewCellsBeforePause()
         {
             cellsBeforePause =
@@ -668,15 +667,14 @@ namespace UdeM.Characters
                 );
         }
 
+        // Procesa la llegada a una celda objetivo de ataque o patrulla.
         private void HandleDestinationReached()
         {
             if (actionState == ATTACKING &&
                 target != null)
             {
                 Vector2Int targetCell =
-                    grid.WorldToCell(
-                        target.transform.position
-                    );
+                    _grid.WorldToCell(target.transform.position);
 
                 if (currentCell == targetCell)
                     OnPlayerCellReached();
@@ -690,6 +688,7 @@ namespace UdeM.Characters
             CheckPatrolPointReached();
         }
 
+        // Comprueba si el NPC alcanzo el punto de patrulla actual.
         private void CheckPatrolPointReached()
         {
             if (patrolPoints == null ||
@@ -708,9 +707,7 @@ namespace UdeM.Characters
             }
 
             Vector2Int patrolCell =
-                grid.WorldToCell(
-                    patrolPoint.position
-                );
+                _grid.WorldToCell(patrolPoint.position);
 
             if (currentCell != patrolCell)
                 return;
@@ -718,8 +715,7 @@ namespace UdeM.Characters
             AdvancePatrolPoint();
 
             nextPatrolTime =
-                Time.time +
-                patrolPointWaitTime;
+                Time.time + patrolPointWaitTime;
 
             nextMovementTime =
                 Mathf.Max(
@@ -728,6 +724,7 @@ namespace UdeM.Characters
                 );
         }
 
+        // Avanza el indice hacia el siguiente punto de patrulla.
         private void AdvancePatrolPoint()
         {
             if (patrolPoints == null ||
@@ -739,22 +736,20 @@ namespace UdeM.Characters
 
             patrolIndex++;
 
-            if (patrolIndex >=
-                patrolPoints.Count)
-            {
+            if (patrolIndex >= patrolPoints.Count)
                 patrolIndex = 0;
-            }
         }
 
+        // Libera la celda ocupada por el NPC dentro de la cuadricula.
         private void ReleaseCurrentCell()
         {
             if (!cellRegistered ||
-                grid == null)
+                _grid == null)
             {
                 return;
             }
 
-            grid.ReleaseCell(
+            _grid.ReleaseCell(
                 currentCell,
                 gameObject
             );
@@ -762,56 +757,53 @@ namespace UdeM.Characters
             cellRegistered = false;
         }
 
-        protected virtual void OnCellBlocked(
-            Vector2Int blockedCell)
+        // Informa cuando una celda vecina esta ocupada por otro objeto.
+        protected virtual void OnCellBlocked(Vector2Int blockedCell)
         {
             Debug.Log(
-                $"El enemigo no puede entrar en " +
-                $"{blockedCell}: la celda est� ocupada.",
+                $"El enemigo no puede entrar en {blockedCell}: " +
+                "la celda esta ocupada.",
                 this
             );
         }
 
+        // Informa cuando el enemigo alcanza la misma celda que el jugador.
         protected virtual void OnPlayerCellReached()
         {
             Debug.Log(
-                $"El enemigo alcanz� la celda " +
-                $"del jugador: {currentCell}.",
+                $"El enemigo alcanzo la celda del jugador: {currentCell}.",
                 this
             );
         }
 
-        public void SetRhythmWindow(
-            bool isOpen)
+        // Abre o cierra la ventana de ritmo y permite una nueva accion al abrirla.
+        public void SetRhythmWindow(bool isOpen)
         {
             rhythmWindowOpen = isOpen;
 
             if (!isOpen)
                 return;
 
-            movementConsumedThisWindow =
-                false;
-
+            movementConsumedThisWindow = false;
             TryPerformGridAction();
         }
 
-        public void SetRequireRhythm(
-            bool value)
+        // Activa o desactiva la dependencia del sistema de ritmo.
+        public void SetRequireRhythm(bool value)
         {
             requireRhythm = value;
-
-            movementConsumedThisWindow =
-                false;
+            movementConsumedThisWindow = false;
 
             if (!requireRhythm)
                 TryPerformGridAction();
         }
 
-        public virtual void PlayerDetected(
-            GameObject detectedTarget)
+        // Cambia el comportamiento a ataque cuando se detecta un jugador.
+        public virtual void PlayerDetected(GameObject detectedTarget)
         {
             if (!behaviourEnabled)
                 return;
+
             if (detectedTarget == null)
                 return;
 
@@ -821,15 +813,14 @@ namespace UdeM.Characters
             TryPerformGridAction();
         }
 
-        public virtual void PlayerLost(
-            GameObject lostTarget)
+        // Regresa el comportamiento a patrulla cuando se pierde el objetivo.
+        public virtual void PlayerLost(GameObject lostTarget)
         {
             if (target != lostTarget)
                 return;
 
             target = null;
             actionState = PATROLLING;
-
             nextPatrolTime = Time.time;
 
             if (_navigator != null &&
@@ -843,60 +834,45 @@ namespace UdeM.Characters
             TryPerformGridAction();
         }
 
-        
-
-        private class GridVisionBehaviour
-            : MonoBehaviour
+        private class GridVisionBehaviour : MonoBehaviour
         {
-            private Character3DNavMeshGridNPCBehaviour
-                owner;
+            // Guarda el NPC que recibe los eventos del area de vision.
+            private Character3DNavMeshGridNPCBehaviour owner;
 
-            public void Initialize(
-                Character3DNavMeshGridNPCBehaviour npc)
+            // Asigna el NPC propietario de este detector de vision.
+            public void Initialize(Character3DNavMeshGridNPCBehaviour npc)
             {
                 owner = npc;
             }
 
-            private void OnTriggerEnter(
-                Collider other)
+            // Notifica al NPC cuando el jugador entra en el area de vision.
+            private void OnTriggerEnter(Collider other)
             {
                 if (owner == null)
                     return;
 
                 if (other.CompareTag("Player"))
-                {
-                    owner.PlayerDetected(
-                        other.gameObject
-                    );
-                }
+                    owner.PlayerDetected(other.gameObject);
             }
 
-            private void OnTriggerStay(
-                Collider other)
+            // Mantiene actualizado al NPC mientras el jugador sigue en el area de vision.
+            private void OnTriggerStay(Collider other)
             {
                 if (owner == null)
                     return;
 
                 if (other.CompareTag("Player"))
-                {
-                    owner.PlayerDetected(
-                        other.gameObject
-                    );
-                }
+                    owner.PlayerDetected(other.gameObject);
             }
 
-            private void OnTriggerExit(
-                Collider other)
+            // Notifica al NPC cuando el jugador sale del area de vision.
+            private void OnTriggerExit(Collider other)
             {
                 if (owner == null)
                     return;
 
                 if (other.CompareTag("Player"))
-                {
-                    owner.PlayerLost(
-                        other.gameObject
-                    );
-                }
+                    owner.PlayerLost(other.gameObject);
             }
         }
     }
