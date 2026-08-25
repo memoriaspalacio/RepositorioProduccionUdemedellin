@@ -1619,17 +1619,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92114637081615b4b9fb92959855707b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.SkeletonBehaviour
-  _height: 0
-  _isGrounded: 0
-  _isFalling: 0
   _canMove: 0
-  _canAction: 0
   _state: 0
   _grid: {fileID: 1677300877}
   _prioritizeLongestAxis: 1
   _gridStepInterval: 1
-  _instantGridMovement: 1
-  grid: {fileID: 1677300877}
   patrolPoints:
   - {fileID: 448029382}
   - {fileID: 1153580271}
@@ -6182,7 +6176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridPlayerMovement
   grid: {fileID: 1677300877}
-  beatJudge: {fileID: 0}
+  beatJudge: {fileID: 1140715656}
   heightOffset: 1
   rotateTowardsMovement: 1
   moveDuration: 0.15
