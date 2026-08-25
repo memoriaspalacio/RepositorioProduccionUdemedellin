@@ -7,46 +7,49 @@ namespace UdeM.Characters
 {
     public class Character3DNavMeshBehaviour : CharacterBehaviour
     {
+        // Guarda el NavMeshAgent usado para mover el personaje.
         protected NavMeshAgent _navigator;
-        protected UnityEvent _onStartMove;
-        protected UnityEvent _onFinishMove;
-        protected GameObject _target;
 
+        // Notifica cuando termina un desplazamiento completo.
+        protected UnityEvent _onFinishMove;
+
+        // Guarda el estado actual de movimiento del personaje.
         [SerializeField] protected int _state;
 
-        [Header("Movimiento por cuadrícula")]
+        // Guarda la cuadricula usada para convertir posiciones en celdas.
+        [Header("Movimiento por cuadricula")]
         [SerializeField] protected MeshGrid _grid;
 
+        // Define si primero se intenta avanzar por el eje con mayor distancia.
         [Tooltip("Prioriza el eje con mayor distancia al destino.")]
         [SerializeField] protected bool _prioritizeLongestAxis = true;
 
+        // Representa el estado en espera del personaje.
         protected const int STANDBY = 0;
+
+        // Representa el estado de movimiento del personaje.
         protected const int MOVING = 1;
 
-        // Casilla final a la que quiere llegar el NPC.
+        // Guarda la celda final del recorrido por cuadricula.
         protected Vector2Int _gridTargetCell;
 
-        // Casilla intermedia hacia la que está avanzando actualmente.
-        protected Vector2Int _activeStepCell;
-
-        // Indica si hay un recorrido por cuadrícula activo.
+        // Indica si existe un recorrido activo por cuadricula.
         protected bool _movingByGrid;
 
+        // Define el tiempo entre pasos del recorrido por cuadricula.
         [Header("Ritmo de desplazamiento")]
         [Min(0.01f)]
         [SerializeField] protected float _gridStepInterval = 0.5f;
 
-        [SerializeField] protected bool _instantGridMovement = true;
-
+        // Guarda la corrutina activa del recorrido por cuadricula.
         protected Coroutine _gridMovementCoroutine;
 
+        // Configura eventos y referencias necesarias para la navegacion.
         protected override void Start()
         {
             base.Start();
 
-            _onStartMove = new UnityEvent();
             _onFinishMove = new UnityEvent();
-
             _onFinishMove.AddListener(OnFinishMove);
 
             _navigator = GetComponent<NavMeshAgent>();
@@ -64,24 +67,27 @@ namespace UdeM.Characters
             if (_grid == null)
             {
                 Debug.LogWarning(
-                    "No se encontró MeshGrid. " +
-                    "El personaje utilizará movimiento NavMesh normal.",
+                    "No se encontro MeshGrid. " +
+                    "El personaje utilizara movimiento NavMesh normal.",
                     this
                 );
             }
         }
 
+        // Cambia el estado a espera cuando termina un movimiento.
         protected virtual void OnFinishMove()
         {
             _state = STANDBY;
         }
 
+        // Revisa cada frame si el NavMeshAgent termino su desplazamiento.
         protected override void Update()
         {
             base.Update();
             CheckMoveState();
         }
 
+        // Detecta cuando termina un movimiento normal o un paso de cuadricula.
         protected void CheckMoveState()
         {
             if (_state != MOVING)
@@ -102,7 +108,6 @@ namespace UdeM.Characters
             if (_navigator.velocity.sqrMagnitude > 0.01f)
                 return;
 
-            // El NavMeshAgent llegó a su destino actual.
             _state = STANDBY;
 
             if (_movingByGrid)
@@ -115,28 +120,22 @@ namespace UdeM.Characters
             }
         }
 
-        /// <summary>
-        /// Se ejecuta cuando el NPC termina una casilla intermedia.
-        /// </summary>
+        // Continua o finaliza el recorrido despues de completar una celda.
         protected virtual void OnGridStepFinished()
         {
             Vector2Int currentCell =
                 _grid.WorldToCell(transform.position);
 
-            // Si ya llegó a la casilla final, termina todo el recorrido.
             if (currentCell == _gridTargetCell)
             {
                 FinishGridMovement();
                 return;
             }
 
-            // Todavía quedan casillas por recorrer.
             MoveToNextGridCell();
         }
 
-        /// <summary>
-        /// Termina el recorrido completo y avisa a las clases hijas.
-        /// </summary>
+        // Finaliza el recorrido por cuadricula y libera el destino del agente.
         protected virtual void FinishGridMovement()
         {
             _movingByGrid = false;
@@ -151,9 +150,7 @@ namespace UdeM.Characters
             _onFinishMove.Invoke();
         }
 
-        /// <summary>
-        /// Recibe un destino del mundo y lo convierte en una casilla final.
-        /// </summary>
+        // Inicia un desplazamiento hacia una posicion del mundo.
         public void GoToDestination(Vector3 position)
         {
             if (_grid == null)
@@ -180,6 +177,7 @@ namespace UdeM.Characters
             }
         }
 
+        // Ejecuta el recorrido por cuadricula respetando el intervalo configurado.
         protected virtual IEnumerator GridMovementRoutine()
         {
             while (_movingByGrid)
@@ -207,6 +205,7 @@ namespace UdeM.Characters
             _gridMovementCoroutine = null;
         }
 
+        // Intenta avanzar una celda hacia el destino usando Warp.
         protected virtual bool MoveInstantlyToNextGridCell()
         {
             Vector2Int currentCell =
@@ -233,9 +232,10 @@ namespace UdeM.Characters
             return false;
         }
 
+        // Intenta mover el agente a una celda vecina usando Warp.
         protected virtual bool TryWarpOneCell(
-    Vector2Int currentCell,
-    Vector2Int direction)
+            Vector2Int currentCell,
+            Vector2Int direction)
         {
             if (direction == Vector2Int.zero)
                 return false;
@@ -265,8 +265,6 @@ namespace UdeM.Characters
 
             RotateTowardsCell(navMeshHit.position);
 
-            _activeStepCell = nextCell;
-
             if (_navigator.isOnNavMesh)
             {
                 _navigator.ResetPath();
@@ -285,8 +283,8 @@ namespace UdeM.Characters
             return true;
         }
 
-        protected virtual void RotateTowardsCell(
-    Vector3 destination)
+        // Rota el personaje hacia el centro de la celda indicada.
+        protected virtual void RotateTowardsCell(Vector3 destination)
         {
             Vector3 direction =
                 destination - transform.position;
@@ -303,11 +301,7 @@ namespace UdeM.Characters
                 );
         }
 
-
-
-        /// <summary>
-        /// Calcula una única casilla vecina hacia el destino final.
-        /// </summary>
+        // Intenta avanzar una celda usando el movimiento normal del NavMeshAgent.
         protected virtual void MoveToNextGridCell()
         {
             Vector2Int currentCell =
@@ -322,25 +316,20 @@ namespace UdeM.Characters
             Vector2Int difference =
                 _gridTargetCell - currentCell;
 
-            Vector2Int primaryDirection;
-            Vector2Int secondaryDirection;
-
             CalculateDirections(
                 difference,
-                out primaryDirection,
-                out secondaryDirection
+                out Vector2Int primaryDirection,
+                out Vector2Int secondaryDirection
             );
 
-            // Intenta avanzar primero por el eje prioritario.
             if (TryMoveOneCell(currentCell, primaryDirection))
                 return;
 
-            // Si no puede, intenta avanzar por el otro eje.
             if (TryMoveOneCell(currentCell, secondaryDirection))
                 return;
 
             Debug.LogWarning(
-                $"El NPC no puede avanzar desde la casilla " +
+                $"El NPC no puede avanzar desde la celda " +
                 $"{currentCell} hasta {_gridTargetCell}.",
                 this
             );
@@ -348,9 +337,7 @@ namespace UdeM.Characters
             CancelGridMovement();
         }
 
-        /// <summary>
-        /// Decide qué eje debe utilizar primero.
-        /// </summary>
+        // Calcula el orden de los ejes usados para acercarse al destino.
         protected virtual void CalculateDirections(
             Vector2Int difference,
             out Vector2Int primaryDirection,
@@ -397,9 +384,7 @@ namespace UdeM.Characters
             }
         }
 
-        /// <summary>
-        /// Intenta mandar el NavMeshAgent a una sola casilla vecina.
-        /// </summary>
+        // Intenta enviar el NavMeshAgent a una celda vecina valida.
         protected virtual bool TryMoveOneCell(
             Vector2Int currentCell,
             Vector2Int direction)
@@ -418,11 +403,6 @@ namespace UdeM.Characters
             Vector3 cellCenter =
                 _grid.CellToWorldCenter(nextCell, 0f);
 
-            /*
-             * CellToWorldCenter obtiene el centro geométrico,
-             * pero necesitamos asegurarnos de que exista un
-             * punto válido del NavMesh cerca de ese centro.
-             */
             float sampleDistance =
                 Mathf.Max(0.5f, _grid.CellSize * 0.45f);
 
@@ -435,10 +415,7 @@ namespace UdeM.Characters
                 return false;
             }
 
-            _activeStepCell = nextCell;
             _state = MOVING;
-
-            _onStartMove.Invoke();
 
             bool destinationAccepted =
                 _navigator.SetDestination(navMeshHit.position);
@@ -452,22 +429,16 @@ namespace UdeM.Characters
             return true;
         }
 
-        /// <summary>
-        /// Movimiento tradicional sin cuadrícula.
-        /// </summary>
-        protected virtual void GoToNavMeshPosition(
-            Vector3 position)
+        // Mueve el personaje a una posicion sin usar la cuadricula.
+        protected virtual void GoToNavMeshPosition(Vector3 position)
         {
             _movingByGrid = false;
             _state = MOVING;
 
-            _onStartMove.Invoke();
             _navigator.SetDestination(position);
         }
 
-        /// <summary>
-        /// Cancela el recorrido actual.
-        /// </summary>
+        // Cancela el recorrido actual y limpia el destino del agente.
         protected virtual void CancelGridMovement()
         {
             _movingByGrid = false;
@@ -478,35 +449,6 @@ namespace UdeM.Characters
             {
                 _navigator.ResetPath();
             }
-        }
-
-        protected float speed
-        {
-            set { _navigator.speed = value; }
-        }
-
-        protected float acceleration
-        {
-            set { _navigator.acceleration = value; }
-        }
-
-        protected float angularSpeed
-        {
-            set { _navigator.angularSpeed = value; }
-        }
-
-        protected float stoppingDistance
-        {
-            set { _navigator.stoppingDistance = value; }
-        }
-
-        protected bool autoBraking
-        {
-            set { _navigator.autoBraking = value; }
-        }
-
-        protected override void CheckHeight()
-        {
         }
     }
 }
