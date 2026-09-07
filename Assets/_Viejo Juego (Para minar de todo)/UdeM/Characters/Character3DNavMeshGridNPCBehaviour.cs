@@ -153,6 +153,35 @@ namespace UdeM.Characters
                 return;
             }
 
+            if (!_navigator.isOnNavMesh)
+            {
+                if (NavMesh.SamplePosition(
+                    transform.position,
+                    out NavMeshHit hit,
+                    100f,
+                    NavMesh.AllAreas))
+                {
+                    _navigator.enabled = false;
+                    transform.position = hit.position;
+                    _navigator.enabled = true;
+
+                    Debug.Log(
+                        $"Enemy ajustado al NavMesh: {hit.position}",
+                        this
+                    );
+                }
+                else
+                {
+                    Debug.LogError(
+                        $"No se encontró NavMesh cerca de {transform.position}",
+                        this
+                    );
+
+                    enabled = false;
+                    return;
+                }
+            }
+
             currentCell = _grid.WorldToCell(transform.position);
 
             if (!_grid.TryOccupyCell(currentCell, gameObject))
@@ -226,13 +255,22 @@ namespace UdeM.Characters
         // Configura el NavMeshAgent para el movimiento por celdas.
         private void ConfigureNavigator()
         {
-            _navigator.isStopped = true;
             _navigator.updatePosition = true;
             _navigator.updateRotation = true;
             _navigator.autoBraking = true;
 
             if (_navigator.isOnNavMesh)
+            {
+                _navigator.isStopped = true;
                 _navigator.ResetPath();
+            }
+            else
+            {
+                Debug.LogWarning(
+                    $"{name} no está sobre el NavMesh. Posición: {transform.position}",
+                    this
+                );
+            }
 
             _state = STANDBY;
         }
