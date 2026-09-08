@@ -2393,7 +2393,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 118601694469779794, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2200658389041648377, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2200658389041648377, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 740249453}
+    - target: {fileID: 2200658389041648377, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: IrAEscena
+      objectReference: {fileID: 0}
+    - target: {fileID: 2200658389041648377, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Scenes, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2200658389041648377, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: mazmorra
       objectReference: {fileID: 0}
     - target: {fileID: 7460320449455115067, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
       propertyPath: m_Pivot.x
@@ -2478,7 +2498,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6319633277631972086, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 740249453}
   m_SourcePrefab: {fileID: 100100000, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
 --- !u!224 &740249450 stripped
 RectTransform:
@@ -2490,6 +2513,23 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 118601694469779794, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
   m_PrefabInstance: {fileID: 740249449}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &740249452 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6319633277631972086, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
+  m_PrefabInstance: {fileID: 740249449}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &740249453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740249452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f95a1e2db014bf41bcf82e0640ef763, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Scenes
 --- !u!1 &785445955
 GameObject:
   m_ObjectHideFlags: 0

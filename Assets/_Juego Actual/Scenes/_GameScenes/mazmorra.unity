@@ -11449,9 +11449,33 @@ PrefabInstance:
       value: Win
       objectReference: {fileID: 0}
     - target: {fileID: 2200658389041648377, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2200658389041648377, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2200658389041648377, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1983170460}
+      objectReference: {fileID: 4872615194335921963}
+    - target: {fileID: 2200658389041648377, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: IrAEscena
+      objectReference: {fileID: 0}
+    - target: {fileID: 2200658389041648377, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Scenes, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2200658389041648377, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: menu
+      objectReference: {fileID: 0}
+    - target: {fileID: 2200658389041648377, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 7460320449455115067, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -11535,8 +11559,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6319633277631972086, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4872615194335921963}
   m_SourcePrefab: {fileID: 100100000, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
+--- !u!1 &4872615194335921962 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6319633277631972086, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
+  m_PrefabInstance: {fileID: 4872615194335921961}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4872615194335921963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4872615194335921962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f95a1e2db014bf41bcf82e0640ef763, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Scenes
 --- !u!33 &5340380324383063022
 MeshFilter:
   m_ObjectHideFlags: 0

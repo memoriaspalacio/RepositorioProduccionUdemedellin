@@ -16,7 +16,7 @@ public class BeatManager : MonoBehaviour {
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
     #endregion
 
