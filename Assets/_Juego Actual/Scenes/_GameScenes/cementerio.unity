@@ -1597,7 +1597,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7460320449455115067, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -38.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7460320449455115067, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -4047,7 +4047,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatManager
   musicSource: {fileID: 327550374}
-  bpm: 120
+  bpm: 124
   beatsPerMeasure: 4
   speedMultiplier: 1
   showDebugLogs: 0
