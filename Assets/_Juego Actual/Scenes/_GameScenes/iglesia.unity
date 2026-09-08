@@ -7479,6 +7479,7 @@ GameObject:
   - component: {fileID: 5011254761118141920}
   - component: {fileID: 9079228855556501810}
   - component: {fileID: 6811297717038641853}
+  - component: {fileID: 9079228855556501811}
   m_Layer: 0
   m_Name: Silla.002
   m_TagString: Untagged
@@ -10175,6 +10176,7 @@ GameObject:
   - component: {fileID: 2297389053643882469}
   - component: {fileID: 7800635928929481799}
   - component: {fileID: 547015210751437680}
+  - component: {fileID: 7800635928929481800}
   m_Layer: 0
   m_Name: Mesa
   m_TagString: Untagged
@@ -13360,6 +13362,7 @@ GameObject:
   - component: {fileID: 4428675043949497742}
   - component: {fileID: 266063555852910423}
   - component: {fileID: 445718175368430262}
+  - component: {fileID: 5985315298344441746}
   m_Layer: 0
   m_Name: Silla.001
   m_TagString: Untagged
@@ -13367,6 +13370,42 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &5985315298344441746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5985315298344441745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 888685292}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 18
+  occupiedCells:
+  - {x: 1, y: 10}
+  - {x: 1, y: 12}
+  - {x: 1, y: 15}
+  - {x: 2, y: 10}
+  - {x: 2, y: 12}
+  - {x: 2, y: 15}
+  - {x: 3, y: 10}
+  - {x: 3, y: 12}
+  - {x: 3, y: 15}
+  - {x: 6, y: 10}
+  - {x: 6, y: 12}
+  - {x: 6, y: 15}
+  - {x: 7, y: 10}
+  - {x: 7, y: 12}
+  - {x: 7, y: 15}
+  - {x: 8, y: 10}
+  - {x: 8, y: 12}
+  - {x: 8, y: 15}
 --- !u!23 &6007541311211210984
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -15475,6 +15514,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3095283079973824623}
   m_Mesh: {fileID: -3101794883780484172, guid: 4535c7eb6e4622a48aa2476d321d0dbd, type: 3}
+--- !u!114 &7800635928929481800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3095283079973824623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 888685292}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 4
+  occupiedCells:
+  - {x: 4, y: 18}
+  - {x: 5, y: 18}
 --- !u!33 &7813203864311556320
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -16701,6 +16760,66 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 656017029411535478}
   m_Mesh: {fileID: -5790695944880680372, guid: 4535c7eb6e4622a48aa2476d321d0dbd, type: 3}
+--- !u!114 &9079228855556501811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656017029411535478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 888685292}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 42
+  occupiedCells:
+  - {x: 1, y: 2}
+  - {x: 1, y: 3}
+  - {x: 1, y: 4}
+  - {x: 1, y: 5}
+  - {x: 1, y: 6}
+  - {x: 1, y: 7}
+  - {x: 1, y: 8}
+  - {x: 2, y: 2}
+  - {x: 2, y: 3}
+  - {x: 2, y: 4}
+  - {x: 2, y: 5}
+  - {x: 2, y: 6}
+  - {x: 2, y: 7}
+  - {x: 2, y: 8}
+  - {x: 3, y: 2}
+  - {x: 3, y: 3}
+  - {x: 3, y: 4}
+  - {x: 3, y: 5}
+  - {x: 3, y: 6}
+  - {x: 3, y: 7}
+  - {x: 3, y: 8}
+  - {x: 6, y: 2}
+  - {x: 6, y: 3}
+  - {x: 6, y: 4}
+  - {x: 6, y: 5}
+  - {x: 6, y: 6}
+  - {x: 6, y: 7}
+  - {x: 6, y: 8}
+  - {x: 7, y: 2}
+  - {x: 7, y: 3}
+  - {x: 7, y: 4}
+  - {x: 7, y: 5}
+  - {x: 7, y: 6}
+  - {x: 7, y: 7}
+  - {x: 7, y: 8}
+  - {x: 8, y: 2}
+  - {x: 8, y: 3}
+  - {x: 8, y: 4}
+  - {x: 8, y: 5}
+  - {x: 8, y: 6}
+  - {x: 8, y: 7}
+  - {x: 8, y: 8}
 --- !u!4 &9088069142266588353
 Transform:
   m_ObjectHideFlags: 0

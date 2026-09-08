@@ -135,14 +135,9 @@ MonoBehaviour:
   updateWhenTransformChanges: 1
   cellCheckScale: 0.98
   showOccupiedCells: 1
-  occupiedCellCount: 6
+  occupiedCellCount: 1
   occupiedCells:
-  - {x: 11, y: 4}
-  - {x: 11, y: 5}
-  - {x: 12, y: 4}
   - {x: 12, y: 5}
-  - {x: 13, y: 4}
-  - {x: 13, y: 5}
 --- !u!1 &26255077
 GameObject:
   m_ObjectHideFlags: 0
@@ -2708,11 +2703,7 @@ MonoBehaviour:
   cellCheckScale: 0.98
   showOccupiedCells: 1
   occupiedCellCount: 4
-  occupiedCells:
-  - {x: 11, y: 2}
-  - {x: 11, y: 3}
-  - {x: 12, y: 2}
-  - {x: 12, y: 3}
+  occupiedCells: []
 --- !u!1 &694217728
 GameObject:
   m_ObjectHideFlags: 0
@@ -4689,12 +4680,8 @@ MonoBehaviour:
   updateWhenTransformChanges: 1
   cellCheckScale: 0.98
   showOccupiedCells: 1
-  occupiedCellCount: 8
+  occupiedCellCount: 4
   occupiedCells:
-  - {x: 11, y: 6}
-  - {x: 11, y: 7}
-  - {x: 12, y: 6}
-  - {x: 12, y: 7}
   - {x: 13, y: 6}
   - {x: 13, y: 7}
   - {x: 14, y: 6}
@@ -5566,9 +5553,8 @@ MonoBehaviour:
   updateWhenTransformChanges: 1
   cellCheckScale: 0.98
   showOccupiedCells: 1
-  occupiedCellCount: 2
+  occupiedCellCount: 1
   occupiedCells:
-  - {x: 14, y: 2}
   - {x: 14, y: 3}
 --- !u!114 &1817032905
 MonoBehaviour:
@@ -10845,7 +10831,7 @@ Transform:
   m_GameObject: {fileID: 2778090559166814276}
   serializedVersion: 2
   m_LocalRotation: {x: 0.01313588, y: 0.70698476, z: 0.70698476, w: -0.01313588}
-  m_LocalPosition: {x: 12.385147, y: 0.16628152, z: -13.331525}
+  m_LocalPosition: {x: 12.385147, y: 0.16628152, z: -12.52}
   m_LocalScale: {x: 18.023481, y: 11.5256605, z: 7.7082863}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14256,6 +14242,7 @@ GameObject:
   - component: {fileID: 5302162572954485131}
   - component: {fileID: 6526218951354722820}
   - component: {fileID: 3637035557280522147}
+  - component: {fileID: 7673354983117905743}
   m_Layer: 0
   m_Name: lapida8
   m_TagString: Untagged
@@ -14263,6 +14250,26 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &7673354983117905743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7673354983117905742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 648938731}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 2
+  occupiedCells:
+  - {x: 14, y: 4}
+  - {x: 13, y: 4}
 --- !u!4 &7685259906804882971
 Transform:
   m_ObjectHideFlags: 0

@@ -49,7 +49,18 @@ public class GridOccupier : MonoBehaviour
     private void OnEnable()
     {
         FindGrid();
-        RefreshOccupation();
+
+        // Si ya tenemos celdas guardadas, simplemente las registramos otra vez.
+        if (occupiedCells.Count > 0)
+        {
+            RegisterSavedCells();
+        }
+        else
+        {
+            // Solo detecta automáticamente la primera vez.
+            RefreshOccupation();
+        }
+
         SaveTransform();
     }
 
@@ -61,9 +72,35 @@ public class GridOccupier : MonoBehaviour
 
         if (TransformChanged())
         {
-            RefreshOccupation();
+            //RefreshOccupation();
             SaveTransform();
         }
+    }
+
+    private void RegisterSavedCells()
+    {
+        if (grid == null)
+            return;
+
+        foreach (Vector2Int cell in occupiedCells)
+        {
+            if (!grid.IsCellInside(cell))
+                continue;
+
+            if (grid.IsCellOccupiedByOther(cell, gameObject))
+            {
+                Debug.LogWarning(
+                    $"{name}: la celda {cell} ya está ocupada por otro objeto.",
+                    this
+                );
+
+                continue;
+            }
+
+            grid.TryOccupyCell(cell, gameObject);
+        }
+
+        occupiedCellCount = occupiedCells.Count;
     }
 
     // Libera las celdas ocupadas cuando el componente se desactiva
@@ -386,13 +423,8 @@ public class GridOccupier : MonoBehaviour
     public void ReleaseOccupiedCells()
     {
         if (grid == null)
-        {
-            occupiedCells.Clear();
-            occupiedCellCount = 0;
             return;
-        }
 
-        // Recorre todas las celdas registradas actualmente por este objeto
         foreach (Vector2Int cell in occupiedCells)
         {
             grid.ReleaseCell(
@@ -401,8 +433,9 @@ public class GridOccupier : MonoBehaviour
             );
         }
 
-        occupiedCells.Clear();
-        occupiedCellCount = 0;
+        // NO borrar occupiedCells.
+        // occupiedCells.Clear();
+        // occupiedCellCount = 0;
     }
 
     // Comprueba si la posicion rotacion o escala del objeto ha cambiado

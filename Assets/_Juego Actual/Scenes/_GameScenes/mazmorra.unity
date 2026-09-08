@@ -1914,141 +1914,6 @@ Transform:
   - {fileID: 327550373}
   m_Father: {fileID: 1776775017}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &456839954
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 456839955}
-  - component: {fileID: 456839958}
-  - component: {fileID: 456839957}
-  - component: {fileID: 456839956}
-  - component: {fileID: 456839959}
-  m_Layer: 0
-  m_Name: Cube
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &456839955
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 456839954}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.79, y: 0.54, z: 2.25}
-  m_LocalScale: {x: 2.07, y: 2.07, z: 2.07}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 1731232081}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &456839956
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 456839954}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &456839957
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 456839954}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &456839958
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 456839954}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &456839959
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 456839954}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
-  grid: {fileID: 7821426081726811204}
-  updateWhenTransformChanges: 1
-  cellCheckScale: 0.98
-  showOccupiedCells: 1
-  occupiedCellCount: 4
-  occupiedCells:
-  - {x: 6, y: 11}
-  - {x: 6, y: 12}
-  - {x: 7, y: 11}
-  - {x: 7, y: 12}
 --- !u!1 &481481441
 GameObject:
   m_ObjectHideFlags: 0
@@ -5006,7 +4871,6 @@ Transform:
   - {fileID: 543450653681515254}
   - {fileID: 2837556720187776626}
   - {fileID: 830178399}
-  - {fileID: 456839955}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1760784772
@@ -6702,6 +6566,7 @@ GameObject:
   - component: {fileID: 8286401473444581748}
   - component: {fileID: 7636082600790369385}
   - component: {fileID: 534391846267068314}
+  - component: {fileID: 8286401473444581749}
   m_Layer: 0
   m_Name: CrucesA
   m_TagString: Untagged
@@ -6728,6 +6593,7 @@ GameObject:
   - component: {fileID: 1184396703418697614}
   - component: {fileID: 3974853932006202143}
   - component: {fileID: 3504048890330280993}
+  - component: {fileID: 3974853932006202144}
   m_Layer: 0
   m_Name: Entrada2
   m_TagString: Untagged
@@ -6878,6 +6744,7 @@ GameObject:
   - component: {fileID: 6114670155515197962}
   - component: {fileID: 376406441804554489}
   - component: {fileID: 3631342934956396886}
+  - component: {fileID: 6114670155515197963}
   m_Layer: 0
   m_Name: Ladrillos1
   m_TagString: Untagged
@@ -6976,6 +6843,7 @@ GameObject:
   - component: {fileID: 1443552285528998961}
   - component: {fileID: 1674234866682407066}
   - component: {fileID: 7432272156803373322}
+  - component: {fileID: 7432272156803373323}
   m_Layer: 0
   m_Name: Ladrillos5
   m_TagString: Untagged
@@ -7235,6 +7103,7 @@ GameObject:
   - component: {fileID: 3565553679649733373}
   - component: {fileID: 8846240294658588683}
   - component: {fileID: 5500099471325893171}
+  - component: {fileID: 8846240294658588684}
   m_Layer: 0
   m_Name: Antorchas2
   m_TagString: Untagged
@@ -7374,6 +7243,7 @@ GameObject:
   - component: {fileID: 3726710941361419456}
   - component: {fileID: 9033159064506699451}
   - component: {fileID: 8068742847351844200}
+  - component: {fileID: 9033159064506699452}
   m_Layer: 0
   m_Name: Ladrillos2
   m_TagString: Untagged
@@ -7422,6 +7292,7 @@ GameObject:
   - component: {fileID: 6627116085860545021}
   - component: {fileID: 7562213107943136724}
   - component: {fileID: 6824103927005080759}
+  - component: {fileID: 7562213107943136725}
   m_Layer: 0
   m_Name: WallW1
   m_TagString: Untagged
@@ -7440,6 +7311,7 @@ GameObject:
   - component: {fileID: 4344212775322501028}
   - component: {fileID: 3683221628601699716}
   - component: {fileID: 2012876016512748377}
+  - component: {fileID: 4344212775322501029}
   m_Layer: 0
   m_Name: Antorchas
   m_TagString: Untagged
@@ -7716,6 +7588,7 @@ GameObject:
   - component: {fileID: 3120519753135226117}
   - component: {fileID: 4261989325884287561}
   - component: {fileID: 2469650413001931542}
+  - component: {fileID: 4261989325884287562}
   m_Layer: 0
   m_Name: Fila2 de es queletos
   m_TagString: Untagged
@@ -7783,6 +7656,7 @@ GameObject:
   - component: {fileID: 6331153388368886678}
   - component: {fileID: 577237425628214758}
   - component: {fileID: 3135921566069977520}
+  - component: {fileID: 6331153388368886679}
   m_Layer: 0
   m_Name: Fila de esqueletos
   m_TagString: Untagged
@@ -7809,6 +7683,7 @@ GameObject:
   - component: {fileID: 7504912406158693631}
   - component: {fileID: 3214839561747008132}
   - component: {fileID: 7707749559871827486}
+  - component: {fileID: 7707749559871827487}
   m_Layer: 0
   m_Name: WallS
   m_TagString: Untagged
@@ -7903,6 +7778,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 446890680096396236}
   m_Mesh: {fileID: -8929468238014375649, guid: 83d3a63da850c3549b6bb078924393d9, type: 3}
+--- !u!114 &3974853932006202144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446890680096396236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 2
+  occupiedCells:
+  - {x: 4, y: 0}
+  - {x: 5, y: 0}
 --- !u!1 &4008192744689347996
 GameObject:
   m_ObjectHideFlags: 0
@@ -7914,6 +7809,7 @@ GameObject:
   - component: {fileID: 4403853881364948761}
   - component: {fileID: 4200916667679110165}
   - component: {fileID: 1508900133791976707}
+  - component: {fileID: 4403853881364948762}
   m_Layer: 0
   m_Name: Entrada
   m_TagString: Untagged
@@ -7937,6 +7833,24 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3626038656185702375}
   m_Mesh: {fileID: 6601053202912034435, guid: 83d3a63da850c3549b6bb078924393d9, type: 3}
+--- !u!114 &4261989325884287562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3626038656185702375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 0
+  occupiedCells: []
 --- !u!4 &4344212775322501028
 Transform:
   m_ObjectHideFlags: 0
@@ -7952,6 +7866,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 543450653681515254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4344212775322501029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2976594627437881577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 0
+  occupiedCells: []
 --- !u!4 &4403853881364948761
 Transform:
   m_ObjectHideFlags: 0
@@ -7967,6 +7899,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 543450653681515254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4403853881364948762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4008192744689347996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 2
+  occupiedCells:
+  - {x: 4, y: 20}
+  - {x: 5, y: 20}
 --- !u!33 &4535113681465006400
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -8066,6 +8018,7 @@ GameObject:
   - component: {fileID: 4801442970554313238}
   - component: {fileID: 7285276220097187297}
   - component: {fileID: 2991273001670763874}
+  - component: {fileID: 7285276220097187298}
   m_Layer: 0
   m_Name: Arco
   m_TagString: Untagged
@@ -8135,6 +8088,7 @@ GameObject:
   - component: {fileID: 3219089285346330356}
   - component: {fileID: 565535291085605047}
   - component: {fileID: 2377153149331874125}
+  - component: {fileID: 5693595556059518797}
   m_Layer: 0
   m_Name: Arco2
   m_TagString: Untagged
@@ -8142,6 +8096,27 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &5693595556059518797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5693595556059518796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 3
+  occupiedCells:
+  - {x: 3, y: 20}
+  - {x: 4, y: 20}
+  - {x: 5, y: 20}
 --- !u!1 &5728468949786732397
 GameObject:
   m_ObjectHideFlags: 0
@@ -8153,6 +8128,7 @@ GameObject:
   - component: {fileID: 3749582092182418749}
   - component: {fileID: 4535113681465006400}
   - component: {fileID: 6489989950991683438}
+  - component: {fileID: 6489989950991683439}
   m_Layer: 0
   m_Name: WallW2
   m_TagString: Untagged
@@ -8175,6 +8151,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 543450653681515254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6114670155515197963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746057024454441978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 1
+  occupiedCells:
+  - {x: 8, y: 19}
 --- !u!4 &6153171503944360235
 Transform:
   m_ObjectHideFlags: 0
@@ -8205,6 +8200,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 543450653681515254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6331153388368886679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3644606928283770268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 13
+  occupiedCells:
+  - {x: 1, y: 18}
+  - {x: 2, y: 18}
+  - {x: 2, y: 13}
+  - {x: 1, y: 13}
+  - {x: 1, y: 7}
+  - {x: 2, y: 7}
+  - {x: 1, y: 2}
+  - {x: 2, y: 2}
+  - {x: 7, y: 2}
+  - {x: 7, y: 3}
+  - {x: 7, y: 10}
+  - {x: 7, y: 18}
+  - {x: 8, y: 18}
 --- !u!23 &6489989950991683438
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8254,6 +8280,24 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6489989950991683439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5728468949786732397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 0
+  occupiedCells: []
 --- !u!4 &6627116085860545021
 Transform:
   m_ObjectHideFlags: 0
@@ -8288,6 +8332,7 @@ GameObject:
   - component: {fileID: 6153171503944360235}
   - component: {fileID: 4544696938494494024}
   - component: {fileID: 4549288967755163270}
+  - component: {fileID: 6767583726795141496}
   m_Layer: 0
   m_Name: WallE2
   m_TagString: Untagged
@@ -8295,6 +8340,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &6767583726795141496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6767583726795141495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 0
+  occupiedCells: []
 --- !u!23 &6824103927005080759
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8370,6 +8433,7 @@ GameObject:
   - component: {fileID: 742847162719512906}
   - component: {fileID: 2405302138081973997}
   - component: {fileID: 1367225043930259879}
+  - component: {fileID: 7053092741538858693}
   m_Layer: 0
   m_Name: WallN
   m_TagString: Untagged
@@ -8377,6 +8441,33 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &7053092741538858693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7053092741538858692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 9
+  occupiedCells:
+  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: 2, y: 0}
+  - {x: 3, y: 0}
+  - {x: 4, y: 0}
+  - {x: 5, y: 0}
+  - {x: 6, y: 0}
+  - {x: 7, y: 0}
+  - {x: 8, y: 0}
 --- !u!33 &7285276220097187297
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -8385,6 +8476,24 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5459982609023621062}
   m_Mesh: {fileID: -7155164085672302393, guid: 83d3a63da850c3549b6bb078924393d9, type: 3}
+--- !u!114 &7285276220097187298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5459982609023621062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 0
+  occupiedCells: []
 --- !u!23 &7432272156803373322
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8434,6 +8543,28 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7432272156803373323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1320704345897381829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 4
+  occupiedCells:
+  - {x: 1, y: 0}
+  - {x: 1, y: 1}
+  - {x: 2, y: 0}
+  - {x: 2, y: 1}
 --- !u!4 &7504912406158693631
 Transform:
   m_ObjectHideFlags: 0
@@ -8465,6 +8596,24 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2859086654610700412}
   m_Mesh: {fileID: 29260345255215905, guid: 83d3a63da850c3549b6bb078924393d9, type: 3}
+--- !u!114 &7562213107943136725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2859086654610700412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 0
+  occupiedCells: []
 --- !u!33 &7636082600790369385
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -8522,6 +8671,24 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7707749559871827487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3688111480869849139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 0
+  occupiedCells: []
 --- !u!23 &7778618766041195651
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8728,6 +8895,7 @@ GameObject:
   - component: {fileID: 663041528036535228}
   - component: {fileID: 3595118639059725868}
   - component: {fileID: 7778618766041195651}
+  - component: {fileID: 8190838279520300807}
   m_Layer: 0
   m_Name: CrucesB
   m_TagString: Untagged
@@ -8735,6 +8903,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8190838279520300807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8190838279520300806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 0
+  occupiedCells: []
 --- !u!1 &8231730788930912076
 GameObject:
   m_ObjectHideFlags: 0
@@ -8746,6 +8932,7 @@ GameObject:
   - component: {fileID: 2242033856443158082}
   - component: {fileID: 8256898779571160246}
   - component: {fileID: 3896426707575129615}
+  - component: {fileID: 8256898779571160247}
   m_Layer: 0
   m_Name: Ladrillos3
   m_TagString: Untagged
@@ -8761,6 +8948,24 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8231730788930912076}
   m_Mesh: {fileID: -171053686363652275, guid: 83d3a63da850c3549b6bb078924393d9, type: 3}
+--- !u!114 &8256898779571160247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8231730788930912076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 0
+  occupiedCells: []
 --- !u!4 &8286401473444581748
 Transform:
   m_ObjectHideFlags: 0
@@ -8776,6 +8981,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 543450653681515254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8286401473444581749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 351749469795467531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 0
+  occupiedCells: []
 --- !u!1 &8733618467264231753
 GameObject:
   m_ObjectHideFlags: 0
@@ -8787,6 +9010,7 @@ GameObject:
   - component: {fileID: 6856287213210519640}
   - component: {fileID: 7544677574584795329}
   - component: {fileID: 1829195072308091108}
+  - component: {fileID: 8733618467264231754}
   m_Layer: 0
   m_Name: WallE1
   m_TagString: Untagged
@@ -8794,6 +9018,35 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8733618467264231754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8733618467264231753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 11
+  occupiedCells:
+  - {x: 0, y: 10}
+  - {x: 0, y: 11}
+  - {x: 0, y: 12}
+  - {x: 0, y: 13}
+  - {x: 0, y: 14}
+  - {x: 0, y: 15}
+  - {x: 0, y: 16}
+  - {x: 0, y: 17}
+  - {x: 0, y: 18}
+  - {x: 0, y: 19}
+  - {x: 0, y: 20}
 --- !u!33 &8846240294658588683
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -8802,6 +9055,44 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2177131050013423757}
   m_Mesh: {fileID: -1390271303090506770, guid: 83d3a63da850c3549b6bb078924393d9, type: 3}
+--- !u!114 &8846240294658588684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2177131050013423757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 20
+  occupiedCells:
+  - {x: 0, y: 1}
+  - {x: 0, y: 2}
+  - {x: 0, y: 3}
+  - {x: 0, y: 4}
+  - {x: 0, y: 5}
+  - {x: 0, y: 6}
+  - {x: 0, y: 7}
+  - {x: 0, y: 8}
+  - {x: 0, y: 9}
+  - {x: 0, y: 10}
+  - {x: 0, y: 11}
+  - {x: 0, y: 12}
+  - {x: 0, y: 13}
+  - {x: 0, y: 14}
+  - {x: 0, y: 15}
+  - {x: 0, y: 16}
+  - {x: 0, y: 17}
+  - {x: 0, y: 18}
+  - {x: 0, y: 19}
+  - {x: 0, y: 20}
 --- !u!1 &8854173521585675012
 GameObject:
   m_ObjectHideFlags: 0
@@ -8813,6 +9104,7 @@ GameObject:
   - component: {fileID: 2764603873355904501}
   - component: {fileID: 5340380324383063022}
   - component: {fileID: 3543282391150201084}
+  - component: {fileID: 8854173521585675013}
   m_Layer: 0
   m_Name: Ladrillos4
   m_TagString: Untagged
@@ -8820,6 +9112,26 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8854173521585675013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8854173521585675012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 2
+  occupiedCells:
+  - {x: 8, y: 6}
+  - {x: 8, y: 7}
 --- !u!4 &8902751608203070304
 Transform:
   m_ObjectHideFlags: 0
@@ -8861,6 +9173,24 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2505322465254311200}
   m_Mesh: {fileID: 4357715290076533280, guid: 83d3a63da850c3549b6bb078924393d9, type: 3}
+--- !u!114 &9033159064506699452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2505322465254311200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 0
+  occupiedCells: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
