@@ -11,9 +11,20 @@ public class PlayerHealth : MonoBehaviour
     [Header("UI")]
     public Slider lifeBar;
 
+
+    private void Start()
+    {
+        currentLife = maxLife;
+
+        lifeBar.maxValue = maxLife;
+        lifeBar.value = currentLife;
+    }
     public void Damage(float damage)
     {
         currentLife = currentLife - damage;
+
+        // Actualizar barra
+        lifeBar.value = currentLife;
 
         Debug.Log("Player fue herido " + currentLife);
         anim.SetTrigger("onHurt");

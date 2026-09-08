@@ -38901,6 +38901,7 @@ MonoBehaviour:
   currentLife: 40
   anim: {fileID: 1251406699}
   playerMovement: {fileID: 1792752530}
+  lifeBar: {fileID: 592853307}
 --- !u!1 &1799045240
 GameObject:
   m_ObjectHideFlags: 0
