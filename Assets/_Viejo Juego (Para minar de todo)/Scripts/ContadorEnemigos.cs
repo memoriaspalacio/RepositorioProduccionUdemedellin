@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ContadorEnemigos : MonoBehaviour
 {
 
     [SerializeField] private List<GameObject> _enemies = new List<GameObject>(); //lista para almacenar enemigos
+    [SerializeField] private TextMeshProUGUI totalEnemies;
     
     
     //[SerializeField] private GameObject _victory;
@@ -15,6 +18,7 @@ public class ContadorEnemigos : MonoBehaviour
     void Start()
     {
         _enemies.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));//al comenzar la escena busca todos los objetos con tag Enemy
+        totalEnemies.text = _enemies.Count.ToString();
         
     }
 
