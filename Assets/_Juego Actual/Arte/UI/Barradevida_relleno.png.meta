@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 91308f34c3f382d45b906950d72c9a7c
+guid: 7f5570e3ae83c7c46bd5fd4f11b0852c
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: nota_musical_0
+      name: Barradevida_relleno_0
       rect:
         serializedVersion: 2
-        x: 806
-        y: 705
-        width: 441
-        height: 614
+        x: 500
+        y: 1256
+        width: 2317
+        height: 241
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,8 +125,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5624c1d1127e4e241bed20308b97de9f
-      internalID: 382393669
+      spriteID: 9910b8942b769f64e85b5b9fcfbd0632
+      internalID: 583363773
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 1bb43b0f8334b2e4bbe364dc5ca21099
     internalID: 0
     vertices: []
     indices: 
@@ -147,7 +147,7 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      nota_musical_0: 382393669
+      Barradevida_relleno_0: 583363773
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

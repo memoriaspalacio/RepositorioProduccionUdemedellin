@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -6,6 +7,9 @@ public class PlayerHealth : MonoBehaviour
     public float currentLife;
     public Animator anim;
     public GridPlayerMovement playerMovement;
+
+    [Header("UI")]
+    public Slider lifeBar;
 
     public void Damage(float damage)
     {

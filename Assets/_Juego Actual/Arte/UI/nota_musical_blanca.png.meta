@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 91308f34c3f382d45b906950d72c9a7c
+guid: 3a54caec6ee1b694787a01e80257baa6
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: nota_musical_0
+      name: nota_musical_blanca_0
       rect:
         serializedVersion: 2
-        x: 806
-        y: 705
-        width: 441
-        height: 614
+        x: 515
+        y: 1021
+        width: 243
+        height: 180
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,8 +125,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5624c1d1127e4e241bed20308b97de9f
-      internalID: 382393669
+      spriteID: ddf1c806ec588784fa17350f8086ebb7
+      internalID: -432811812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nota_musical_blanca_1
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 65
+        width: 847
+        height: 864
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 146, y: 166, z: 140, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa6f11aa42ac3d343895b8ee253e5e49
+      internalID: 1771673834
       vertices: []
       indices: 
       edges: []
@@ -135,7 +157,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: c24469a30ca3451498716f9d5e8bd4bc
     internalID: 0
     vertices: []
     indices: 
@@ -147,7 +169,8 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      nota_musical_0: 382393669
+      nota_musical_blanca_0: -432811812
+      nota_musical_blanca_1: 1771673834
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
