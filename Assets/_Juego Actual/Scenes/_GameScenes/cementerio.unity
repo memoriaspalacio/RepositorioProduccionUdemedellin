@@ -6964,6 +6964,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ContadorEnemigos
   _enemies: []
   totalEnemies: {fileID: 281538600}
+  defeatEnemies: {fileID: 259338932}
 --- !u!114 &1983170460
 MonoBehaviour:
   m_ObjectHideFlags: 0
