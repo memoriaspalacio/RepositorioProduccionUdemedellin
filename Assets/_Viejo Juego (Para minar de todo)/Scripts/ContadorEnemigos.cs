@@ -30,6 +30,7 @@ public class ContadorEnemigos : MonoBehaviour
     public void EnemyDied(GameObject enemy)
     {
         _enemies.Remove(enemy);
+        Destroy(enemy);
         enemyCount++;
         defeatEnemies.text = enemyCount.ToString();
         CheckForWinCondition();
