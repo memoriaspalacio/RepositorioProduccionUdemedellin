@@ -1,8 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class GridPlayerMovement : MonoBehaviour
-{
+public class GridPlayerMovement : MonoBehaviour {
     // Indica si el jugador esta muerto y no puede realizar acciones.
     private bool isDead = false;
 
@@ -60,9 +59,8 @@ public class GridPlayerMovement : MonoBehaviour
     // Expone si el jugador esta en movimiento.
     public bool IsMoving => isMoving;
 
-    
-    private void Start()
-    {
+
+    private void Start() {
         Transform model = transform.Find("ModelChica");
 
         if (model != null)
@@ -71,8 +69,7 @@ public class GridPlayerMovement : MonoBehaviour
         if (grid == null)
             grid = FindFirstObjectByType<MeshGrid>();
 
-        if (grid == null)
-        {
+        if (grid == null) {
             Debug.LogError(
                 "No se encontro un objeto con el script MeshGrid.",
                 this
@@ -85,8 +82,7 @@ public class GridPlayerMovement : MonoBehaviour
         if (beatJudge == null)
             beatJudge = FindFirstObjectByType<BeatActionJudge>();
 
-        if (beatJudge == null)
-        {
+        if (beatJudge == null) {
             Debug.LogError(
                 "No se encontro un objeto con el script BeatActionJudge.",
                 this
@@ -98,8 +94,7 @@ public class GridPlayerMovement : MonoBehaviour
 
         currentCell = grid.WorldToCell(transform.position);
 
-        if (!grid.TryOccupyCell(currentCell, gameObject))
-        {
+        if (!grid.TryOccupyCell(currentCell, gameObject)) {
             Debug.LogError(
                 $"La celda inicial {currentCell} esta ocupada.",
                 this
@@ -116,26 +111,22 @@ public class GridPlayerMovement : MonoBehaviour
     }
 
     // Lee las entradas de rotacion, ataque y movimiento.
-    private void Update()
-    {
+    private void Update() {
         ReadRotationInput();
 
-        if (!isMoving)
-        {
+        if (!isMoving) {
             ReadMovementInput();
             ReadAttackInput();
         }
     }
 
     // Marca al jugador como muerto para bloquear nuevas acciones.
-    public void SetDead()
-    {
+    public void SetDead() {
         isDead = true;
     }
 
     // Lee WASD y solicita un movimiento valido segun el ritmo.
-    private void ReadMovementInput()
-    {
+    private void ReadMovementInput() {
         if (isDead)
             return;
 
@@ -152,7 +143,7 @@ public class GridPlayerMovement : MonoBehaviour
 
         if (direction == Vector2Int.zero)
             return;
-       
+
 
         if (!beatJudge.TryConsumeBeat())
             return;
@@ -161,8 +152,7 @@ public class GridPlayerMovement : MonoBehaviour
     }
 
     // Lee las flechas y cambia la direccion del jugador.
-    private void ReadRotationInput()
-    {
+    private void ReadRotationInput() {
         Vector2Int direction = Vector2Int.zero;
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -179,8 +169,7 @@ public class GridPlayerMovement : MonoBehaviour
     }
 
     // Rota al jugador hacia una direccion de la cuadricula.
-    private void RotateTowards(Vector2Int direction)
-    {
+    private void RotateTowards(Vector2Int direction) {
         facingDirection = direction;
 
         Vector3 lookDirection = new Vector3(
@@ -196,15 +185,13 @@ public class GridPlayerMovement : MonoBehaviour
     }
 
     // Lee la tecla configurada e intenta iniciar un ataque.
-    private void ReadAttackInput()
-    {
+    private void ReadAttackInput() {
         if (Input.GetKeyDown(attackKey))
             TryAttack();
     }
 
     // Valida la celda destino y comienza el desplazamiento del jugador.
-    private void TryMove(Vector2Int direction)
-    {
+    private void TryMove(Vector2Int direction) {
         if (isDead)
             return;
 
@@ -214,13 +201,11 @@ public class GridPlayerMovement : MonoBehaviour
         if (!grid.TryGetNeighbour(
                 currentCell,
                 direction,
-                out Vector2Int nextCell))
-        {
+                out Vector2Int nextCell)) {
             return;
         }
 
-        if (grid.IsCellOccupiedByOther(nextCell, gameObject))
-        {
+        if (grid.IsCellOccupiedByOther(nextCell, gameObject)) {
             Debug.Log(
                 $"No puedes moverte. La celda {nextCell} esta ocupada.",
                 this
@@ -234,8 +219,7 @@ public class GridPlayerMovement : MonoBehaviour
         if (!grid.TryMoveOccupant(
                 previousCell,
                 nextCell,
-                gameObject))
-        {
+                gameObject)) {
             return;
         }
 
@@ -248,8 +232,7 @@ public class GridPlayerMovement : MonoBehaviour
     }
 
     // Comprueba restricciones de ataque y ejecuta la accion.
-    private void TryAttack()
-    {
+    private void TryAttack() {
         if (isDead)
             return;
 
@@ -259,15 +242,14 @@ public class GridPlayerMovement : MonoBehaviour
         if (!beatJudge.TryConsumeBeat())
             return;
 
-        if (_anim != null && !beatJudge.TryConsumeBeat())
+        if (_anim != null)
             _anim.SetTrigger("onAttack");
 
         ExecuteAttack();
     }
 
     // Ataca la celda frontal y aplica dano al enemigo encontrado.
-    protected virtual void ExecuteAttack()
-    {
+    protected virtual void ExecuteAttack() {
         Vector2Int attackCell = currentCell + facingDirection;
 
         if (!grid.IsCellInside(attackCell))
@@ -275,8 +257,7 @@ public class GridPlayerMovement : MonoBehaviour
 
         GameObject target = grid.GetCellOccupant(attackCell);
 
-        if (target == null)
-        {
+        if (target == null) {
             Debug.Log(
                 $"No hubo impacto. La celda {attackCell} esta vacia.",
                 this
@@ -287,8 +268,7 @@ public class GridPlayerMovement : MonoBehaviour
 
         EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
 
-        if (enemyHealth == null)
-        {
+        if (enemyHealth == null) {
             Debug.Log(
                 $"La celda {attackCell} esta ocupada, pero {target.name} no tiene EnemyHealth.",
                 this
@@ -301,15 +281,13 @@ public class GridPlayerMovement : MonoBehaviour
     }
 
     // Genera el valor aleatorio de dano del jugador.
-    private float HitFunction()
-    {
+    private float HitFunction() {
         return Random.Range(4, 8);
     }
 
     // Interpola la posicion del jugador hasta la celda destino.
     private IEnumerator MoveToCell(
-        Vector2Int nextCell)
-    {
+        Vector2Int nextCell) {
         isMoving = true;
 
         Vector3 startPosition = transform.position;
@@ -321,8 +299,7 @@ public class GridPlayerMovement : MonoBehaviour
 
         float elapsedTime = 0f;
 
-        while (elapsedTime < moveDuration)
-        {
+        while (elapsedTime < moveDuration) {
             elapsedTime += Time.deltaTime;
 
             float normalizedTime =
@@ -346,19 +323,15 @@ public class GridPlayerMovement : MonoBehaviour
     }
 
     // Detecta una colision y comprueba la etiqueta de salida del jugador.
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (CompareTag("exit"))
-        {
+    private void OnCollisionEnter(Collision collision) {
+        if (CompareTag("exit")) {
             ScreensInGame.singleton.ScreenWinActive();
         }
     }
 
     // Detecta un trigger y comprueba la etiqueta de salida del jugador.
-    private void OnTriggerEnter(Collider other)
-    {
-        if (CompareTag("exit"))
-        {
+    private void OnTriggerEnter(Collider other) {
+        if (CompareTag("exit")) {
             ScreensInGame.singleton.ScreenWinActive();
         }
     }
