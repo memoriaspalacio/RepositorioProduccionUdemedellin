@@ -5045,7 +5045,7 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 1424186785}
-  skeletonEnemy: {fileID: 1424186788}
+  skeletonEnemy: {fileID: 0}
   contador: {fileID: 1983170459}
 --- !u!114 &1424186788
 MonoBehaviour:
@@ -5056,25 +5056,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 1424186786}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92114637081615b4b9fb92959855707b, type: 3}
+  m_Script: {fileID: 11500000, guid: 27b51a995f0fa104d89e5d8415d310f4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.SkeletonBehaviour
-  _canMove: 1
+  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.SisterBehaviour
+  _canMove: 0
   _state: 0
   _grid: {fileID: 0}
   _prioritizeLongestAxis: 1
-  _gridStepInterval: 1
+  _gridStepInterval: 0.5
   patrolPoints:
   - {fileID: 689248517}
   - {fileID: 1437059696}
   - {fileID: 144525862}
   - {fileID: 1760784773}
   patrolPointWaitTime: 2
-  minimumCellsBeforePause: 2
-  maximumCellsBeforePause: 5
-  pauseDuration: 3
-  timeBetweenCells: 1
-  requireRhythm: 0
+  minimumCellsBeforePause: 1
+  maximumCellsBeforePause: 3
+  pauseDuration: 1
+  timeBetweenCells: 0.1
+  requireRhythm: 1
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
@@ -5084,8 +5084,13 @@ MonoBehaviour:
   animator: {fileID: 0}
   reloadTrigger: onReload
   attackTrigger: onAttack
-  reloadTime: 2
+  preparationTime: 0.75
+  attackCooldown: 2
+  attackRange: 3
+  attackDamage: 3
   playerHealth: {fileID: 1792752532}
+  attackCellPrefab: {fileID: 0}
+  indicatorHeight: 0.05
 --- !u!1 &1437059695
 GameObject:
   m_ObjectHideFlags: 0
