@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/_Juego Actual/Scenes/_GameScenes/iglesia.unity
     guid: 442c5744d382f8e46b20f0b01418b02d
   - enabled: 1
+    path: Assets/_Juego Actual/Scenes/_GameScenes/crisantia.unity
+    guid: fe0877e63adc0244dbbd6f714f19d62d
+  - enabled: 1
     path: Assets/_Juego Actual/Scenes/_GameScenes/mazmorra.unity
     guid: aa8f32e28537917438dd3b6964bf44e3
   m_configObjects:
