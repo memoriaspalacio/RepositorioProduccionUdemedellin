@@ -42,13 +42,6 @@ public class GridPlayerMovement : MonoBehaviour
     // Referencia al Animator del modelo visual del jugador.
     [SerializeField] private Animator _anim;
 
-    [Header("Referencia a la Camara (Opcional)")]
-    [SerializeField] private Transform mainCamera;
-
-    [Header("Rotacion Suave")]
-    [SerializeField] private float rotationSpeed = 15f;
-    private Quaternion targetRotation;
-
     // Celda actual ocupada por el jugador.
     private Vector2Int currentCell;
 
@@ -70,12 +63,6 @@ public class GridPlayerMovement : MonoBehaviour
     
     private void Start()
     {
-        targetRotation = transform.rotation;
-
-        if (mainCamera == null && Camera.main != null)
-        {
-            mainCamera = Camera.main.transform;
-        }
 
         if (grid == null)
             grid = FindFirstObjectByType<MeshGrid>();
@@ -134,13 +121,6 @@ public class GridPlayerMovement : MonoBehaviour
             ReadMovementInput();
             ReadAttackInput();
         }
-
-        // Rotacion suave hacia el objetivo
-        transform.rotation = Quaternion.Slerp(
-            transform.rotation,
-            targetRotation,
-            Time.deltaTime * rotationSpeed
-        );
     }
 
     // Marca al jugador como muerto para bloquear nuevas acciones.
@@ -155,76 +135,46 @@ public class GridPlayerMovement : MonoBehaviour
         if (isDead)
             return;
 
-        Vector2Int localDirection = Vector2Int.zero;
+        Vector2Int direction = Vector2Int.zero;
 
         if (Input.GetKeyDown(KeyCode.W))
-            localDirection = Vector2Int.up;
+            direction = Vector2Int.up;
         else if (Input.GetKeyDown(KeyCode.S))
-            localDirection = Vector2Int.down;
+            direction = Vector2Int.down;
         else if (Input.GetKeyDown(KeyCode.A))
-            localDirection = Vector2Int.left;
+            direction = Vector2Int.left;
         else if (Input.GetKeyDown(KeyCode.D))
-            localDirection = Vector2Int.right;
+            direction = Vector2Int.right;
 
-        if (localDirection == Vector2Int.zero)
+        if (direction == Vector2Int.zero)
             return;
        
 
         if (!beatJudge.TryConsumeBeat())
             return;
 
-        Vector2Int worldDirection = GetCameraRelativeDirection(localDirection);
-        TryMove(worldDirection);
+        TryMove(direction);
     }
 
     // Lee las flechas y cambia la direccion del jugador.
     private void ReadRotationInput()
     {
-        Vector2Int localDirection = Vector2Int.zero;
+        Vector2Int direction = Vector2Int.zero;
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
-            localDirection = Vector2Int.up;
+            direction = Vector2Int.up;
         else if (Input.GetKeyDown(KeyCode.DownArrow))
-            localDirection = Vector2Int.down;
+            direction = Vector2Int.down;
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
-            localDirection = Vector2Int.left;
+            direction = Vector2Int.left;
         else if (Input.GetKeyDown(KeyCode.RightArrow))
-            localDirection = Vector2Int.right;
+            direction = Vector2Int.right;
 
-        if (localDirection != Vector2Int.zero)
-        {
-            Vector2Int worldDirection = GetCameraRelativeDirection(localDirection);
-            RotateTowards(worldDirection);
-        }
+        if (direction != Vector2Int.zero)
+            RotateTowards(direction);
     }
 
-    // Convierte un input 2D en una direccion del mundo relativa a la camara.
-    private Vector2Int GetCameraRelativeDirection(Vector2Int localInput)
-    {
-        if (mainCamera == null)
-            return localInput; // Fallback absoluto si no hay camara
-
-        Vector3 camForward = mainCamera.forward;
-        camForward.y = 0;
-        camForward.Normalize();
-
-        Vector3 camRight = mainCamera.right;
-        camRight.y = 0;
-        camRight.Normalize();
-
-        Vector3 worldDir = (camForward * localInput.y) + (camRight * localInput.x);
-
-        if (Mathf.Abs(worldDir.x) > Mathf.Abs(worldDir.z))
-        {
-            return worldDir.x > 0 ? Vector2Int.right : Vector2Int.left;
-        }
-        else
-        {
-            return worldDir.z > 0 ? Vector2Int.up : Vector2Int.down;
-        }
-    }
-
-    // Establece la rotacion objetivo hacia una direccion de la cuadricula.
+    // Rota al jugador hacia una direccion de la cuadricula.
     private void RotateTowards(Vector2Int direction)
     {
         facingDirection = direction;
@@ -235,7 +185,7 @@ public class GridPlayerMovement : MonoBehaviour
             direction.y
         );
 
-        targetRotation = Quaternion.LookRotation(
+        transform.rotation = Quaternion.LookRotation(
             lookDirection,
             Vector3.up
         );
@@ -290,9 +240,11 @@ public class GridPlayerMovement : MonoBehaviour
 
         if (_anim != null)
         {
-            string animTrigger = GetRelativeAnimationTrigger(direction);
-            Debug.Log($"[AnimDebug] Moviendo a: {direction}. Mirando a: {facingDirection}. Disparando: {animTrigger}");
-            _anim.SetTrigger(animTrigger);
+            Debug.Log($"[AnimDebug] Disparando animacion para direccion: {direction}. Animator asignado: {_anim.name}");
+            if (direction == Vector2Int.up) _anim.SetTrigger("onForward");
+            else if (direction == Vector2Int.down) _anim.SetTrigger("onBackward");
+            else if (direction == Vector2Int.left) _anim.SetTrigger("onLeft");
+            else if (direction == Vector2Int.right) _anim.SetTrigger("onRight");
         }
         else
         {
@@ -302,23 +254,6 @@ public class GridPlayerMovement : MonoBehaviour
         StartCoroutine(
             MoveToCell(nextCell)
         );
-    }
-
-    // Calcula que animacion disparar basandose en la diferencia entre la rotacion y la direccion de movimiento.
-    private string GetRelativeAnimationTrigger(Vector2Int moveDirection)
-    {
-        Vector2 move = new Vector2(moveDirection.x, moveDirection.y);
-        Vector2 face = new Vector2(facingDirection.x, facingDirection.y);
-
-        float dot = Vector2.Dot(face, move);
-        float cross = (face.x * move.y) - (face.y * move.x);
-
-        if (dot > 0.5f) return "onForward";
-        if (dot < -0.5f) return "onBackward";
-        if (cross > 0.5f) return "onLeft";
-        if (cross < -0.5f) return "onRight";
-
-        return "onForward"; 
     }
 
     // Comprueba restricciones de ataque y ejecuta la accion.

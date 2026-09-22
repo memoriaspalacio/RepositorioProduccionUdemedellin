@@ -1,49 +1,9 @@
 fileFormatVersion: 2
-guid: 3db2585e18ff15a4986fd48c1a97ed41
+guid: 41ac6817e0686404ca4b4df28bfef051
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: CINTURON
-    second: {fileID: 2100000, guid: e1a9eac951dc35a4e8042cd04c19744a, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: body
-    second: {fileID: 2100000, guid: fc0c9299ac6a1fe4da57ae54e69d166b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: craneo
-    second: {fileID: 2100000, guid: af7f2218f69cf6d438ff189be050a164, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: cuerpo
-    second: {fileID: 2100000, guid: c34c97d351cfe4a42bba3d680d59fbb9, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: falda
-    second: {fileID: 2100000, guid: 7003db2bbe19d6c45be23a03e36c0ce1, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: pies
-    second: {fileID: 2100000, guid: e04dc3917beff1744b150a486bfbfea6, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: cuerpo2
-    second: {fileID: 2800000, guid: 6daff3b4dabfade4aaf3715790719f6b, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: paletadecolor_characters
-    second: {fileID: 2800000, guid: f3c31b4567f274e46b4e5cf5a8cbe68f, type: 3}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -73,7 +33,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.5
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -131,8 +91,8 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.005
-    rootMotionBoneName: 
+    globalScale: 1
+    rootMotionBoneName: mixamorig:Hips
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
@@ -140,7 +100,7 @@ ModelImporter:
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 0
+  avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
