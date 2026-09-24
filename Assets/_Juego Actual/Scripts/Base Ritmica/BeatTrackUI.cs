@@ -12,7 +12,7 @@ using UnityEngine;
 /// stays consistent.
 ///
 /// This is a pure view. It reacts to the judge's events and never decides whether an
-/// action was on time.
+/// action was on time, or when a note is destroyed - BeatActionJudge owns both.
 /// </summary>
 public class BeatTrackUI : MonoBehaviour {
 
@@ -31,12 +31,18 @@ public class BeatTrackUI : MonoBehaviour {
     [Tooltip("Container the bars are parented to.")]
     [SerializeField] private RectTransform barParent;
 
+    /// <summary>Read by BeatWindowZone/BeatDestroyZone to convert their box edges into beats.</summary>
+    public RectTransform SpawnPoint => spawnPoint;
+
+    /// <summary>Read by BeatWindowZone/BeatDestroyZone to convert their box edges into beats.</summary>
+    public RectTransform HeartPoint => heartPoint;
+
     [Header("Timing")]
     [Tooltip("How many beats a bar takes to travel from the spawn point to the heart.")]
     [SerializeField, Min(1f)] private float travelBeats = 4f;
 
-    [Tooltip("How many beats a bar keeps travelling past the heart before it despawns.")]
-    [SerializeField, Min(0.1f)] private float despawnBeats = 1f;
+    /// <summary>Read by BeatWindowZone/BeatDestroyZone to convert their box edges into beats.</summary>
+    public float TravelBeats => travelBeats;
 
     [Header("Colors")]
     [Tooltip("Before the beat's window opens.")]
@@ -69,14 +75,14 @@ public class BeatTrackUI : MonoBehaviour {
         }
 
         beatJudge.OnBeatConsumed += HandleBeatConsumed;
-        beatJudge.OnBeatsPenalized += HandleBeatsPenalized;
+        beatJudge.OnNoteDestroyed += HandleNoteDestroyed;
     }
 
     private void OnDisable() {
         if (beatJudge == null) return;
 
         beatJudge.OnBeatConsumed -= HandleBeatConsumed;
-        beatJudge.OnBeatsPenalized -= HandleBeatsPenalized;
+        beatJudge.OnNoteDestroyed -= HandleNoteDestroyed;
     }
 
     private void Update() {
@@ -110,8 +116,9 @@ public class BeatTrackUI : MonoBehaviour {
     }
 
     private void SpawnBar(int targetBeat) {
-        // A penalized beat has no opportunity to show, so it gets no bar at all.
-        if (beatJudge.IsBeatLocked(targetBeat)) return;
+        // A beat already resolved (e.g. destroyed early by a penalty) has no
+        // opportunity to show, so it gets no bar at all.
+        if (beatJudge.IsBeatResolved(targetBeat)) return;
 
         BeatBar bar;
 
@@ -144,13 +151,10 @@ public class BeatTrackUI : MonoBehaviour {
             // zero exactly on the beat, positive once past the heart.
             float beatsPastTarget = nowBeat - bar.TargetBeat;
 
-            if (beatsPastTarget > despawnBeats) {
-                Recycle(bar, i);
-                continue;
-            }
-
             // Travel progress runs 0 at spawn to 1 at the heart, and keeps going
             // past 1 so a bar carries on through instead of stopping on the heart.
+            // Destruction is entirely event-driven now (HandleNoteDestroyed) - this
+            // method only ever moves and colors bars that are still alive.
             float progress = 1f + (beatsPastTarget / travelBeats);
 
             bar.SetAnchoredPosition(
@@ -186,15 +190,16 @@ public class BeatTrackUI : MonoBehaviour {
     }
 
     /// <summary>
-    /// Removes the bars for beats the judge just stole, so the player sees the
-    /// opportunities they lost disappear from the track.
+    /// Removes the bar for a beat the judge just destroyed - whether it expired on
+    /// its own or was sacrificed to a whiff penalty. If no bar exists yet for this
+    /// beat, SpawnBar's IsBeatResolved check will simply skip spawning it later.
     /// </summary>
-    private void HandleBeatsPenalized(int firstBeat, int count) {
+    private void HandleNoteDestroyed(int beat, DestroyReason reason) {
         for (int i = activeBars.Count - 1; i >= 0; i--) {
-            int targetBeat = activeBars[i].TargetBeat;
-
-            if (targetBeat >= firstBeat && targetBeat < firstBeat + count)
+            if (activeBars[i].TargetBeat == beat) {
                 Recycle(activeBars[i], i);
+                return;
+            }
         }
     }
 
