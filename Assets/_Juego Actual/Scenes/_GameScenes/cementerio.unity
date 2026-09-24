@@ -3959,7 +3959,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e86f4c860a13b4342994b9d067ab6020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatTrackUI
-  beatJudge: {fileID: 0}
+  beatJudge: {fileID: 1140715656}
   spawnPoint: {fileID: 586867721}
   heartPoint: {fileID: 897937915}
   barPrefab: {fileID: 1763768325479063683, guid: ee83b12492d592d499d90b08e2d2a06c, type: 3}
