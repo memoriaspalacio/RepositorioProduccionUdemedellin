@@ -2059,12 +2059,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 407365721}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.1861, y: 0.59, z: 2.87}
-  m_LocalScale: {x: 3.090926, y: 2.7395, z: 3.9060829}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1374.8586, y: -784.7007, z: 3.866}
+  m_LocalScale: {x: 3.169255, y: 2.913732, z: 3.9555085}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 951531518}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &407365726
 MonoBehaviour:
@@ -2079,7 +2079,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridBeatVisualizer
   meshGrid: {fileID: 648938731}
-  minPulse: 0.05
+  minPulse: 0.556
   maxPulse: 0.8
   pulseCurve:
     serializedVersion: 2
@@ -2087,8 +2087,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -2096,8 +2096,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -3577,6 +3577,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &951531517
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 951531518}
+  m_Layer: 0
+  m_Name: ======GameScripts======
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &951531518
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 951531517}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1379.0449, y: 785.2907, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1140715655}
+  - {fileID: 407365725}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -3965,7 +3998,6 @@ MonoBehaviour:
   barPrefab: {fileID: 1763768325479063683, guid: ee83b12492d592d499d90b08e2d2a06c, type: 3}
   barParent: {fileID: 1092442724}
   travelBeats: 4
-  despawnBeats: 0.1
   idleColor: {r: 0.79622644, g: 0.7616732, b: 0.7616732, a: 1}
   windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   windowClosingColor: {r: 0.6, g: 0.2, b: 0.15, a: 1}
@@ -4334,11 +4366,11 @@ Transform:
   m_GameObject: {fileID: 1140715648}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 75.27, y: 1.86, z: 6.98}
+  m_LocalPosition: {x: -1303.7749, y: -783.4307, z: 6.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 951531518}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1140715656
 MonoBehaviour:
@@ -4354,7 +4386,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
   earlyTolerance: 0.5
   lateTolerance: 0.25
-  penaltyBeats: 2
+  penaltyNoteCount: 1
   logActions: 1
 --- !u!114 &1150939307
 MonoBehaviour:
@@ -6326,7 +6358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RhythmicAnimator
   modelTransform: {fileID: 1699717526}
-  enableBop: 0
+  enableBop: 1
   enableTilt: 0
   enableSquashAndStretch: 0
   applyPreset: 0
@@ -16166,10 +16198,9 @@ MeshRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1140715655}
+  - {fileID: 951531518}
   - {fileID: 1776775017}
   - {fileID: 1983170458}
   - {fileID: 1115188533}
   - {fileID: 1731232081}
   - {fileID: 915093859}
-  - {fileID: 407365725}
