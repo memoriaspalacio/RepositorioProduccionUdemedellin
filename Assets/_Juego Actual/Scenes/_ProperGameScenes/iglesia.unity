@@ -1542,6 +1542,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
       addedObject: {fileID: 361842212}
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 361842214}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!4 &361842209 stripped
 Transform:
@@ -1610,10 +1613,50 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
+--- !u!114 &361842214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 361842211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27b51a995f0fa104d89e5d8415d310f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.SisterBehaviour
+  _canMove: 0
+  _state: 0
+  _grid: {fileID: 888685292}
+  _prioritizeLongestAxis: 1
+  _gridStepInterval: 0.5
+  patrolPoints: []
+  patrolPointWaitTime: 2
+  minimumCellsBeforePause: 1
+  maximumCellsBeforePause: 3
+  pauseDuration: 1
+  timeBetweenCells: 0.1
+  requireRhythm: 1
+  rhythmWindowOpen: 0
+  navMeshSampleDistance: 2
+  currentCell: {x: 0, y: 0}
+  movementConsumedThisWindow: 0
+  movedCells: 0
+  cellsBeforePause: 0
+  animator: {fileID: 0}
+  reloadTrigger: onReload
+  attackTrigger: onAttack
+  preparationTime: 0.75
+  attackCooldown: 2
+  attackRange: 3
+  attackDamage: 3
+  playerHealth: {fileID: 1792752532}
+  attackCellPrefab: {fileID: 0}
+  indicatorHeight: 0.05
 --- !u!1 &406492257 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
@@ -1652,7 +1695,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -2737,7 +2780,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2929,7 +2972,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -3420,7 +3463,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3612,7 +3655,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -3871,7 +3914,6 @@ MonoBehaviour:
   barPrefab: {fileID: 1763768325479063683, guid: ee83b12492d592d499d90b08e2d2a06c, type: 3}
   barParent: {fileID: 675132970}
   travelBeats: 4
-  despawnBeats: 0.1
   idleColor: {r: 0.42, g: 0.17, b: 0.17, a: 1}
   windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   windowClosingColor: {r: 0.6, g: 0.2, b: 0.15, a: 1}
@@ -4174,7 +4216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
   earlyTolerance: 0.5
   lateTolerance: 0.25
-  penaltyBeats: 2
+  penaltyNoteCount: 2
   logActions: 1
 --- !u!1 &1158727593
 GameObject:
@@ -4562,7 +4604,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -4754,7 +4796,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -4890,7 +4932,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5724,6 +5766,9 @@ MonoBehaviour:
     m_RotationOrder: 4
   attackKey: 32
   attackCooldown: 0.3
+  _anim: {fileID: 0}
+  mainCamera: {fileID: 0}
+  rotationSpeed: 15
 --- !u!114 &1792752532
 MonoBehaviour:
   m_ObjectHideFlags: 0
