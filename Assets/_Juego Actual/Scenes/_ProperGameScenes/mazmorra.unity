@@ -328,7 +328,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -546,7 +546,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 33352299}
-  skeletonEnemy: {fileID: 33352304}
   contador: {fileID: 1983170459}
 --- !u!114 &33352304
 MonoBehaviour:
@@ -580,7 +579,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -654,7 +653,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -872,7 +871,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 85292678}
-  skeletonEnemy: {fileID: 85292683}
   contador: {fileID: 1983170459}
 --- !u!114 &85292683
 MonoBehaviour:
@@ -906,7 +904,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -980,7 +978,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1198,7 +1196,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 126750405}
-  skeletonEnemy: {fileID: 126750410}
   contador: {fileID: 1983170459}
 --- !u!114 &126750410
 MonoBehaviour:
@@ -1232,7 +1229,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -2464,9 +2461,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 361842213}
-    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 361842212}
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
@@ -2474,6 +2468,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
       addedObject: {fileID: 361842215}
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 361842217}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!4 &361842209 stripped
 Transform:
@@ -2505,44 +2502,7 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 361842210}
-  skeletonEnemy: {fileID: 361842213}
   contador: {fileID: 1983170459}
---- !u!114 &361842213
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 361842211}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92114637081615b4b9fb92959855707b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.SkeletonBehaviour
-  _canMove: 1
-  _state: 0
-  _grid: {fileID: 0}
-  _prioritizeLongestAxis: 1
-  _gridStepInterval: 1
-  patrolPoints:
-  - {fileID: 689248517}
-  patrolPointWaitTime: 2
-  minimumCellsBeforePause: 2
-  maximumCellsBeforePause: 5
-  pauseDuration: 3
-  timeBetweenCells: 1
-  requireRhythm: 0
-  rhythmWindowOpen: 0
-  navMeshSampleDistance: 2
-  currentCell: {x: 0, y: 0}
-  movementConsumedThisWindow: 0
-  movedCells: 0
-  cellsBeforePause: 0
-  animator: {fileID: 0}
-  reloadTrigger: onReload
-  attackTrigger: onAttack
-  reloadTime: 2
-  playerHealth: {fileID: 1792752532}
 --- !u!23 &361842215
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2600,6 +2560,44 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 361842211}
   m_Mesh: {fileID: -7786390875159896513, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
+--- !u!114 &361842217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 361842211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79d29cf88f0b88f4a929c8e24a98b555, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.AngelBehaviour
+  _canMove: 0
+  _state: 0
+  _grid: {fileID: 7821426081726811204}
+  _prioritizeLongestAxis: 1
+  _gridStepInterval: 0.5
+  patrolPoints: []
+  patrolPointWaitTime: 2
+  minimumCellsBeforePause: 1
+  maximumCellsBeforePause: 3
+  pauseDuration: 1
+  timeBetweenCells: 0.1
+  requireRhythm: 1
+  rhythmWindowOpen: 0
+  navMeshSampleDistance: 2
+  currentCell: {x: 0, y: 0}
+  movementConsumedThisWindow: 0
+  movedCells: 0
+  cellsBeforePause: 0
+  animator: {fileID: 361842210}
+  reloadTrigger: onReload
+  attackTrigger: onAttack
+  reloadTime: 0.75
+  chargeTimePerCell: 0.12
+  attackDamage: 5
+  timeBetweenBatches: 0.75
+  playerHealth: {fileID: 1792752532}
 --- !u!1001 &370628113
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2790,9 +2788,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 370628120}
-    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 370628119}
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
@@ -2800,6 +2795,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
       addedObject: {fileID: 370628117}
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 370628123}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!4 &370628114 stripped
 Transform:
@@ -2888,9 +2886,8 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 370628115}
-  skeletonEnemy: {fileID: 370628120}
   contador: {fileID: 1983170459}
---- !u!114 &370628120
+--- !u!114 &370628123
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2899,32 +2896,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 370628116}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92114637081615b4b9fb92959855707b, type: 3}
+  m_Script: {fileID: 11500000, guid: 79d29cf88f0b88f4a929c8e24a98b555, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.SkeletonBehaviour
-  _canMove: 1
+  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.AngelBehaviour
+  _canMove: 0
   _state: 0
-  _grid: {fileID: 0}
+  _grid: {fileID: 7821426081726811204}
   _prioritizeLongestAxis: 1
-  _gridStepInterval: 1
-  patrolPoints:
-  - {fileID: 689248517}
+  _gridStepInterval: 0.5
+  patrolPoints: []
   patrolPointWaitTime: 2
-  minimumCellsBeforePause: 2
-  maximumCellsBeforePause: 5
-  pauseDuration: 3
-  timeBetweenCells: 1
-  requireRhythm: 0
+  minimumCellsBeforePause: 1
+  maximumCellsBeforePause: 3
+  pauseDuration: 1
+  timeBetweenCells: 0.1
+  requireRhythm: 1
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
   movementConsumedThisWindow: 0
   movedCells: 0
   cellsBeforePause: 0
-  animator: {fileID: 0}
+  animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
-  reloadTime: 2
+  reloadTime: 0.75
+  chargeTimePerCell: 0.12
+  attackDamage: 5
+  timeBetweenBatches: 0.75
   playerHealth: {fileID: 1792752532}
 --- !u!1 &406492257 stripped
 GameObject:
@@ -2964,7 +2963,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -2983,7 +2982,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 1350811594}
-  skeletonEnemy: {fileID: 406492262}
   contador: {fileID: 1983170459}
 --- !u!1 &422656232
 GameObject:
@@ -3369,7 +3367,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3587,7 +3585,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 572176875}
-  skeletonEnemy: {fileID: 572176880}
   contador: {fileID: 1983170459}
 --- !u!114 &572176880
 MonoBehaviour:
@@ -3621,7 +3618,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -3660,7 +3657,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 1185477624}
-  skeletonEnemy: {fileID: 664701258}
   contador: {fileID: 1983170459}
 --- !u!114 &664701258
 MonoBehaviour:
@@ -3697,7 +3693,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -4477,7 +4473,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 294286123}
-  skeletonEnemy: {fileID: 879223017}
   contador: {fileID: 1983170459}
 --- !u!114 &879223017
 MonoBehaviour:
@@ -4514,7 +4509,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -4891,7 +4886,6 @@ MonoBehaviour:
   barPrefab: {fileID: 1763768325479063683, guid: ee83b12492d592d499d90b08e2d2a06c, type: 3}
   barParent: {fileID: 2018902622}
   travelBeats: 4
-  despawnBeats: 0.1
   idleColor: {r: 0.42, g: 0.17, b: 0.17, a: 1}
   windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   windowClosingColor: {r: 0.6, g: 0.2, b: 0.15, a: 1}
@@ -4966,7 +4960,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5184,7 +5178,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 1092455412}
-  skeletonEnemy: {fileID: 1092455417}
   contador: {fileID: 1983170459}
 --- !u!114 &1092455417
 MonoBehaviour:
@@ -5218,7 +5211,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -5582,7 +5575,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
   earlyTolerance: 0.5
   lateTolerance: 0.25
-  penaltyBeats: 2
+  penaltyNoteCount: 2
   logActions: 1
 --- !u!1 &1158727593
 GameObject:
@@ -5761,7 +5754,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5979,7 +5972,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 1167960962}
-  skeletonEnemy: {fileID: 1167960967}
   contador: {fileID: 1983170459}
 --- !u!114 &1167960967
 MonoBehaviour:
@@ -6013,7 +6005,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -6550,7 +6542,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -6768,7 +6760,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 1345655859}
-  skeletonEnemy: {fileID: 1345655864}
   contador: {fileID: 1983170459}
 --- !u!114 &1345655864
 MonoBehaviour:
@@ -6802,7 +6793,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -7386,7 +7377,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -7604,7 +7595,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 1637367254}
-  skeletonEnemy: {fileID: 1637367259}
   contador: {fileID: 1983170459}
 --- !u!114 &1637367259
 MonoBehaviour:
@@ -7638,7 +7628,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -7977,7 +7967,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 1440218699}
-  skeletonEnemy: {fileID: 1788141266}
   contador: {fileID: 1983170459}
 --- !u!114 &1788141266
 MonoBehaviour:
@@ -8014,7 +8003,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -8066,6 +8055,9 @@ MonoBehaviour:
     m_RotationOrder: 4
   attackKey: 32
   attackCooldown: 0.3
+  _anim: {fileID: 0}
+  mainCamera: {fileID: 0}
+  rotationSpeed: 15
 --- !u!114 &1792752532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9002,7 +8994,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -9220,7 +9212,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 1955960647}
-  skeletonEnemy: {fileID: 1955960652}
   contador: {fileID: 1983170459}
 --- !u!114 &1955960652
 MonoBehaviour:
@@ -9254,7 +9245,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -9758,7 +9749,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -9976,7 +9967,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 2132965248}
-  skeletonEnemy: {fileID: 2132965253}
   contador: {fileID: 1983170459}
 --- !u!114 &2132965253
 MonoBehaviour:
@@ -10010,7 +10000,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
