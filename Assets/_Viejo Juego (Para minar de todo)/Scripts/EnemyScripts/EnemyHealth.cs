@@ -7,7 +7,7 @@ public class EnemyHealth : MonoBehaviour
     public float maxLife;
     public float currentLife;
     public Animator anim;
-    public SkeletonBehaviour skeletonEnemy;
+    //public SkeletonBehaviour skeletonEnemy;
     public ContadorEnemigos contador;
     public void Damage(float damage)
     {
@@ -26,7 +26,7 @@ public class EnemyHealth : MonoBehaviour
     {
         
         Debug.Log("Enemy ha muerto");
-        skeletonEnemy.SetDead();
+        //skeletonEnemy.SetDead();
         contador.EnemyDied(gameObject);
         anim.SetTrigger("onDeath");
         

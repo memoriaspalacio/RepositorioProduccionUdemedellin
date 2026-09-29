@@ -15,21 +15,30 @@ namespace UdeM.Characters
         // Guarda el nombre del trigger usado para preparar el ataque.
         [SerializeField] private string reloadTrigger = "onReload";
 
-        // Guarda el nombre del trigger usado para ejecutar el ataque.
+        // Guarda el nombre del trigger usado para ejecutar el ataque final.
         [SerializeField] private string attackTrigger = "onAttack";
 
-        // Define el tiempo que tarda la monja en ejecutar el ataque.
-        [SerializeField] private float preparationTime = 0.75f;
+        // Define el tiempo inicial antes de comenzar a expandir el ataque.
+        [SerializeField] private float preparationTime = 0.5f;
 
-        // Define el tiempo minimo entre ataques consecutivos.
+        // Define el tiempo entre cada nueva expansion de la cruz.
+        [SerializeField] private float expansionInterval = 0.3f;
+
+        // Define el tiempo minimo entre ataques completos.
         [SerializeField] private float attackCooldown = 2f;
 
         // Define cuantas celdas alcanza cada brazo del ataque en cruz.
         [Min(1)]
         [SerializeField] private int attackRange = 3;
 
-        // Define el dano realizado por el ataque de la monja.
-        [SerializeField] private float attackDamage = 3f;
+        // Define el dano pequeno realizado por cada quemadura.
+        [SerializeField] private float burnDamage = 0.5f;
+
+        // Define cada cuanto tiempo puede aplicarse el dano de quemadura.
+        [SerializeField] private float burnInterval = 0.25f;
+
+        // Define el dano realizado cuando la cruz alcanza su rango maximo.
+        [SerializeField] private float finalAttackDamage = 5f;
 
         // Guarda la referencia al componente de vida del jugador.
         [SerializeField] private PlayerHealth playerHealth;
@@ -37,7 +46,7 @@ namespace UdeM.Characters
         // Guarda el prefab usado para mostrar cada celda del ataque.
         [SerializeField] private GameObject attackCellPrefab;
 
-        // Define la altura visual de las marcas respecto al centro de la celda.
+        // Define la altura visual de las marcas respecto al suelo.
         [SerializeField] private float indicatorHeight = 0.05f;
 
         // Indica si actualmente existe un ataque en preparacion.
@@ -46,9 +55,19 @@ namespace UdeM.Characters
         // Guarda el proximo instante en el que la monja puede atacar.
         private float nextAttackTime = 0f;
 
+        // Guarda el proximo instante permitido para realizar dano de quemadura.
+        private float nextBurnTime = 0f;
+
+        // Guarda el alcance que actualmente tiene la cruz.
+        private int currentAttackRange = 0;
+
         // Guarda todas las marcas visuales creadas para el ataque actual.
         private readonly List<GameObject> activeIndicators =
             new List<GameObject>();
+
+        // Guarda las celdas que actualmente forman parte del ataque.
+        private readonly HashSet<Vector2Int> activeAttackCells =
+            new HashSet<Vector2Int>();
 
         // Busca automaticamente el Animator si no fue asignado en el Inspector.
         protected override void Start()
@@ -73,7 +92,7 @@ namespace UdeM.Characters
             ClearCrossArea();
         }
 
-        // Detecta al jugador y prepara un ataque en cruz sin perseguirlo.
+        // Detecta al jugador y prepara un ataque expansivo sin perseguirlo.
         public override void PlayerDetected(GameObject detectedTarget)
         {
             if (isDead)
@@ -93,23 +112,55 @@ namespace UdeM.Characters
             );
         }
 
-        // Prepara el ataque, muestra la cruz y posteriormente ejecuta el dano.
+        // Prepara la cruz, la expande progresivamente y ejecuta el golpe final.
         private IEnumerator PrepareCrossAttack(GameObject target)
         {
             isPreparingAttack = true;
+            currentAttackRange = 0;
+            nextBurnTime = Time.time;
+
+            ClearCrossArea();
 
             StopMovementFor(
-                preparationTime + 0.1f
+                preparationTime +
+                expansionInterval * attackRange +
+                0.2f
             );
 
             if (animator != null)
                 animator.SetTrigger(reloadTrigger);
 
-            ShowCrossArea();
-
             yield return new WaitForSeconds(
                 preparationTime
             );
+
+            for (int distance = 1;
+                 distance <= attackRange;
+                 distance++)
+            {
+                if (isDead)
+                {
+                    ClearCrossArea();
+                    isPreparingAttack = false;
+                    yield break;
+                }
+
+                currentAttackRange = distance;
+
+                ExpandCrossArea(
+                    distance
+                );
+
+                float expansionEndTime =
+                    Time.time + expansionInterval;
+
+                while (Time.time < expansionEndTime)
+                {
+                    ApplyBurnDamage(target);
+
+                    yield return null;
+                }
+            }
 
             if (isDead)
             {
@@ -121,7 +172,7 @@ namespace UdeM.Characters
             if (animator != null)
                 animator.SetTrigger(attackTrigger);
 
-            ExecuteCrossAttack(target);
+            ExecuteFinalAttack(target);
 
             ClearCrossArea();
 
@@ -131,37 +182,72 @@ namespace UdeM.Characters
             isPreparingAttack = false;
         }
 
-        // Comprueba si el jugador se encuentra dentro de las celdas del ataque en cruz.
-        private void ExecuteCrossAttack(GameObject target)
+        // Agrega las cuatro nuevas celdas correspondientes al alcance indicado.
+        private void ExpandCrossArea(int distance)
+        {
+            Vector2Int centerCell =
+                CurrentGridCell;
+
+            CreateAttackIndicator(
+                centerCell +
+                new Vector2Int(distance, 0)
+            );
+
+            CreateAttackIndicator(
+                centerCell +
+                new Vector2Int(-distance, 0)
+            );
+
+            CreateAttackIndicator(
+                centerCell +
+                new Vector2Int(0, distance)
+            );
+
+            CreateAttackIndicator(
+                centerCell +
+                new Vector2Int(0, -distance)
+            );
+        }
+
+        // Aplica dano pequeno si el jugador permanece sobre una celda activa.
+        private void ApplyBurnDamage(GameObject target)
         {
             if (target == null)
                 return;
 
-            Vector2Int sisterCell =
-                CurrentGridCell;
+            if (Time.time < nextBurnTime)
+                return;
 
             Vector2Int playerCell =
                 Grid.WorldToCell(
                     target.transform.position
                 );
 
-            Vector2Int difference =
-                playerCell - sisterCell;
+            if (!activeAttackCells.Contains(playerCell))
+                return;
 
-            bool isHorizontal =
-                difference.y == 0 &&
-                Mathf.Abs(difference.x) >= 1 &&
-                Mathf.Abs(difference.x) <= attackRange;
+            nextBurnTime =
+                Time.time + burnInterval;
 
-            bool isVertical =
-                difference.x == 0 &&
-                Mathf.Abs(difference.y) >= 1 &&
-                Mathf.Abs(difference.y) <= attackRange;
+            if (playerHealth != null)
+                playerHealth.Damage(burnDamage);
+        }
 
-            if (!isHorizontal && !isVertical)
+        // Ejecuta el dano fuerte si el jugador permanece dentro de la cruz completa.
+        private void ExecuteFinalAttack(GameObject target)
+        {
+            if (target == null)
+                return;
+
+            Vector2Int playerCell =
+                Grid.WorldToCell(
+                    target.transform.position
+                );
+
+            if (!activeAttackCells.Contains(playerCell))
             {
                 Debug.Log(
-                    $"El jugador esquivo el ataque en cruz: {playerCell}.",
+                    $"El jugador esquivo el ataque final: {playerCell}.",
                     this
                 );
 
@@ -169,51 +255,25 @@ namespace UdeM.Characters
             }
 
             Debug.Log(
-                $"La monja ataco al jugador en la celda {playerCell}.",
+                $"La monja golpeo al jugador con el ataque final en {playerCell}.",
                 this
             );
 
             if (playerHealth != null)
-                playerHealth.Damage(attackDamage);
+                playerHealth.Damage(finalAttackDamage);
         }
 
-        // Crea visualmente las marcas de las celdas que forman la cruz.
-        private void ShowCrossArea()
-        {
-            ClearCrossArea();
-
-            Vector2Int centerCell =
-                CurrentGridCell;
-
-            for (int distance = 1;
-                 distance <= attackRange;
-                 distance++)
-            {
-                CreateAttackIndicator(
-                    centerCell +
-                    new Vector2Int(distance, 0)
-                );
-
-                CreateAttackIndicator(
-                    centerCell +
-                    new Vector2Int(-distance, 0)
-                );
-
-                CreateAttackIndicator(
-                    centerCell +
-                    new Vector2Int(0, distance)
-                );
-
-                CreateAttackIndicator(
-                    centerCell +
-                    new Vector2Int(0, -distance)
-                );
-            }
-        }
-
-        // Crea una marca visual en el centro de una celda de ataque.
+        // Crea una marca visual y registra su celda como parte del ataque activo.
         private void CreateAttackIndicator(Vector2Int cell)
         {
+            if (!Grid.IsCellInside(cell))
+                return;
+
+            if (activeAttackCells.Contains(cell))
+                return;
+
+            activeAttackCells.Add(cell);
+
             if (attackCellPrefab == null)
                 return;
 
@@ -235,7 +295,7 @@ namespace UdeM.Characters
             activeIndicators.Add(indicator);
         }
 
-        // Elimina todas las marcas visuales creadas por el ataque actual.
+        // Elimina todas las marcas visuales y limpia las celdas activas.
         private void ClearCrossArea()
         {
             for (int i = 0;
@@ -247,6 +307,8 @@ namespace UdeM.Characters
             }
 
             activeIndicators.Clear();
+            activeAttackCells.Clear();
+            currentAttackRange = 0;
         }
 
         // Desactiva el ataque normal de una celda usado por la clase base.
@@ -257,5 +319,5 @@ namespace UdeM.Characters
             return false;
         }
     }
-}
 
+}

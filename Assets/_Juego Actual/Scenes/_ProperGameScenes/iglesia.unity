@@ -1538,9 +1538,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 361842213}
-    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 361842212}
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
@@ -1576,47 +1573,7 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 361842210}
-  skeletonEnemy: {fileID: 361842213}
   contador: {fileID: 1983170459}
---- !u!114 &361842213
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 361842211}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92114637081615b4b9fb92959855707b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.SkeletonBehaviour
-  _canMove: 1
-  _state: 0
-  _grid: {fileID: 0}
-  _prioritizeLongestAxis: 1
-  _gridStepInterval: 1
-  patrolPoints:
-  - {fileID: 689248517}
-  - {fileID: 144525862}
-  - {fileID: 1437059696}
-  - {fileID: 1760784773}
-  patrolPointWaitTime: 2
-  minimumCellsBeforePause: 2
-  maximumCellsBeforePause: 5
-  pauseDuration: 3
-  timeBetweenCells: 1
-  requireRhythm: 0
-  rhythmWindowOpen: 0
-  navMeshSampleDistance: 2
-  currentCell: {x: 0, y: 0}
-  movementConsumedThisWindow: 0
-  movedCells: 0
-  cellsBeforePause: 0
-  animator: {fileID: 0}
-  walkTrigger: Walk
-  attackTrigger: onAttack
-  reloadTime: 2
-  playerHealth: {fileID: 1792752532}
 --- !u!114 &361842214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1629,18 +1586,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27b51a995f0fa104d89e5d8415d310f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.SisterBehaviour
-  _canMove: 0
+  _canMove: 1
   _state: 0
   _grid: {fileID: 888685292}
   _prioritizeLongestAxis: 1
   _gridStepInterval: 0.5
-  patrolPoints: []
+  patrolPoints:
+  - {fileID: 689248517}
+  - {fileID: 144525862}
+  - {fileID: 1437059696}
+  - {fileID: 1760784773}
   patrolPointWaitTime: 2
   minimumCellsBeforePause: 1
   maximumCellsBeforePause: 3
   pauseDuration: 1
   timeBetweenCells: 0.1
-  requireRhythm: 1
+  requireRhythm: 0
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
@@ -1650,12 +1611,12 @@ MonoBehaviour:
   animator: {fileID: 0}
   reloadTrigger: onReload
   attackTrigger: onAttack
-  preparationTime: 0.75
+  preparationTime: 3
   attackCooldown: 2
-  attackRange: 3
+  attackRange: 2
   attackDamage: 3
   playerHealth: {fileID: 1792752532}
-  attackCellPrefab: {fileID: 0}
+  attackCellPrefab: {fileID: 3440353448881964017, guid: 38722416446bebe4f9c8249f6b1dc361, type: 3}
   indicatorHeight: 0.05
 --- !u!1 &406492257 stripped
 GameObject:
@@ -1714,7 +1675,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 1350811594}
-  skeletonEnemy: {fileID: 406492262}
   contador: {fileID: 1983170459}
 --- !u!1 &422656232
 GameObject:
@@ -2935,7 +2895,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 827361322}
-  skeletonEnemy: {fileID: 827361325}
   contador: {fileID: 1983170459}
 --- !u!114 &827361325
 MonoBehaviour:
@@ -3149,7 +3108,7 @@ GameObject:
   - component: {fileID: 888685294}
   - component: {fileID: 888685293}
   - component: {fileID: 888685292}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Terreno
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3173,7 +3132,7 @@ MonoBehaviour:
   gridColor: {r: 0, g: 1, b: 1, a: 1}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 8
   raycastHeight: 100
 --- !u!114 &888685293
 MonoBehaviour:
@@ -3618,7 +3577,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 981127846}
-  skeletonEnemy: {fileID: 981127849}
   contador: {fileID: 1983170459}
 --- !u!114 &981127849
 MonoBehaviour:
@@ -4759,7 +4717,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 1409329990}
-  skeletonEnemy: {fileID: 1409329993}
   contador: {fileID: 1983170459}
 --- !u!114 &1409329993
 MonoBehaviour:
@@ -5087,7 +5044,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 1424186785}
-  skeletonEnemy: {fileID: 0}
   contador: {fileID: 1983170459}
 --- !u!114 &1424186788
 MonoBehaviour:
@@ -11909,7 +11865,7 @@ GameObject:
   - component: {fileID: 2299371300570923351}
   - component: {fileID: 1459797899304090716}
   - component: {fileID: 4668336584716827274}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Piso.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
