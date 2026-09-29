@@ -16,6 +16,10 @@ public class EnemyHealth : MonoBehaviour
         Debug.Log("Enemy fue herido fue herido " + currentLife);
         anim.SetTrigger("onHurt");
 
+        AngelBehaviour angel = GetComponent<AngelBehaviour>();
+        if (angel != null)
+            angel.NotifyAngelAttacked();
+
         if (currentLife <= 0)
         {
             Death();

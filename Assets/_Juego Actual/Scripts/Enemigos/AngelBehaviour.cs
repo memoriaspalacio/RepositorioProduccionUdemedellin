@@ -28,6 +28,9 @@ namespace UdeM.Characters
         // Indica si el grupo de angeles ya entro en combate.
         private static bool combatActive = false;
 
+        // Indica si el grupo ya completo su unica oleada de ataques por provocacion del jugador.
+        private static bool groupAttackCycleComplete = false;
+
         // Indica si existe actualmente una tanda de ataque activa.
         private static bool batchActive = false;
 
@@ -52,14 +55,11 @@ namespace UdeM.Characters
         // Indica si este angel ya golpeo al jugador durante su carga actual.
         private bool playerHitThisCharge = false;
 
-        // Indica si este angel posee una celda registrada manualmente.
-        private bool hasSpecialOccupiedCell = false;
+        // Indica si este angel ya completo su unico ataque de combate grupal.
+        private bool hasCompletedAttack = false;
 
         // Guarda la ultima celda del jugador registrada al comenzar la recarga.
         private Vector2Int recordedPlayerCell;
-
-        // Guarda la celda ocupada manualmente despues de terminar una carga.
-        private Vector2Int specialOccupiedCell;
 
         // Guarda el Animator usado por las animaciones del angel.
         [SerializeField] private Animator animator;
@@ -104,6 +104,7 @@ namespace UdeM.Characters
             batchActive = false;
             batchScheduled = false;
             firstBatchPending = false;
+            groupAttackCycleComplete = false;
 
             activeAttackers = 0;
         }
@@ -155,18 +156,8 @@ namespace UdeM.Characters
             if (playerHealth == null)
                 playerHealth = player.GetComponent<PlayerHealth>();
 
-            if (combatActive)
-                return;
-
-            combatActive = true;
-
-            firstExcludedAngel = this;
-            firstBatchPending = true;
-
-            RefillTurnPool();
-
-            ScheduleNextBatch(
-                0f
+            RestartGroupAttackCycle(
+                this
             );
         }
 
@@ -203,6 +194,98 @@ namespace UdeM.Characters
             return player;
         }
 
+        // Reinicia la oleada grupal cuando el jugador golpea a cualquier angel.
+        private static void RestartGroupAttackCycle(
+            AngelBehaviour struckAngel)
+        {
+            if (struckAngel == null ||
+                struckAngel.isDead)
+            {
+                return;
+            }
+
+            batchActive = false;
+            batchScheduled = false;
+            activeAttackers = 0;
+            groupAttackCycleComplete = false;
+            combatActive = true;
+
+            firstExcludedAngel = struckAngel;
+            firstBatchPending = true;
+
+            batchCandidates.Clear();
+            turnPool.Clear();
+
+            for (int i = 0;
+                 i < allAngels.Count;
+                 i++)
+            {
+                AngelBehaviour angel =
+                    allAngels[i];
+
+                if (angel == null)
+                    continue;
+
+                if (angel.isDead)
+                    continue;
+
+                angel.StopAllCoroutines();
+                angel.isCurrentBatchMember = false;
+                angel.playerHitThisCharge = false;
+                angel.hasCompletedAttack = false;
+            }
+
+            RefillTurnPool();
+
+            ScheduleNextBatch(
+                0f
+            );
+        }
+
+        // Comprueba si todos los angeles vivos ya realizaron su ataque de combate.
+        private static bool AllLivingAngelsHaveCompletedAttack()
+        {
+            bool anyLiving = false;
+
+            for (int i = 0;
+                 i < allAngels.Count;
+                 i++)
+            {
+                AngelBehaviour angel =
+                    allAngels[i];
+
+                if (angel == null)
+                    continue;
+
+                if (angel.isDead)
+                    continue;
+
+                if (!angel.isActiveAndEnabled)
+                    continue;
+
+                anyLiving = true;
+
+                if (!angel.hasCompletedAttack)
+                    return false;
+            }
+
+            return anyLiving;
+        }
+
+        // Cierra el combate grupal cuando ya no quedan angeles pendientes de atacar.
+        private static void TryConcludeGroupCombat()
+        {
+            if (!AllLivingAngelsHaveCompletedAttack())
+                return;
+
+            groupAttackCycleComplete = true;
+            combatActive = false;
+            batchActive = false;
+            batchScheduled = false;
+            firstBatchPending = false;
+            firstExcludedAngel = null;
+        }
+
         // Llena nuevamente la ronda con todos los angeles vivos y disponibles.
         private static void RefillTurnPool()
         {
@@ -224,6 +307,9 @@ namespace UdeM.Characters
                 if (!angel.isActiveAndEnabled)
                     continue;
 
+                if (angel.hasCompletedAttack)
+                    continue;
+
                 turnPool.Add(
                     angel
                 );
@@ -242,7 +328,8 @@ namespace UdeM.Characters
 
                 if (angel == null ||
                     angel.isDead ||
-                    !angel.isActiveAndEnabled)
+                    !angel.isActiveAndEnabled ||
+                    angel.hasCompletedAttack)
                 {
                     turnPool.RemoveAt(
                         i
@@ -331,12 +418,9 @@ namespace UdeM.Characters
 
             if (turnPool.Count == 0)
             {
-                RefillTurnPool();
-                RemoveInvalidAngelsFromPool();
-            }
-
-            if (turnPool.Count == 0)
+                TryConcludeGroupCombat();
                 return;
+            }
 
             BuildBatchCandidates();
 
@@ -441,7 +525,8 @@ namespace UdeM.Characters
         // Comienza el turno del angel y registra en ese instante la celda del jugador.
         private void BeginAttackTurn(GameObject player)
         {
-            if (isDead)
+            if (isDead ||
+                hasCompletedAttack)
             {
                 ReportAttackFinished();
                 return;
@@ -568,12 +653,7 @@ namespace UdeM.Characters
                     cellDistance * chargeTimePerCell
                 );
 
-            ReleaseSpecialOccupation();
-
-            Grid.ReleaseCell(
-                startCell,
-                gameObject
-            );
+            ReleaseGridOccupancy();
 
             bool navigatorWasEnabled =
                 _navigator != null &&
@@ -624,25 +704,34 @@ namespace UdeM.Characters
                     player
                 );
 
-                RegisterSpecialOccupation(
+                TryClaimDestinationCell(
                     destinationCell
                 );
             }
 
-            if (navigatorWasEnabled &&
-                _navigator != null)
+            if (_navigator != null)
             {
-                _navigator.enabled = true;
+                _navigator.ResetPath();
+                _navigator.isStopped = true;
 
-                if (NavMesh.SamplePosition(
-                        transform.position,
-                        out NavMeshHit hit,
-                        Grid.CellSize,
-                        NavMesh.AllAreas))
+                if (lockedInCombat)
                 {
-                    _navigator.Warp(
-                        hit.position
-                    );
+                    _navigator.enabled = false;
+                }
+                else if (navigatorWasEnabled)
+                {
+                    _navigator.enabled = true;
+
+                    if (NavMesh.SamplePosition(
+                            transform.position,
+                            out NavMeshHit hit,
+                            Grid.CellSize,
+                            NavMesh.AllAreas))
+                    {
+                        _navigator.Warp(
+                            hit.position
+                        );
+                    }
                 }
             }
         }
@@ -662,10 +751,10 @@ namespace UdeM.Characters
                 );
 
             if (currentPlayerCell != targetCell)
-                return targetCell;
+                return GetAvailableCellOrSelf(targetCell);
 
             if (startCell == targetCell)
-                return startCell;
+                return GetAvailableCellOrSelf(startCell);
 
             Vector3 startWorld =
                 Grid.CellToWorldCenter(
@@ -713,7 +802,10 @@ namespace UdeM.Characters
                     );
 
                 if (testCell != targetCell &&
-                    Grid.IsCellInside(testCell))
+                    Grid.IsCellInside(testCell) &&
+                    !Grid.IsCellOccupiedByOther(
+                        testCell,
+                        gameObject))
                 {
                     return testCell;
                 }
@@ -722,7 +814,85 @@ namespace UdeM.Characters
                     searchStep;
             }
 
-            return startCell;
+            return GetAvailableCellOrSelf(startCell);
+        }
+
+        // Devuelve la celda pedida si esta libre; si no, busca una vecina disponible.
+        private Vector2Int GetAvailableCellOrSelf(Vector2Int preferredCell)
+        {
+            if (!Grid.IsCellOccupiedByOther(
+                    preferredCell,
+                    gameObject))
+            {
+                return preferredCell;
+            }
+
+            Vector2Int[] offsets =
+            {
+                Vector2Int.up,
+                Vector2Int.down,
+                Vector2Int.left,
+                Vector2Int.right
+            };
+
+            for (int i = 0;
+                 i < offsets.Length;
+                 i++)
+            {
+                Vector2Int candidate =
+                    preferredCell + offsets[i];
+
+                if (!Grid.IsCellInside(candidate))
+                    continue;
+
+                if (Grid.IsCellOccupiedByOther(
+                        candidate,
+                        gameObject))
+                {
+                    continue;
+                }
+
+                return candidate;
+            }
+
+            return preferredCell;
+        }
+
+        // Intenta registrar la celda final evitando solaparse con otros angeles.
+        private void TryClaimDestinationCell(Vector2Int preferredCell)
+        {
+            if (ClaimGridCell(preferredCell))
+                return;
+
+            Vector2Int fallback =
+                GetAvailableCellOrSelf(preferredCell);
+
+            if (fallback == preferredCell)
+            {
+                Debug.LogWarning(
+                    $"El angel termino en {preferredCell} pero no pudo registrar la celda.",
+                    this
+                );
+
+                return;
+            }
+
+            Vector3 fallbackPosition =
+                Grid.CellToWorldCenter(
+                    fallback,
+                    0f
+                );
+
+            transform.position =
+                fallbackPosition;
+
+            if (!ClaimGridCell(fallback))
+            {
+                Debug.LogWarning(
+                    $"El angel no pudo registrar la celda alternativa {fallback}.",
+                    this
+                );
+            }
         }
 
         // Comprueba mediante las celdas si el angel impacto al jugador durante la carga.
@@ -744,52 +914,53 @@ namespace UdeM.Characters
                     player.transform.position
                 );
 
-            if (angelCell != playerCell)
+            int cellDistance =
+                Mathf.Abs(angelCell.x - playerCell.x) +
+                Mathf.Abs(angelCell.y - playerCell.y);
+
+            if (cellDistance == 0)
+            {
+                ApplyChargeDamage(player);
+                return;
+            }
+
+            if (cellDistance != 1 ||
+                playerCell != recordedPlayerCell)
+            {
+                return;
+            }
+
+            ApplyChargeDamage(player);
+        }
+
+        // Aplica el dano de la carga una sola vez por turno.
+        private void ApplyChargeDamage(GameObject player)
+        {
+            if (playerHitThisCharge)
                 return;
 
             playerHitThisCharge = true;
 
-            if (playerHealth != null)
-                playerHealth.Damage(attackDamage);
+            PlayerHealth health =
+                player != null
+                    ? player.GetComponent<PlayerHealth>()
+                    : null;
+
+            if (health == null)
+                health = playerHealth;
+
+            if (health != null)
+                health.Damage(attackDamage);
+
+            Vector2Int playerCell =
+                Grid.WorldToCell(
+                    player.transform.position
+                );
 
             Debug.Log(
                 $"El angel impacto al jugador en la celda {playerCell}.",
                 this
             );
-        }
-
-        // Registra manualmente la nueva celda ocupada despues de terminar la carga.
-        private void RegisterSpecialOccupation(Vector2Int cell)
-        {
-            specialOccupiedCell = cell;
-
-            hasSpecialOccupiedCell =
-                Grid.TryOccupyCell(
-                    cell,
-                    gameObject
-                );
-
-            if (!hasSpecialOccupiedCell)
-            {
-                Debug.LogWarning(
-                    $"El angel termino en {cell} pero no pudo registrar la celda.",
-                    this
-                );
-            }
-        }
-
-        // Libera la celda registrada manualmente durante una carga anterior.
-        private void ReleaseSpecialOccupation()
-        {
-            if (!hasSpecialOccupiedCell)
-                return;
-
-            Grid.ReleaseCell(
-                specialOccupiedCell,
-                gameObject
-            );
-
-            hasSpecialOccupiedCell = false;
         }
 
         // Informa al sistema grupal que este angel termino su ataque actual.
@@ -799,6 +970,11 @@ namespace UdeM.Characters
                 return;
 
             isCurrentBatchMember = false;
+            hasCompletedAttack = true;
+
+            turnPool.Remove(
+                this
+            );
 
             activeAttackers =
                 Mathf.Max(
@@ -830,7 +1006,7 @@ namespace UdeM.Characters
 
             StopAllCoroutines();
 
-            ReleaseSpecialOccupation();
+            ReleaseGridOccupancy();
 
             turnPool.Remove(
                 this
@@ -875,7 +1051,7 @@ namespace UdeM.Characters
         // Elimina este angel de todos los registros cuando su objeto es destruido.
         protected override void OnDestroy()
         {
-            ReleaseSpecialOccupation();
+            ReleaseGridOccupancy();
 
             allAngels.Remove(
                 this
