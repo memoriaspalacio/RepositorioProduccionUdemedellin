@@ -289,7 +289,8 @@ namespace UdeM.Characters
                 Instantiate(
                     attackCellPrefab,
                     worldPosition,
-                    Quaternion.identity
+                    Quaternion.identity,
+                    transform
                 );
 
             activeIndicators.Add(indicator);

@@ -1597,10 +1597,10 @@ MonoBehaviour:
   - {fileID: 1437059696}
   - {fileID: 1760784773}
   patrolPointWaitTime: 2
-  minimumCellsBeforePause: 1
-  maximumCellsBeforePause: 3
+  minimumCellsBeforePause: 2
+  maximumCellsBeforePause: 5
   pauseDuration: 1
-  timeBetweenCells: 0.1
+  timeBetweenCells: 1
   requireRhythm: 0
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
@@ -2743,7 +2743,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2863,10 +2863,10 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 827361325}
+      addedObject: {fileID: 827361324}
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 827361324}
+      addedObject: {fileID: 827361328}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!4 &827361321 stripped
 Transform:
@@ -2899,7 +2899,7 @@ MonoBehaviour:
   currentLife: 20
   anim: {fileID: 827361322}
   contador: {fileID: 1983170459}
---- !u!114 &827361325
+--- !u!114 &827361328
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2908,14 +2908,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 827361323}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92114637081615b4b9fb92959855707b, type: 3}
+  m_Script: {fileID: 11500000, guid: 27b51a995f0fa104d89e5d8415d310f4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.SkeletonBehaviour
+  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.SisterBehaviour
   _canMove: 1
   _state: 0
-  _grid: {fileID: 0}
+  _grid: {fileID: 888685292}
   _prioritizeLongestAxis: 1
-  _gridStepInterval: 1
+  _gridStepInterval: 0.5
   patrolPoints:
   - {fileID: 689248517}
   - {fileID: 1437059696}
@@ -2924,7 +2924,7 @@ MonoBehaviour:
   patrolPointWaitTime: 2
   minimumCellsBeforePause: 2
   maximumCellsBeforePause: 5
-  pauseDuration: 3
+  pauseDuration: 1
   timeBetweenCells: 1
   requireRhythm: 0
   rhythmWindowOpen: 0
@@ -2934,10 +2934,18 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  walkTrigger: Walk
+  reloadTrigger: onReload
   attackTrigger: onAttack
-  reloadTime: 2
+  preparationTime: 4.5
+  expansionInterval: 1.5
+  attackCooldown: 1
+  attackRange: 3
+  burnDamage: 0.5
+  burnInterval: 0.25
+  finalAttackDamage: 5
   playerHealth: {fileID: 1792752532}
+  attackCellPrefab: {fileID: 3440353448881964017, guid: 38722416446bebe4f9c8249f6b1dc361, type: 3}
+  indicatorHeight: 0.08
 --- !u!1 &830178398
 GameObject:
   m_ObjectHideFlags: 0
@@ -3425,7 +3433,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3545,10 +3553,10 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 981127849}
+      addedObject: {fileID: 981127848}
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 981127848}
+      addedObject: {fileID: 981127852}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!4 &981127845 stripped
 Transform:
@@ -3581,7 +3589,7 @@ MonoBehaviour:
   currentLife: 20
   anim: {fileID: 981127846}
   contador: {fileID: 1983170459}
---- !u!114 &981127849
+--- !u!114 &981127852
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3590,14 +3598,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 981127847}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92114637081615b4b9fb92959855707b, type: 3}
+  m_Script: {fileID: 11500000, guid: 27b51a995f0fa104d89e5d8415d310f4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.SkeletonBehaviour
+  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.SisterBehaviour
   _canMove: 1
   _state: 0
-  _grid: {fileID: 0}
+  _grid: {fileID: 888685292}
   _prioritizeLongestAxis: 1
-  _gridStepInterval: 1
+  _gridStepInterval: 0.5
   patrolPoints:
   - {fileID: 1437059696}
   - {fileID: 144525862}
@@ -3606,7 +3614,7 @@ MonoBehaviour:
   patrolPointWaitTime: 2
   minimumCellsBeforePause: 2
   maximumCellsBeforePause: 5
-  pauseDuration: 3
+  pauseDuration: 1
   timeBetweenCells: 1
   requireRhythm: 0
   rhythmWindowOpen: 0
@@ -3616,10 +3624,18 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  walkTrigger: Walk
+  reloadTrigger: onReload
   attackTrigger: onAttack
-  reloadTime: 2
+  preparationTime: 4.5
+  expansionInterval: 1.5
+  attackCooldown: 1
+  attackRange: 3
+  burnDamage: 0.5
+  burnInterval: 0.25
+  finalAttackDamage: 5
   playerHealth: {fileID: 1792752532}
+  attackCellPrefab: {fileID: 3440353448881964017, guid: 38722416446bebe4f9c8249f6b1dc361, type: 3}
+  indicatorHeight: 0.08
 --- !u!1001 &1014257826
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4565,7 +4581,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -4685,10 +4701,10 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1409329993}
+      addedObject: {fileID: 1409329992}
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1409329992}
+      addedObject: {fileID: 1409329997}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!4 &1409329989 stripped
 Transform:
@@ -4721,7 +4737,7 @@ MonoBehaviour:
   currentLife: 20
   anim: {fileID: 1409329990}
   contador: {fileID: 1983170459}
---- !u!114 &1409329993
+--- !u!114 &1409329997
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4730,14 +4746,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1409329991}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92114637081615b4b9fb92959855707b, type: 3}
+  m_Script: {fileID: 11500000, guid: 27b51a995f0fa104d89e5d8415d310f4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.SkeletonBehaviour
+  m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.SisterBehaviour
   _canMove: 1
   _state: 0
-  _grid: {fileID: 0}
+  _grid: {fileID: 888685292}
   _prioritizeLongestAxis: 1
-  _gridStepInterval: 1
+  _gridStepInterval: 0.5
   patrolPoints:
   - {fileID: 1437059696}
   - {fileID: 144525862}
@@ -4746,7 +4762,7 @@ MonoBehaviour:
   patrolPointWaitTime: 2
   minimumCellsBeforePause: 2
   maximumCellsBeforePause: 5
-  pauseDuration: 3
+  pauseDuration: 1
   timeBetweenCells: 1
   requireRhythm: 0
   rhythmWindowOpen: 0
@@ -4756,10 +4772,18 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  walkTrigger: Walk
+  reloadTrigger: onReload
   attackTrigger: onAttack
-  reloadTime: 2
+  preparationTime: 4.5
+  expansionInterval: 1.5
+  attackCooldown: 1
+  attackRange: 3
+  burnDamage: 0.5
+  burnInterval: 0.25
+  finalAttackDamage: 5
   playerHealth: {fileID: 1792752532}
+  attackCellPrefab: {fileID: 3440353448881964017, guid: 38722416446bebe4f9c8249f6b1dc361, type: 3}
+  indicatorHeight: 0.08
 --- !u!1001 &1418137738
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4892,7 +4916,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5060,9 +5084,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27b51a995f0fa104d89e5d8415d310f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.SisterBehaviour
-  _canMove: 0
+  _canMove: 1
   _state: 0
-  _grid: {fileID: 0}
+  _grid: {fileID: 888685292}
   _prioritizeLongestAxis: 1
   _gridStepInterval: 0.5
   patrolPoints:
@@ -5071,11 +5095,11 @@ MonoBehaviour:
   - {fileID: 144525862}
   - {fileID: 1760784773}
   patrolPointWaitTime: 2
-  minimumCellsBeforePause: 1
-  maximumCellsBeforePause: 3
+  minimumCellsBeforePause: 2
+  maximumCellsBeforePause: 5
   pauseDuration: 1
-  timeBetweenCells: 0.1
-  requireRhythm: 1
+  timeBetweenCells: 1
+  requireRhythm: 0
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
@@ -5085,16 +5109,16 @@ MonoBehaviour:
   animator: {fileID: 0}
   reloadTrigger: onReload
   attackTrigger: onAttack
-  preparationTime: 0.75
-  expansionInterval: 0.3
-  attackCooldown: 2
+  preparationTime: 4.5
+  expansionInterval: 1.5
+  attackCooldown: 1
   attackRange: 3
   burnDamage: 0.5
   burnInterval: 0.25
   finalAttackDamage: 5
   playerHealth: {fileID: 1792752532}
-  attackCellPrefab: {fileID: 0}
-  indicatorHeight: 0.05
+  attackCellPrefab: {fileID: 3440353448881964017, guid: 38722416446bebe4f9c8249f6b1dc361, type: 3}
+  indicatorHeight: 0.08
 --- !u!1 &1437059695
 GameObject:
   m_ObjectHideFlags: 0
