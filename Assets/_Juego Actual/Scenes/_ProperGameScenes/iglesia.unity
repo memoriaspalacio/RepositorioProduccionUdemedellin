@@ -1611,13 +1611,16 @@ MonoBehaviour:
   animator: {fileID: 0}
   reloadTrigger: onReload
   attackTrigger: onAttack
-  preparationTime: 3
-  attackCooldown: 2
-  attackRange: 2
-  attackDamage: 3
+  preparationTime: 4.5
+  expansionInterval: 1.5
+  attackCooldown: 1
+  attackRange: 3
+  burnDamage: 0.5
+  burnInterval: 0.25
+  finalAttackDamage: 5
   playerHealth: {fileID: 1792752532}
   attackCellPrefab: {fileID: 3440353448881964017, guid: 38722416446bebe4f9c8249f6b1dc361, type: 3}
-  indicatorHeight: 0.05
+  indicatorHeight: 0.08
 --- !u!1 &406492257 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
@@ -5083,9 +5086,12 @@ MonoBehaviour:
   reloadTrigger: onReload
   attackTrigger: onAttack
   preparationTime: 0.75
+  expansionInterval: 0.3
   attackCooldown: 2
   attackRange: 3
-  attackDamage: 3
+  burnDamage: 0.5
+  burnInterval: 0.25
+  finalAttackDamage: 5
   playerHealth: {fileID: 1792752532}
   attackCellPrefab: {fileID: 0}
   indicatorHeight: 0.05
