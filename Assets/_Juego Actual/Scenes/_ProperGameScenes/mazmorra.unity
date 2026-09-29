@@ -584,7 +584,7 @@ MonoBehaviour:
   chargeTimePerCell: 0.12
   attackDamage: 5
   timeBetweenBatches: 0.75
-  playerHealth: {fileID: 1792752532}
+  playerHealth: {fileID: 0}
 --- !u!1001 &85292676
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -911,7 +911,7 @@ MonoBehaviour:
   chargeTimePerCell: 0.12
   attackDamage: 5
   timeBetweenBatches: 0.75
-  playerHealth: {fileID: 1792752532}
+  playerHealth: {fileID: 0}
 --- !u!1001 &126750403
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1238,7 +1238,7 @@ MonoBehaviour:
   chargeTimePerCell: 0.12
   attackDamage: 5
   timeBetweenBatches: 0.75
-  playerHealth: {fileID: 1792752532}
+  playerHealth: {fileID: 0}
 --- !u!1 &144525861
 GameObject:
   m_ObjectHideFlags: 0
@@ -1804,6 +1804,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 8104152678226698038, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
+      propertyPath: lifeBar
+      value: 
+      objectReference: {fileID: 2018902625}
     - target: {fileID: 8278722189647839598, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 11.100824
@@ -1864,13 +1868,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3252187599590653706, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
       insertIndex: 1
       addedObject: {fileID: 1894882663}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5593976134881640356, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1792752530}
-    - targetCorrespondingSourceObject: {fileID: 5593976134881640356, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1792752532}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
 --- !u!1 &248186056
 GameObject:
@@ -2143,6 +2141,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: arabella
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1a5532cc84629dc43b283ee54d0791c9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2347,7 +2349,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2603,7 +2605,7 @@ MonoBehaviour:
   chargeTimePerCell: 0.12
   attackDamage: 5
   timeBetweenBatches: 0.75
-  playerHealth: {fileID: 1792752532}
+  playerHealth: {fileID: 0}
 --- !u!1001 &370628113
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2930,7 +2932,7 @@ MonoBehaviour:
   chargeTimePerCell: 0.12
   attackDamage: 5
   timeBetweenBatches: 0.75
-  playerHealth: {fileID: 1792752532}
+  playerHealth: {fileID: 0}
 --- !u!1 &406492257 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
@@ -2972,7 +2974,7 @@ MonoBehaviour:
   walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
-  playerHealth: {fileID: 1792752532}
+  playerHealth: {fileID: 0}
 --- !u!114 &406492266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3629,15 +3631,10 @@ MonoBehaviour:
   chargeTimePerCell: 0.12
   attackDamage: 5
   timeBetweenBatches: 0.75
-  playerHealth: {fileID: 1792752532}
+  playerHealth: {fileID: 0}
 --- !u!1 &578597209 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4321849672758228593, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
-  m_PrefabInstance: {fileID: 233945029}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &619254479 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5593976134881640356, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
   m_PrefabInstance: {fileID: 233945029}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &664701255 stripped
@@ -3703,7 +3700,7 @@ MonoBehaviour:
   chargeTimePerCell: 0.12
   attackDamage: 5
   timeBetweenBatches: 0.75
-  playerHealth: {fileID: 1792752532}
+  playerHealth: {fileID: 0}
 --- !u!1001 &687991857
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4518,7 +4515,7 @@ MonoBehaviour:
   chargeTimePerCell: 0.12
   attackDamage: 5
   timeBetweenBatches: 0.75
-  playerHealth: {fileID: 1792752532}
+  playerHealth: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -5222,7 +5219,7 @@ MonoBehaviour:
   chargeTimePerCell: 0.12
   attackDamage: 5
   timeBetweenBatches: 0.75
-  playerHealth: {fileID: 1792752532}
+  playerHealth: {fileID: 0}
 --- !u!1 &1115188530
 GameObject:
   m_ObjectHideFlags: 0
@@ -6018,16 +6015,11 @@ MonoBehaviour:
   chargeTimePerCell: 0.12
   attackDamage: 5
   timeBetweenBatches: 0.75
-  playerHealth: {fileID: 1792752532}
+  playerHealth: {fileID: 0}
 --- !u!95 &1185477624 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5180268599392299982, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
   m_PrefabInstance: {fileID: 1854845681}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &1251406699 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 7792116119601143675, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
-  m_PrefabInstance: {fileID: 233945029}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1256647088
 GameObject:
@@ -6808,7 +6800,7 @@ MonoBehaviour:
   chargeTimePerCell: 0.12
   attackDamage: 5
   timeBetweenBatches: 0.75
-  playerHealth: {fileID: 1792752532}
+  playerHealth: {fileID: 0}
 --- !u!95 &1350811594 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5180268599392299982, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
@@ -7645,7 +7637,7 @@ MonoBehaviour:
   chargeTimePerCell: 0.12
   attackDamage: 5
   timeBetweenBatches: 0.75
-  playerHealth: {fileID: 1792752532}
+  playerHealth: {fileID: 0}
 --- !u!1 &1712180125 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 118601694469779794, guid: f3b47b39b52d1d94cb59989dc2ae4653, type: 3}
@@ -8020,75 +8012,12 @@ MonoBehaviour:
   walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
-  playerHealth: {fileID: 1792752532}
+  playerHealth: {fileID: 0}
 --- !u!4 &1792752527 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3252187599590653706, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
   m_PrefabInstance: {fileID: 233945029}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1792752530
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 619254479}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7971b4d803ee834f9fde0dc8d835b00, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GridPlayerMovement
-  grid: {fileID: 0}
-  beatJudge: {fileID: 1140715656}
-  heightOffset: 1
-  rotateTowardsMovement: 1
-  moveDuration: 0.15
-  movementCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  attackKey: 32
-  attackCooldown: 0.3
-  _anim: {fileID: 0}
-  mainCamera: {fileID: 0}
-  rotationSpeed: 15
---- !u!114 &1792752532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 619254479}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b4be2b2dc459634a9b71d146d56fef6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  maxLife: 40
-  currentLife: 40
-  anim: {fileID: 1251406699}
-  playerMovement: {fileID: 1792752530}
-  lifeBar: {fileID: 2018902625}
 --- !u!1001 &1853576051
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9264,7 +9193,7 @@ MonoBehaviour:
   chargeTimePerCell: 0.12
   attackDamage: 5
   timeBetweenBatches: 0.75
-  playerHealth: {fileID: 1792752532}
+  playerHealth: {fileID: 0}
 --- !u!1 &1983170454
 GameObject:
   m_ObjectHideFlags: 0
@@ -10021,7 +9950,7 @@ MonoBehaviour:
   chargeTimePerCell: 0.12
   attackDamage: 5
   timeBetweenBatches: 0.75
-  playerHealth: {fileID: 1792752532}
+  playerHealth: {fileID: 0}
 --- !u!1 &351749469795467531
 GameObject:
   m_ObjectHideFlags: 0

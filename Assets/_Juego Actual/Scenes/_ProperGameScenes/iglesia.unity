@@ -129,7 +129,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: d52f683d36adfe44a9f36807c61a3326, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.01
+      value: -6.63
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d52f683d36adfe44a9f36807c61a3326, type: 3}
       propertyPath: m_LocalPosition.y
@@ -137,7 +137,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d52f683d36adfe44a9f36807c61a3326, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.21000004
+      value: -5.03
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d52f683d36adfe44a9f36807c61a3326, type: 3}
       propertyPath: m_LocalRotation.w
@@ -752,6 +752,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 5264282115128844298, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
+      propertyPath: grid
+      value: 
+      objectReference: {fileID: 888685292}
+    - target: {fileID: 5264282115128844298, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
+      propertyPath: beatJudge
+      value: 
+      objectReference: {fileID: 1140715656}
+    - target: {fileID: 5264282115128844298, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
+      propertyPath: mainCamera
+      value: 
+      objectReference: {fileID: 963194228}
     - target: {fileID: 5389053593820512191, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -941,9 +953,6 @@ PrefabInstance:
       insertIndex: 1
       addedObject: {fileID: 1894882663}
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5593976134881640356, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1792752530}
     - targetCorrespondingSourceObject: {fileID: 5593976134881640356, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1792752532}
@@ -1213,6 +1222,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 1a5532cc84629dc43b283ee54d0791c9, type: 3}
       propertyPath: m_Name
       value: arabella
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1a5532cc84629dc43b283ee54d0791c9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3373,7 +3386,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.69
+      value: -0.29
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3381,7 +3394,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.4
+      value: -12.37
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4364,11 +4377,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d52f683d36adfe44a9f36807c61a3326, type: 3}
   m_PrefabInstance: {fileID: 1242942843}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &1251406699 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 7792116119601143675, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
-  m_PrefabInstance: {fileID: 233945029}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1256647088
 GameObject:
   m_ObjectHideFlags: 0
@@ -4521,7 +4529,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.69
+      value: -3.06
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5709,51 +5717,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3252187599590653706, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
   m_PrefabInstance: {fileID: 233945029}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1792752530
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 619254479}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7971b4d803ee834f9fde0dc8d835b00, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GridPlayerMovement
-  grid: {fileID: 0}
-  beatJudge: {fileID: 1140715656}
-  heightOffset: 1
-  rotateTowardsMovement: 1
-  moveDuration: 0.15
-  movementCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  attackCooldown: 0.3
-  _anim: {fileID: 0}
-  mainCamera: {fileID: 0}
-  rotationSpeed: 15
 --- !u!114 &1792752532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5768,8 +5731,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxLife: 40
   currentLife: 40
-  anim: {fileID: 1251406699}
-  playerMovement: {fileID: 1792752530}
+  anim: {fileID: 0}
+  playerMovement: {fileID: 0}
   lifeBar: {fileID: 675132973}
 --- !u!1 &1878608292
 GameObject:

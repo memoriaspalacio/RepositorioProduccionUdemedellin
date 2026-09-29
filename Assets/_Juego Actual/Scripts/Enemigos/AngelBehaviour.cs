@@ -153,8 +153,10 @@ namespace UdeM.Characters
 
             sharedPlayer = player;
 
-            if (playerHealth == null)
-                playerHealth = player.GetComponent<PlayerHealth>();
+            playerHealth =
+                ResolvePlayerHealth(
+                    player
+                );
 
             RestartGroupAttackCycle(
                 this
@@ -192,6 +194,41 @@ namespace UdeM.Characters
                 );
 
             return player;
+        }
+
+        // Resuelve el PlayerHealth correcto cuando hay mas de uno en el jugador.
+        private PlayerHealth ResolvePlayerHealth(GameObject player)
+        {
+            if (player == null)
+                return playerHealth;
+
+            if (playerHealth != null &&
+                playerHealth.gameObject == player)
+            {
+                return playerHealth;
+            }
+
+            PlayerHealth[] healthComponents =
+                player.GetComponents<PlayerHealth>();
+
+            for (int i = 0;
+                 i < healthComponents.Length;
+                 i++)
+            {
+                PlayerHealth candidate =
+                    healthComponents[i];
+
+                if (candidate == null)
+                    continue;
+
+                if (candidate.lifeBar != null)
+                    return candidate;
+            }
+
+            if (healthComponents.Length > 0)
+                return healthComponents[0];
+
+            return null;
         }
 
         // Reinicia la oleada grupal cuando el jugador golpea a cualquier angel.
@@ -546,8 +583,10 @@ namespace UdeM.Characters
                     player.transform.position
                 );
 
-            if (playerHealth == null)
-                playerHealth = player.GetComponent<PlayerHealth>();
+            playerHealth =
+                ResolvePlayerHealth(
+                    player
+                );
 
             if (!lockedInCombat)
             {
@@ -942,12 +981,9 @@ namespace UdeM.Characters
             playerHitThisCharge = true;
 
             PlayerHealth health =
-                player != null
-                    ? player.GetComponent<PlayerHealth>()
-                    : null;
-
-            if (health == null)
-                health = playerHealth;
+                ResolvePlayerHealth(
+                    player
+                );
 
             if (health != null)
                 health.Damage(attackDamage);

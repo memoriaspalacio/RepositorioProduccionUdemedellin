@@ -16,18 +16,23 @@ public class PlayerHealth : MonoBehaviour
     {
         currentLife = maxLife;
 
-        lifeBar.maxValue = maxLife;
-        lifeBar.value = currentLife;
+        if (lifeBar != null)
+        {
+            lifeBar.maxValue = maxLife;
+            lifeBar.value = currentLife;
+        }
     }
     public void Damage(float damage)
     {
         currentLife = currentLife - damage;
 
-        // Actualizar barra
-        lifeBar.value = currentLife;
+        if (lifeBar != null)
+            lifeBar.value = currentLife;
 
         Debug.Log("Player fue herido " + currentLife);
-        anim.SetTrigger("onHurt");
+
+        if (anim != null)
+            anim.SetTrigger("onHurt");
 
         if(currentLife <= 0)
         {
@@ -38,8 +43,11 @@ public class PlayerHealth : MonoBehaviour
     public void Death()
     {
         Debug.Log("Player ha muerto");
-        playerMovement.SetDead();
-        anim.SetTrigger("onDeath");
+        if (playerMovement != null)
+            playerMovement.SetDead();
+
+        if (anim != null)
+            anim.SetTrigger("onDeath");
         ScreensInGame.singleton.ScreenLostActive();
         
     }
