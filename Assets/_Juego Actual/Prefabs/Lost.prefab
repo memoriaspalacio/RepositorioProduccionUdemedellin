@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Reiniciar
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
+  m_sharedMaterial: {fileID: -898937273595191794, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -258,9 +258,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ScreensInGame, Assembly-CSharp
-        m_MethodName: ResetScene
+      - m_Target: {fileID: 1455853729538191729}
+        m_TargetAssemblyTypeName: Scenes, Assembly-CSharp
+        m_MethodName: ReiniciarEscena
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -281,13 +281,14 @@ GameObject:
   - component: {fileID: 5485114383748992539}
   - component: {fileID: 3786991912686342061}
   - component: {fileID: 4506652151657486301}
+  - component: {fileID: 1455853729538191729}
   m_Layer: 5
   m_Name: Lost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5485114383748992539
 RectTransform:
   m_ObjectHideFlags: 0
@@ -347,6 +348,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1455853729538191729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6305918671090303674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f95a1e2db014bf41bcf82e0640ef763, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Scenes
 --- !u!1 &8487506603147135098
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,8 +427,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Perdiste!!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
+  m_sharedMaterial: {fileID: -898937273595191794, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

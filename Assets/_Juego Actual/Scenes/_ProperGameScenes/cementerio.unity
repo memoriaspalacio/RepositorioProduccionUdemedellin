@@ -2066,13 +2066,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lost
       objectReference: {fileID: 0}
+    - target: {fileID: 6305918671090303674, guid: 0a876161f67c83a408037c9c3155141e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6305918671090303674, guid: 0a876161f67c83a408037c9c3155141e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 603067385}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a876161f67c83a408037c9c3155141e, type: 3}
 --- !u!224 &603067381 stripped
 RectTransform:
@@ -2084,18 +2085,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6305918671090303674, guid: 0a876161f67c83a408037c9c3155141e, type: 3}
   m_PrefabInstance: {fileID: 603067380}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &603067385
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 603067382}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f95a1e2db014bf41bcf82e0640ef763, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Scenes
 --- !u!1001 &606222056
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2241,6 +2230,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1983170458}
     m_Modifications:
+    - target: {fileID: 502740346062669670, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
+    - target: {fileID: 502740346062669670, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -898937273595191794, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
+    - target: {fileID: 502740346062669670, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 625703232248823309, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2321,6 +2322,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1021442423466097878, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1085581473987598108, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
+    - target: {fileID: 1085581473987598108, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -898937273595191794, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
+    - target: {fileID: 1085581473987598108, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1085581473987598108, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1917602078452645560, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2328,6 +2349,34 @@ PrefabInstance:
     - target: {fileID: 2671328518192151799, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_Name
       value: Gametime UI (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8075253062828422866, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
+    - target: {fileID: 8075253062828422866, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -898937273595191794, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
+    - target: {fileID: 8075253062828422866, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8519113622942411241, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
+    - target: {fileID: 8519113622942411241, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -898937273595191794, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
+    - target: {fileID: 8519113622942411241, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8519113622942411241, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
