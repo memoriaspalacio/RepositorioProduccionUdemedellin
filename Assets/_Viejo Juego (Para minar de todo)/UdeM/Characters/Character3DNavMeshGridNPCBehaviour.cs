@@ -795,6 +795,57 @@ namespace UdeM.Characters
             cellRegistered = false;
         }
 
+        // Libera la ocupacion de cuadricula para desplazamientos externos (p. ej. carga del angel).
+        protected void ReleaseGridOccupancy()
+        {
+            ReleaseCurrentCell();
+        }
+
+        // Registra al NPC en una celda tras un desplazamiento que no usa el movimiento por pasos.
+        protected bool ClaimGridCell(Vector2Int cell)
+        {
+            if (_grid == null ||
+                !_grid.IsCellInside(cell))
+            {
+                return false;
+            }
+
+            if (cellRegistered)
+            {
+                if (currentCell == cell)
+                    return true;
+
+                if (!_grid.TryMoveOccupant(
+                        currentCell,
+                        cell,
+                        gameObject))
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (_grid.IsCellOccupiedByOther(
+                        cell,
+                        gameObject))
+                {
+                    return false;
+                }
+
+                if (!_grid.TryOccupyCell(
+                        cell,
+                        gameObject))
+                {
+                    return false;
+                }
+
+                cellRegistered = true;
+            }
+
+            currentCell = cell;
+            return true;
+        }
+
         // Informa cuando una celda vecina esta ocupada por otro objeto.
         protected virtual void OnCellBlocked(Vector2Int blockedCell)
         {

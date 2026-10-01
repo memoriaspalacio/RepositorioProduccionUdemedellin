@@ -11,13 +11,13 @@ namespace UdeM.Characters
         // Guarda el Animator usado por las animaciones del esqueleto.
         [SerializeField] private Animator animator;
 
-        // Guarda el nombre del trigger usado para preparar el ataque.
+        // Guarda el nombre del trigger usado para caminar.
         [SerializeField]
-        private string reloadTrigger = "onReload";
+        private string walkTrigger = "Walk";
 
         // Guarda el nombre del trigger usado para ejecutar el ataque.
         [SerializeField]
-        private string attackTrigger = "onAttack";
+        private string attackTrigger = "Attack";
 
         // Define el tiempo entre la preparacion y la comprobacion del golpe.
         [SerializeField] private float reloadTime = 0.5f;
@@ -84,7 +84,7 @@ namespace UdeM.Characters
             StopMovementFor(2.10f);
 
             if (animator != null)
-                animator.SetTrigger(reloadTrigger);
+                animator.SetTrigger(walkTrigger);
 
             yield return new WaitForSeconds(reloadTime);
 

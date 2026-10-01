@@ -604,57 +604,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 188703212}
   m_CullTransparentMesh: 1
---- !u!1 &206262059
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 206262060}
-  - component: {fileID: 206262061}
-  m_Layer: 5
-  m_Name: Fin de Zona OportunidadDeMovimiento (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &206262060
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 206262059}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2146692983}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 345, y: 158}
-  m_SizeDelta: {x: 14.3, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &206262061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 206262059}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6e8f19148e897b4a9200ca909c60fac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeatDestroyZone
-  beatJudge: {fileID: 1140715656}
-  beatTrackUI: {fileID: 1032602251}
-  destroyBox: {fileID: 206262060}
 --- !u!1001 &233945029
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1998,7 +1947,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -2677,6 +2626,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 787692906890486275, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: beatJudge
+      value: 
+      objectReference: {fileID: 1140715656}
+    - target: {fileID: 787692906890486275, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: beatTrackUI
+      value: 
+      objectReference: {fileID: 1032602251}
     - target: {fileID: 1917602078452645560, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2685,15 +2642,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Gametime UI
       objectReference: {fileID: 0}
+    - target: {fileID: 4254642703486385409, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: beatJudge
+      value: 
+      objectReference: {fileID: 1140715656}
+    - target: {fileID: 4254642703486385409, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: beatTrackUI
+      value: 
+      objectReference: {fileID: 1032602251}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 7701592360574646356, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1131306762}
-    - targetCorrespondingSourceObject: {fileID: 7701592360574646356, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 206262060}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
 --- !u!1 &689248516
@@ -3983,57 +3942,6 @@ MonoBehaviour:
   - {x: 3, y: 3}
   - {x: 4, y: 2}
   - {x: 4, y: 3}
---- !u!1 &1131306761
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1131306762}
-  - component: {fileID: 1131306763}
-  m_Layer: 5
-  m_Name: Comienzo de Zona OportunidadDeMovimiento
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1131306762
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1131306761}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2146692983}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 284.8, y: 161.2}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1131306763
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1131306761}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30fae4f92cf1b0544acc513cd01d8f1f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeatWindowZone
-  beatJudge: {fileID: 1140715656}
-  beatTrackUI: {fileID: 1032602251}
-  windowBox: {fileID: 1131306762}
 --- !u!1 &1139778889
 GameObject:
   m_ObjectHideFlags: 0
@@ -5154,7 +5062,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -5687,7 +5595,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -5744,6 +5652,9 @@ MonoBehaviour:
     m_RotationOrder: 4
   attackKey: 32
   attackCooldown: 0.3
+  _anim: {fileID: 0}
+  mainCamera: {fileID: 0}
+  rotationSpeed: 15
 --- !u!114 &1792752532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6617,11 +6528,6 @@ MonoBehaviour:
   occupiedCells:
   - {x: 1, y: 8}
   - {x: 2, y: 8}
---- !u!224 &2146692983 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7701592360574646356, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-  m_PrefabInstance: {fileID: 661014466}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6409218989996008
 Transform:
   m_ObjectHideFlags: 0
