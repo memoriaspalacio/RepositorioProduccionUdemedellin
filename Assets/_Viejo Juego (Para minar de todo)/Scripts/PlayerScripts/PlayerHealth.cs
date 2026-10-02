@@ -34,7 +34,9 @@ public class PlayerHealth : MonoBehaviour
         if (anim != null)
             anim.SetTrigger("onHurt");
 
-        if(currentLife <= 0)
+        SoundManager.singleton.PlaySFX("danoJugador");
+
+        if (currentLife <= 0)
         {
             Death();
         }
