@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,8 @@ public class PlayerHealth : MonoBehaviour
     public float currentLife;
     public Animator anim;
     public GridPlayerMovement playerMovement;
+    [SerializeField] private float tiempoEntreSonidosDano = 0.5f; // Tiempo de espera en segundos
+    private float siguienteTiempoSonidoDano = 0f;
 
     [Header("UI")]
     public Slider lifeBar;
@@ -34,7 +37,13 @@ public class PlayerHealth : MonoBehaviour
         if (anim != null)
             anim.SetTrigger("onHurt");
 
-        SoundManager.singleton.PlaySFX("danoJugador");
+        // NUEVO: Solo reproduce el sonido si ya pasó el tiempo de espera mínimo
+        if (Time.time >= siguienteTiempoSonidoDano)
+        {
+            SoundManager.singleton.PlaySFX("danoJugador");
+            siguienteTiempoSonidoDano = Time.time + tiempoEntreSonidosDano; // Actualiza el temporizador
+            tiempoEntreSonidosDano = Random.Range(1.2f, 3);
+        }
 
         if (currentLife <= 0)
         {
@@ -42,6 +51,7 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    
     public void Death()
     {
         Debug.Log("Player ha muerto");
