@@ -244,6 +244,8 @@ namespace UdeM.Characters
                     target.transform.position
                 );
 
+            SoundManager.singleton.PlaySFX("monjaAtaque");
+
             if (!activeAttackCells.Contains(playerCell))
             {
                 Debug.Log(
