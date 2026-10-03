@@ -2935,7 +2935,6 @@ MonoBehaviour:
   barPrefab: {fileID: 1763768325479063683, guid: ee83b12492d592d499d90b08e2d2a06c, type: 3}
   barParent: {fileID: 1092442724}
   travelBeats: 4
-  despawnBeats: 0.1
   idleColor: {r: 0.79622644, g: 0.7616732, b: 0.7616732, a: 1}
   windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   windowClosingColor: {r: 0.6, g: 0.2, b: 0.15, a: 1}
@@ -3243,7 +3242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
   earlyTolerance: 0.5
   lateTolerance: 0.25
-  penaltyBeats: 2
+  penaltyNoteCount: 2
   logActions: 1
 --- !u!1 &1158727593
 GameObject:
@@ -3352,11 +3351,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1731232081}
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
---- !u!95 &1251406699 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 7792116119601143675, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
-  m_PrefabInstance: {fileID: 233945029}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1256647088
 GameObject:
   m_ObjectHideFlags: 0
@@ -3827,7 +3821,6 @@ MonoBehaviour:
   maxLife: 20
   currentLife: 20
   anim: {fileID: 1518774651}
-  skeletonEnemy: {fileID: 1518774654}
   contador: {fileID: 1983170459}
 --- !u!114 &1518774654
 MonoBehaviour:
@@ -3863,7 +3856,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  reloadTrigger: onReload
+  walkTrigger: Walk
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
@@ -4128,8 +4121,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  attackKey: 32
   attackCooldown: 0.3
+  _anim: {fileID: 0}
+  mainCamera: {fileID: 0}
+  rotationSpeed: 15
 --- !u!114 &1792752532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4144,8 +4139,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxLife: 40
   currentLife: 40
-  anim: {fileID: 1251406699}
+  anim: {fileID: 0}
   playerMovement: {fileID: 1792752530}
+  tiempoEntreSonidosDano: 0.5
   lifeBar: {fileID: 719510573}
 --- !u!1 &1878608292
 GameObject:
@@ -4753,6 +4749,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8803ca9161fca344953642eb6a3e5d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScreensInGame
+  soundMusicBeat: {fileID: 1776775016}
   screenLose: {fileID: 603067382}
   screenWin: {fileID: 342296132}
 --- !u!1 &2089667804

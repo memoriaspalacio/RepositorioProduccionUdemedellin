@@ -6074,6 +6074,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8803ca9161fca344953642eb6a3e5d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScreensInGame
+  soundMusicBeat: {fileID: 1776775016}
   screenLose: {fileID: 603067382}
   screenWin: {fileID: 342296132}
 --- !u!114 &2032388367

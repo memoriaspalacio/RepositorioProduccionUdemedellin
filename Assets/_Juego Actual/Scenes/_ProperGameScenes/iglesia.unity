@@ -892,6 +892,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 8104152678226698038, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
+      propertyPath: beatMusic
+      value: 
+      objectReference: {fileID: 1776775016}
     - target: {fileID: 8278722189647839598, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 11.100824
@@ -5915,6 +5919,7 @@ MonoBehaviour:
   currentLife: 40
   anim: {fileID: 0}
   playerMovement: {fileID: 0}
+  tiempoEntreSonidosDano: 0.5
   lifeBar: {fileID: 675132973}
 --- !u!1 &1878608292
 GameObject:
@@ -6584,6 +6589,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8803ca9161fca344953642eb6a3e5d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScreensInGame
+  soundMusicBeat: {fileID: 1776775016}
   screenLose: {fileID: 1470276181}
   screenWin: {fileID: 740249451}
 --- !u!4 &1998217936 stripped
