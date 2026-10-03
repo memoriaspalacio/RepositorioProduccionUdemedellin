@@ -156,6 +156,7 @@ public class BeatActionJudge : MonoBehaviour {
 
             if (logActions) Debug.Log($"Beat {tb.beat}: consumed");
             OnBeatConsumed?.Invoke(tb.beat);
+            SoundManager.singleton.PlaySFX("ritmoExitoso");
             return true;
         }
 
@@ -170,12 +171,14 @@ public class BeatActionJudge : MonoBehaviour {
     private void ApplyPenalty(double beatPosition) {
         if (penaltyNoteCount <= 0) return;
 
+        
+
         int candidate = Mathf.FloorToInt((float)(beatPosition + earlyTolerance)) + 1;
         int destroyed = 0;
 
         while (destroyed < penaltyNoteCount) {
             EnsureTracked(candidate);
-
+            SoundManager.singleton.PlaySFX("ritmoFallido");
             int index = candidate - tracked[0].beat;
             TrackedBeat tb = tracked[index];
 
