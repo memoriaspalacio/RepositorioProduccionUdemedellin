@@ -89,6 +89,8 @@ GameObject:
   - component: {fileID: 3819902966801406886}
   - component: {fileID: 4345590710582932419}
   - component: {fileID: 2200658389041648377}
+  - component: {fileID: 7182884006011953126}
+  - component: {fileID: 223795077599091126}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -198,18 +200,42 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ScreensInGame, Assembly-CSharp
-        m_MethodName: ResetScene
-        m_Mode: 1
+      - m_Target: {fileID: 7182884006011953126}
+        m_TargetAssemblyTypeName: Scenes, Assembly-CSharp
+        m_MethodName: IrAEscena
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: iglesia
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7182884006011953126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6319633277631972086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f95a1e2db014bf41bcf82e0640ef763, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Scenes
+--- !u!114 &223795077599091126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6319633277631972086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b9d4b49e424d0b46b77fab91547703c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonScript
 --- !u!1 &7482088567698867899
 GameObject:
   m_ObjectHideFlags: 0
