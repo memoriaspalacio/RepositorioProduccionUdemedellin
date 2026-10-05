@@ -10339,6 +10339,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 543450653681515254}
+  - component: {fileID: 919132149206196301}
   m_Layer: 0
   m_Name: Mazmorra
   m_TagString: Untagged
@@ -10346,6 +10347,37 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &919132149206196301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132149206196300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
+  grid: {fileID: 7821426081726811204}
+  updateWhenTransformChanges: 1
+  cellCheckScale: 0.98
+  showOccupiedCells: 1
+  occupiedCellCount: 13
+  occupiedCells:
+  - {x: 1, y: 18}
+  - {x: 2, y: 18}
+  - {x: 2, y: 13}
+  - {x: 1, y: 13}
+  - {x: 1, y: 7}
+  - {x: 2, y: 7}
+  - {x: 1, y: 2}
+  - {x: 2, y: 2}
+  - {x: 7, y: 2}
+  - {x: 7, y: 3}
+  - {x: 7, y: 10}
+  - {x: 7, y: 18}
+  - {x: 8, y: 18}
 --- !u!4 &1184396703418697614
 Transform:
   m_ObjectHideFlags: 0
@@ -11231,7 +11263,6 @@ GameObject:
   - component: {fileID: 6331153388368886678}
   - component: {fileID: 577237425628214758}
   - component: {fileID: 3135921566069977520}
-  - component: {fileID: 6331153388368886679}
   m_Layer: 0
   m_Name: Fila de esqueletos
   m_TagString: Untagged
@@ -11934,10 +11965,7 @@ MonoBehaviour:
   cellCheckScale: 0.98
   showOccupiedCells: 1
   occupiedCellCount: 3
-  occupiedCells:
-  - {x: 3, y: 20}
-  - {x: 4, y: 20}
-  - {x: 5, y: 20}
+  occupiedCells: []
 --- !u!1 &5728468949786732397
 GameObject:
   m_ObjectHideFlags: 0
@@ -11989,8 +12017,7 @@ MonoBehaviour:
   cellCheckScale: 0.98
   showOccupiedCells: 1
   occupiedCellCount: 1
-  occupiedCells:
-  - {x: 8, y: 19}
+  occupiedCells: []
 --- !u!4 &6153171503944360235
 Transform:
   m_ObjectHideFlags: 0
@@ -12021,37 +12048,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 543450653681515254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6331153388368886679
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3644606928283770268}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea760fbae39e57046aeeebdefdc5132d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GridOccupier
-  grid: {fileID: 7821426081726811204}
-  updateWhenTransformChanges: 1
-  cellCheckScale: 0.98
-  showOccupiedCells: 1
-  occupiedCellCount: 13
-  occupiedCells:
-  - {x: 1, y: 18}
-  - {x: 2, y: 18}
-  - {x: 2, y: 13}
-  - {x: 1, y: 13}
-  - {x: 1, y: 7}
-  - {x: 2, y: 7}
-  - {x: 1, y: 2}
-  - {x: 2, y: 2}
-  - {x: 7, y: 2}
-  - {x: 7, y: 3}
-  - {x: 7, y: 10}
-  - {x: 7, y: 18}
-  - {x: 8, y: 18}
 --- !u!23 &6489989950991683438
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12679,12 +12675,9 @@ MonoBehaviour:
   updateWhenTransformChanges: 1
   cellCheckScale: 0.98
   showOccupiedCells: 1
-  occupiedCellCount: 4
+  occupiedCellCount: 2
   occupiedCells:
   - {x: 0, y: 9}
-  - {x: 0, y: 10}
-  - {x: 1, y: 9}
-  - {x: 1, y: 10}
 --- !u!4 &8286401473444581748
 Transform:
   m_ObjectHideFlags: 0
@@ -12850,11 +12843,7 @@ MonoBehaviour:
   cellCheckScale: 0.98
   showOccupiedCells: 1
   occupiedCellCount: 4
-  occupiedCells:
-  - {x: 0, y: 15}
-  - {x: 0, y: 16}
-  - {x: 1, y: 15}
-  - {x: 1, y: 16}
+  occupiedCells: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
