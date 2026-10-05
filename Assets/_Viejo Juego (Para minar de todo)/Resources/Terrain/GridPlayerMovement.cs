@@ -472,7 +472,9 @@ private void TryAttack()
     if (_anim != null)
         _anim.SetTrigger("onAttack");
 
-    ExecuteAttack();
+        SoundManager.singleton.PlaySFX("ataqueJugador");
+
+        ExecuteAttack();
 }
 
 // Ataca exclusivamente la celda situada frente al jugador.

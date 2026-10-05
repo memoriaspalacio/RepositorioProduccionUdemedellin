@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 public class ScreensInGame : MonoBehaviour
 {
     public static ScreensInGame singleton;
+    public GameObject soundMusicBeat;
 
     public GameObject screenLose;
     public GameObject screenWin;
@@ -20,6 +21,7 @@ public class ScreensInGame : MonoBehaviour
     public void ScreenLostActive()
     {
         screenLose.SetActive(true);
+        soundMusicBeat.SetActive(false);
     }
 
     public void ScreenLostDesactive()

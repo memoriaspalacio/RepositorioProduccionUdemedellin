@@ -638,6 +638,8 @@ namespace UdeM.Characters
         // Realiza una carga recta hacia la celda registrada sin actualizar el objetivo.
         private IEnumerator ChargeToRecordedCell(GameObject player)
         {
+
+            SoundManager.singleton.PlaySFX("estatuasAtaque");
             Vector2Int startCell =
                 Grid.WorldToCell(
                     transform.position
@@ -943,6 +945,8 @@ namespace UdeM.Characters
             if (player == null)
                 return;
 
+            
+
             Vector2Int angelCell =
                 Grid.WorldToCell(
                     transform.position
@@ -979,6 +983,8 @@ namespace UdeM.Characters
                 return;
 
             playerHitThisCharge = true;
+
+            
 
             PlayerHealth health =
                 ResolvePlayerHealth(

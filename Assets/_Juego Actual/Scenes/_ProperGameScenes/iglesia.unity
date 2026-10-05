@@ -892,6 +892,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 8104152678226698038, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
+      propertyPath: beatMusic
+      value: 
+      objectReference: {fileID: 1776775016}
     - target: {fileID: 8278722189647839598, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 11.100824
@@ -5468,6 +5472,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1470836124}
   m_CullTransparentMesh: 1
+--- !u!1001 &1512508956
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 508236371047684987, guid: 78368b7c5f18c9443be05f964d5e47cb, type: 3}
+      propertyPath: m_Name
+      value: SoundManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5630315392613980985, guid: 78368b7c5f18c9443be05f964d5e47cb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1823.208
+      objectReference: {fileID: 0}
+    - target: {fileID: 5630315392613980985, guid: 78368b7c5f18c9443be05f964d5e47cb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 734.39996
+      objectReference: {fileID: 0}
+    - target: {fileID: 5630315392613980985, guid: 78368b7c5f18c9443be05f964d5e47cb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5630315392613980985, guid: 78368b7c5f18c9443be05f964d5e47cb, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5630315392613980985, guid: 78368b7c5f18c9443be05f964d5e47cb, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5630315392613980985, guid: 78368b7c5f18c9443be05f964d5e47cb, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5630315392613980985, guid: 78368b7c5f18c9443be05f964d5e47cb, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5630315392613980985, guid: 78368b7c5f18c9443be05f964d5e47cb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5630315392613980985, guid: 78368b7c5f18c9443be05f964d5e47cb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5630315392613980985, guid: 78368b7c5f18c9443be05f964d5e47cb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 78368b7c5f18c9443be05f964d5e47cb, type: 3}
 --- !u!1 &1609262914
 GameObject:
   m_ObjectHideFlags: 0
@@ -5859,6 +5920,7 @@ MonoBehaviour:
   currentLife: 40
   anim: {fileID: 0}
   playerMovement: {fileID: 0}
+  tiempoEntreSonidosDano: 0.5
   lifeBar: {fileID: 675132973}
 --- !u!1 &1878608292
 GameObject:
@@ -6528,6 +6590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8803ca9161fca344953642eb6a3e5d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScreensInGame
+  soundMusicBeat: {fileID: 1776775016}
   screenLose: {fileID: 1470276181}
   screenWin: {fileID: 740249451}
 --- !u!4 &1998217936 stripped
@@ -11601,7 +11664,7 @@ Transform:
   m_GameObject: {fileID: 5985315298344441745}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -6.8526373, y: 0.62528026, z: -2.3268554}
+  m_LocalPosition: {x: 0.04000017, y: 0.2, z: -2.3268554}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12400,7 +12463,7 @@ Transform:
   m_GameObject: {fileID: 656017029411535478}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -6.8526373, y: 0.62528026, z: -18.902008}
+  m_LocalPosition: {x: 0.04, y: 0.20000002, z: -18.902008}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -16821,49 +16884,25 @@ MonoBehaviour:
   updateWhenTransformChanges: 1
   cellCheckScale: 0.98
   showOccupiedCells: 1
-  occupiedCellCount: 42
+  occupiedCellCount: 19
   occupiedCells:
   - {x: 1, y: 2}
-  - {x: 1, y: 3}
-  - {x: 1, y: 4}
   - {x: 1, y: 5}
-  - {x: 1, y: 6}
-  - {x: 1, y: 7}
   - {x: 1, y: 8}
   - {x: 2, y: 2}
-  - {x: 2, y: 3}
-  - {x: 2, y: 4}
   - {x: 2, y: 5}
-  - {x: 2, y: 6}
-  - {x: 2, y: 7}
   - {x: 2, y: 8}
   - {x: 3, y: 2}
-  - {x: 3, y: 3}
-  - {x: 3, y: 4}
   - {x: 3, y: 5}
-  - {x: 3, y: 6}
-  - {x: 3, y: 7}
   - {x: 3, y: 8}
   - {x: 6, y: 2}
-  - {x: 6, y: 3}
-  - {x: 6, y: 4}
   - {x: 6, y: 5}
-  - {x: 6, y: 6}
-  - {x: 6, y: 7}
   - {x: 6, y: 8}
   - {x: 7, y: 2}
-  - {x: 7, y: 3}
-  - {x: 7, y: 4}
   - {x: 7, y: 5}
-  - {x: 7, y: 6}
-  - {x: 7, y: 7}
   - {x: 7, y: 8}
   - {x: 8, y: 2}
-  - {x: 8, y: 3}
-  - {x: 8, y: 4}
   - {x: 8, y: 5}
-  - {x: 8, y: 6}
-  - {x: 8, y: 7}
   - {x: 8, y: 8}
 --- !u!4 &9088069142266588353
 Transform:
@@ -17218,3 +17257,4 @@ SceneRoots:
   - {fileID: 888685294}
   - {fileID: 1788141263}
   - {fileID: 793639181}
+  - {fileID: 1512508956}
