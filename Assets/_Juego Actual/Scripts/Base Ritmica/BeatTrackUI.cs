@@ -116,7 +116,11 @@ public class BeatTrackUI : MonoBehaviour {
     }
 
     private void SpawnBar(int targetBeat) {
-        // A beat already resolved (e.g. destroyed early by a penalty) has no
+        // Only beats the judge treats as notes get a bar, so what's drawn always
+        // matches what can actually be hit.
+        if (!beatJudge.IsNoteBeat(targetBeat)) return;
+
+        // A note already resolved (e.g. destroyed early by a penalty) has no
         // opportunity to show, so it gets no bar at all.
         if (beatJudge.IsBeatResolved(targetBeat)) return;
 
@@ -184,9 +188,12 @@ public class BeatTrackUI : MonoBehaviour {
     }
 
     private void HandleBeatConsumed(int beat) {
-        BeatBar bar = FindActiveBar(beat);
-
-        if (bar != null) bar.MarkConsumed();
+        for (int i = activeBars.Count - 1; i >= 0; i--) {
+            if (activeBars[i].TargetBeat == beat) {
+                Recycle(activeBars[i], i);
+                return;
+            }
+        }
     }
 
     /// <summary>
@@ -201,14 +208,6 @@ public class BeatTrackUI : MonoBehaviour {
                 return;
             }
         }
-    }
-
-    private BeatBar FindActiveBar(int beat) {
-        for (int i = 0; i < activeBars.Count; i++) {
-            if (activeBars[i].TargetBeat == beat) return activeBars[i];
-        }
-
-        return null;
     }
 
     private void Recycle(BeatBar bar, int index) {

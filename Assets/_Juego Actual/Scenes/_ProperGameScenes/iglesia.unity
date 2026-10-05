@@ -4025,6 +4025,7 @@ MonoBehaviour:
   barPrefab: {fileID: 1763768325479063683, guid: ee83b12492d592d499d90b08e2d2a06c, type: 3}
   barParent: {fileID: 675132970}
   travelBeats: 4
+  beatSpawnInterval: 1
   idleColor: {r: 0.42, g: 0.17, b: 0.17, a: 1}
   windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   windowClosingColor: {r: 0.6, g: 0.2, b: 0.15, a: 1}
@@ -4327,7 +4328,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
   earlyTolerance: 0.5
   lateTolerance: 0.25
-  penaltyNoteCount: 2
+  penaltyNoteCount: 1
   logActions: 1
 --- !u!1 &1158727593
 GameObject:

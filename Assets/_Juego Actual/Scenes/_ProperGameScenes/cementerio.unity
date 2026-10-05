@@ -1376,7 +1376,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2230,18 +2230,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1983170458}
     m_Modifications:
-    - target: {fileID: 502740346062669670, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
-    - target: {fileID: 502740346062669670, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: -898937273595191794, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
-    - target: {fileID: 502740346062669670, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 625703232248823309, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2322,61 +2310,81 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1021442423466097878, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1085581473987598108, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_fontAsset
+    - target: {fileID: 787692906890486275, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: beatJudge
       value: 
-      objectReference: {fileID: 11400000, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
-    - target: {fileID: 1085581473987598108, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_sharedMaterial
+      objectReference: {fileID: 1140715656}
+    - target: {fileID: 787692906890486275, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: beatTrackUI
       value: 
-      objectReference: {fileID: -898937273595191794, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
-    - target: {fileID: 1085581473987598108, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_HorizontalAlignment
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1085581473987598108, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1032602251}
     - target: {fileID: 1917602078452645560, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2671328518192151799, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_Name
-      value: Gametime UI (1)
+    - target: {fileID: 2521028516836949071, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 10
       objectReference: {fileID: 0}
-    - target: {fileID: 8075253062828422866, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
-    - target: {fileID: 8075253062828422866, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: -898937273595191794, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
-    - target: {fileID: 8075253062828422866, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8519113622942411241, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
-    - target: {fileID: 8519113622942411241, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: -898937273595191794, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
-    - target: {fileID: 8519113622942411241, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_HorizontalAlignment
+    - target: {fileID: 2521028516836949071, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_LocalScale.x
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 8519113622942411241, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
+    - target: {fileID: 2521028516836949071, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2521028516836949071, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2521028516836949071, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2671328518192151799, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_Name
+      value: Gametime UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 4254642703486385409, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: beatJudge
+      value: 
+      objectReference: {fileID: 1140715656}
+    - target: {fileID: 4254642703486385409, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: beatTrackUI
+      value: 
+      objectReference: {fileID: 1032602251}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 305.15002
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 155
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4038,8 +4046,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfc661b33e28ed4418a9f6ad6790c92b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
-  earlyTolerance: 0.5
-  lateTolerance: 0.25
+  noteInterval: 2
+  earlyTolerance: 0.05
+  lateTolerance: 0.05
   penaltyNoteCount: 1
   logActions: 1
 --- !u!114 &1150939307
@@ -4909,7 +4918,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5741,7 +5750,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
