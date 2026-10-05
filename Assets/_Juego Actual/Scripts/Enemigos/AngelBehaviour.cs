@@ -72,7 +72,7 @@ namespace UdeM.Characters
 
         // Define cuanto tiempo recarga el angel antes de iniciar su carga.
         [Min(0f)]
-        [SerializeField] private float reloadTime = 0.75f;
+        [SerializeField] private float reloadTime = 1;
 
         // Define aproximadamente cuanto tarda el angel en recorrer una celda.
         [Min(0.01f)]
@@ -84,7 +84,7 @@ namespace UdeM.Characters
 
         // Define cuanto espera el grupo antes de comenzar la siguiente tanda.
         [Min(0f)]
-        [SerializeField] private float timeBetweenBatches = 0.75f;
+        [SerializeField] private float timeBetweenBatches = 1;
 
         // Guarda la referencia al componente de vida del jugador.
         [SerializeField] private PlayerHealth playerHealth;
@@ -422,7 +422,7 @@ namespace UdeM.Characters
 
             coordinator.StartCoroutine(
                 coordinator.StartNextBatchAfterDelay(
-                    delay
+                    delay * BeatManager.Instance.SecPerBeat
                 )
             );
         }
@@ -614,7 +614,7 @@ namespace UdeM.Characters
                 animator.SetTrigger(reloadTrigger);
 
             yield return new WaitForSeconds(
-                reloadTime
+                reloadTime * BeatManager.Instance.SecPerBeat
             );
 
             if (isDead)
@@ -1133,5 +1133,4 @@ namespace UdeM.Characters
             base.OnDestroy();
         }
     }
-
 }

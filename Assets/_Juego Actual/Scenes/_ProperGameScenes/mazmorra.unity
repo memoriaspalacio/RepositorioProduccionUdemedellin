@@ -580,10 +580,10 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
-  reloadTime: 0.75
+  reloadTime: 2
   chargeTimePerCell: 0.12
   attackDamage: 5
-  timeBetweenBatches: 0.75
+  timeBetweenBatches: 1
   playerHealth: {fileID: 0}
 --- !u!1001 &85292676
 PrefabInstance:
@@ -3696,10 +3696,10 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
-  reloadTime: 0.75
+  reloadTime: 2
   chargeTimePerCell: 0.12
   attackDamage: 5
-  timeBetweenBatches: 0.75
+  timeBetweenBatches: 1
   playerHealth: {fileID: 0}
 --- !u!1 &578597209 stripped
 GameObject:
@@ -4958,7 +4958,6 @@ MonoBehaviour:
   barPrefab: {fileID: 1763768325479063683, guid: ee83b12492d592d499d90b08e2d2a06c, type: 3}
   barParent: {fileID: 2018902622}
   travelBeats: 4
-  beatSpawnInterval: 2
   idleColor: {r: 0.42, g: 0.17, b: 0.17, a: 1}
   windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   windowClosingColor: {r: 0.6, g: 0.2, b: 0.15, a: 1}
@@ -5285,10 +5284,10 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
-  reloadTime: 0.75
+  reloadTime: 2
   chargeTimePerCell: 0.12
   attackDamage: 5
-  timeBetweenBatches: 0.75
+  timeBetweenBatches: 1
   playerHealth: {fileID: 0}
 --- !u!1 &1115188530
 GameObject:
@@ -5648,6 +5647,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfc661b33e28ed4418a9f6ad6790c92b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
+  noteInterval: 2
   earlyTolerance: 0.5
   lateTolerance: 0.25
   penaltyNoteCount: 1
@@ -6866,10 +6866,10 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
-  reloadTime: 0.75
+  reloadTime: 2
   chargeTimePerCell: 0.12
   attackDamage: 5
-  timeBetweenBatches: 0.75
+  timeBetweenBatches: 1
   playerHealth: {fileID: 0}
 --- !u!95 &1350811594 stripped
 Animator:
@@ -7760,10 +7760,10 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
-  reloadTime: 0.75
+  reloadTime: 2
   chargeTimePerCell: 0.12
   attackDamage: 5
-  timeBetweenBatches: 0.75
+  timeBetweenBatches: 1
   playerHealth: {fileID: 0}
 --- !u!1 &1712180125 stripped
 GameObject:
@@ -7809,18 +7809,18 @@ Transform:
   - {fileID: 705507995}
   - {fileID: 848378713}
   - {fileID: 1792752527}
-  - {fileID: 1788141264}
-  - {fileID: 361842209}
-  - {fileID: 370628114}
   - {fileID: 33352298}
   - {fileID: 1345655858}
-  - {fileID: 126750404}
   - {fileID: 1637367253}
-  - {fileID: 85292677}
   - {fileID: 1092455411}
   - {fileID: 572176874}
   - {fileID: 1955960646}
   - {fileID: 2132965247}
+  - {fileID: 1788141264}
+  - {fileID: 361842209}
+  - {fileID: 370628114}
+  - {fileID: 126750404}
+  - {fileID: 85292677}
   - {fileID: 1167960961}
   - {fileID: 664701256}
   - {fileID: 879223015}
@@ -9316,10 +9316,10 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
-  reloadTime: 0.75
+  reloadTime: 2
   chargeTimePerCell: 0.12
   attackDamage: 5
-  timeBetweenBatches: 0.75
+  timeBetweenBatches: 1
   playerHealth: {fileID: 0}
 --- !u!1 &1983170454
 GameObject:
@@ -9646,14 +9646,42 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1476223623718612070, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1476223623718612070, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 348.38712
+      objectReference: {fileID: 0}
+    - target: {fileID: 1476223623718612070, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 160.72105
+      objectReference: {fileID: 0}
     - target: {fileID: 1917602078452645560, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2521028516836949071, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 10.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2521028516836949071, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 275.52182
+      objectReference: {fileID: 0}
+    - target: {fileID: 2521028516836949071, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 159.20305
       objectReference: {fileID: 0}
     - target: {fileID: 2671328518192151799, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_Name
       value: Gametime UI (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6102761456098161839, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -46
+      objectReference: {fileID: 0}
     - target: {fileID: 8075253062828422866, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -9666,6 +9694,10 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8244709572362194178, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 154
+      objectReference: {fileID: 0}
     - target: {fileID: 8519113622942411241, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -9677,6 +9709,30 @@ PrefabInstance:
     - target: {fileID: 8519113622942411241, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 381.40002
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 235
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10130,10 +10186,10 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
-  reloadTime: 0.75
+  reloadTime: 2
   chargeTimePerCell: 0.12
   attackDamage: 5
-  timeBetweenBatches: 0.75
+  timeBetweenBatches: 1
   playerHealth: {fileID: 0}
 --- !u!1 &351749469795467531
 GameObject:
@@ -12676,7 +12732,7 @@ MonoBehaviour:
   updateWhenTransformChanges: 1
   cellCheckScale: 0.98
   showOccupiedCells: 1
-  occupiedCellCount: 2
+  occupiedCellCount: 1
   occupiedCells:
   - {x: 0, y: 9}
 --- !u!4 &8286401473444581748
