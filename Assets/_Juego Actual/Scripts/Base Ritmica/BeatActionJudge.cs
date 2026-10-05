@@ -201,7 +201,7 @@ public class BeatActionJudge : MonoBehaviour {
 
             if (logActions) Debug.Log($"Beat {tb.beat}: consumed");
             OnBeatConsumed?.Invoke(tb.beat);
-            SoundManager.singleton.PlaySFX("ritmoExitoso");
+            // SoundManager.singleton.PlaySFX("ritmoExitoso");
             return true;
         }
 

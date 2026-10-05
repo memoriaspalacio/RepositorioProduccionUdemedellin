@@ -764,6 +764,10 @@ PrefabInstance:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 963194228}
+    - target: {fileID: 5264282115128844298, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
+      propertyPath: startHightOffset
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 5389053593820512191, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -1631,7 +1635,7 @@ MonoBehaviour:
   preparationTime: 4.5
   expansionInterval: 1.5
   attackCooldown: 1
-  attackRange: 3
+  attackRange: 2
   burnDamage: 0.5
   burnInterval: 0.25
   finalAttackDamage: 5
@@ -2078,9 +2082,17 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1476223623718612070, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 18.8
+      objectReference: {fileID: 0}
     - target: {fileID: 1917602078452645560, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2521028516836949071, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2671328518192151799, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_Name
@@ -2109,6 +2121,38 @@ PrefabInstance:
     - target: {fileID: 8519113622942411241, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 305.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 155
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3077,7 +3121,7 @@ MonoBehaviour:
   preparationTime: 4.5
   expansionInterval: 1.5
   attackCooldown: 1
-  attackRange: 3
+  attackRange: 2
   burnDamage: 0.5
   burnInterval: 0.25
   finalAttackDamage: 5
@@ -3767,7 +3811,7 @@ MonoBehaviour:
   preparationTime: 4.5
   expansionInterval: 1.5
   attackCooldown: 1
-  attackRange: 3
+  attackRange: 2
   burnDamage: 0.5
   burnInterval: 0.25
   finalAttackDamage: 5
@@ -4029,7 +4073,6 @@ MonoBehaviour:
   barPrefab: {fileID: 1763768325479063683, guid: ee83b12492d592d499d90b08e2d2a06c, type: 3}
   barParent: {fileID: 675132970}
   travelBeats: 4
-  beatSpawnInterval: 1
   idleColor: {r: 0.42, g: 0.17, b: 0.17, a: 1}
   windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   windowClosingColor: {r: 0.6, g: 0.2, b: 0.15, a: 1}
@@ -4330,6 +4373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfc661b33e28ed4418a9f6ad6790c92b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
+  noteInterval: 2
   earlyTolerance: 0.5
   lateTolerance: 0.25
   penaltyNoteCount: 1
@@ -4911,7 +4955,7 @@ MonoBehaviour:
   preparationTime: 4.5
   expansionInterval: 1.5
   attackCooldown: 1
-  attackRange: 3
+  attackRange: 2
   burnDamage: 0.5
   burnInterval: 0.25
   finalAttackDamage: 5
@@ -5246,7 +5290,7 @@ MonoBehaviour:
   preparationTime: 4.5
   expansionInterval: 1.5
   attackCooldown: 1
-  attackRange: 3
+  attackRange: 2
   burnDamage: 0.5
   burnInterval: 0.25
   finalAttackDamage: 5
@@ -16884,7 +16928,7 @@ MonoBehaviour:
   updateWhenTransformChanges: 1
   cellCheckScale: 0.98
   showOccupiedCells: 1
-  occupiedCellCount: 19
+  occupiedCellCount: 18
   occupiedCells:
   - {x: 1, y: 2}
   - {x: 1, y: 5}
