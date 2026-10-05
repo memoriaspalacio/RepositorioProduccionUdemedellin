@@ -128,7 +128,6 @@ namespace UdeM.Characters
         {
             if (Grid == null)
                 return;
-
             Vector2Int monkCell =
                 Grid.WorldToCell(
                     transform.position
@@ -152,40 +151,22 @@ namespace UdeM.Characters
                         i % possessedDirections.Length
                     ];
 
-                Vector2Int crossCell =
-                    monkCell + direction;
+                Vector3 offset =
+                    new Vector3(
+                        direction.x * Grid.CellSize,
+                        possessedCrossHeight,
+                        direction.y * Grid.CellSize
+                    );
 
-                Vector3 targetPosition;
-
-                if (Grid.IsCellInside(crossCell))
-                {
-                    targetPosition =
-                        Grid.CellToWorldCenter(
-                            crossCell,
-                            possessedCrossHeight
-                        );
-                }
-                else
-                {
-                    Vector3 monkPosition =
-                        Grid.CellToWorldCenter(
-                            monkCell,
-                            possessedCrossHeight
-                        );
-
-                    targetPosition =
-                        monkPosition +
-                        new Vector3(
-                            direction.x,
-                            0f,
-                            direction.y
-                        ) * Grid.CellSize;
-                }
+                Vector3 targetPosition =
+                    transform.position +
+                    offset;
 
                 cross.UpdatePossessedPosition(
                     targetPosition
                 );
             }
+
         }
 
         // Detecta al jugador y comienza la secuencia de lanzamiento de las cruces.

@@ -5863,7 +5863,7 @@ GameObject:
   - component: {fileID: 1167939300432868710}
   - component: {fileID: 7300513124780109419}
   - component: {fileID: 7300513124780109418}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: piso
   m_TagString: Untagged
   m_Icon: {fileID: 0}
