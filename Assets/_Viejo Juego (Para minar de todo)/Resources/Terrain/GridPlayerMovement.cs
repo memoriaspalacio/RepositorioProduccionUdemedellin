@@ -129,7 +129,7 @@ private void Start()
     transform.position =
         grid.CellToWorldCenter(
             currentCell,
-            heightOffset
+            -0.5f
         );
 }
 

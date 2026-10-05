@@ -1376,7 +1376,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1531,8 +1531,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e05b8e2759a98ea48bbee85f6b3d0331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxLife: 20
-  currentLife: 20
+  maxLife: 10
+  currentLife: 10
   anim: {fileID: 361842210}
   contador: {fileID: 1983170459}
 --- !u!114 &361842213
@@ -1558,10 +1558,10 @@ MonoBehaviour:
   - {fileID: 689248517}
   - {fileID: 1760784773}
   patrolPointWaitTime: 2
-  minimumCellsBeforePause: 2
-  maximumCellsBeforePause: 5
-  pauseDuration: 3
-  timeBetweenCells: 1
+  minimumCellsBeforePause: 1
+  maximumCellsBeforePause: 2
+  pauseDuration: 2
+  timeBetweenCells: 2
   requireRhythm: 0
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
@@ -4050,7 +4050,7 @@ MonoBehaviour:
   earlyTolerance: 0.05
   lateTolerance: 0.05
   penaltyNoteCount: 1
-  logActions: 1
+  logActions: 0
 --- !u!114 &1150939307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4918,7 +4918,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5073,8 +5073,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e05b8e2759a98ea48bbee85f6b3d0331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxLife: 20
-  currentLife: 20
+  maxLife: 10
+  currentLife: 10
   anim: {fileID: 1739370771}
   contador: {fileID: 1983170459}
 --- !u!114 &1739370774
@@ -5100,10 +5100,10 @@ MonoBehaviour:
   - {fileID: 689248517}
   - {fileID: 1437059696}
   patrolPointWaitTime: 2
-  minimumCellsBeforePause: 2
-  maximumCellsBeforePause: 5
-  pauseDuration: 3
-  timeBetweenCells: 1
+  minimumCellsBeforePause: 1
+  maximumCellsBeforePause: 2
+  pauseDuration: 2
+  timeBetweenCells: 2
   requireRhythm: 0
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
@@ -5750,7 +5750,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5905,8 +5905,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e05b8e2759a98ea48bbee85f6b3d0331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxLife: 20
-  currentLife: 20
+  maxLife: 10
+  currentLife: 10
   anim: {fileID: 1966416173}
   contador: {fileID: 1983170459}
 --- !u!114 &1966416176
@@ -5932,10 +5932,10 @@ MonoBehaviour:
   - {fileID: 144525862}
   - {fileID: 1760784773}
   patrolPointWaitTime: 2
-  minimumCellsBeforePause: 2
-  maximumCellsBeforePause: 5
-  pauseDuration: 3
-  timeBetweenCells: 1
+  minimumCellsBeforePause: 1
+  maximumCellsBeforePause: 2
+  pauseDuration: 2
+  timeBetweenCells: 2
   requireRhythm: 0
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
