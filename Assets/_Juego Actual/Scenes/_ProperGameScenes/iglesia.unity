@@ -2098,6 +2098,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Gametime UI (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6102761456098161839, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 44.781776
+      objectReference: {fileID: 0}
     - target: {fileID: 8075253062828422866, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -4374,6 +4378,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
   noteInterval: 2
+  midBeatNoteChance: 0.1875
+  halfBeatNoteChance: 0.09375
   earlyTolerance: 0.5
   lateTolerance: 0.25
   penaltyNoteCount: 1
@@ -4699,7 +4705,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.65
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.y
