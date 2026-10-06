@@ -7,7 +7,7 @@ public class EnemyHealth : MonoBehaviour
     public float maxLife;
     public float currentLife;
     public Animator anim;
-    public SkeletonBehaviour skeletonEnemy;
+    //public SkeletonBehaviour skeletonEnemy;
     public ContadorEnemigos contador;
     public void Damage(float damage)
     {
@@ -15,6 +15,13 @@ public class EnemyHealth : MonoBehaviour
 
         Debug.Log("Enemy fue herido fue herido " + currentLife);
         anim.SetTrigger("onHurt");
+
+        GetComponent<MonkCrossBehaviour>()?.SetDead();
+        GetComponent<MonkBehaviour>()?.NotifyMonkDamaged();
+
+        AngelBehaviour angel = GetComponent<AngelBehaviour>();
+        if (angel != null)
+            angel.NotifyAngelAttacked();
 
         if (currentLife <= 0)
         {
@@ -26,7 +33,7 @@ public class EnemyHealth : MonoBehaviour
     {
         
         Debug.Log("Enemy ha muerto");
-        skeletonEnemy.SetDead();
+        //skeletonEnemy.SetDead();
         contador.EnemyDied(gameObject);
         anim.SetTrigger("onDeath");
         

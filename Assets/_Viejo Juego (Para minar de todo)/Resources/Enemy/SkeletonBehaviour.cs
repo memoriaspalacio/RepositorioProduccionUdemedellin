@@ -108,6 +108,7 @@ namespace UdeM.Characters
 
                     if (animator != null)
                         animator.SetTrigger(attackTrigger);
+                    SoundManager.singleton.PlaySFX("esqueletoAtaque");
 
                     Debug.Log(
                         $"El esqueleto ataco la celda {currentTargetCell}.",

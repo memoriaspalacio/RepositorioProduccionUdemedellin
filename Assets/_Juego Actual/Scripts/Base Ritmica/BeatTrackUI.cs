@@ -60,7 +60,8 @@ public class BeatTrackUI : MonoBehaviour {
     private readonly List<BeatBar> activeBars = new List<BeatBar>();
     private readonly Queue<BeatBar> pool = new Queue<BeatBar>();
 
-    private int nextBeatToSpawn;
+    // Notes can sit on half beats, so this steps in half beats rather than whole ones.
+    private float nextBeatToSpawn;
     private bool trackStarted;
 
     private void OnEnable() {
@@ -94,7 +95,7 @@ public class BeatTrackUI : MonoBehaviour {
         // On the first playing frame, fill the track so it is already populated
         // instead of ramping up over the first travelBeats beats.
         if (!trackStarted) {
-            nextBeatToSpawn = Mathf.CeilToInt(nowBeat);
+            nextBeatToSpawn = Mathf.CeilToInt(nowBeat * 2f) / 2f;
             trackStarted = true;
         }
 
@@ -111,12 +112,16 @@ public class BeatTrackUI : MonoBehaviour {
 
         while (nextBeatToSpawn <= furthestVisibleBeat) {
             SpawnBar(nextBeatToSpawn);
-            nextBeatToSpawn++;
+            nextBeatToSpawn += 0.5f;
         }
     }
 
-    private void SpawnBar(int targetBeat) {
-        // A beat already resolved (e.g. destroyed early by a penalty) has no
+    private void SpawnBar(float targetBeat) {
+        // Only beats the judge treats as notes get a bar, so what's drawn always
+        // matches what can actually be hit.
+        if (!beatJudge.IsNoteBeat(targetBeat)) return;
+
+        // A note already resolved (e.g. destroyed early by a penalty) has no
         // opportunity to show, so it gets no bar at all.
         if (beatJudge.IsBeatResolved(targetBeat)) return;
 
@@ -183,10 +188,13 @@ public class BeatTrackUI : MonoBehaviour {
         return Color.Lerp(windowOpenColor, windowClosingColor, windowProgress);
     }
 
-    private void HandleBeatConsumed(int beat) {
-        BeatBar bar = FindActiveBar(beat);
-
-        if (bar != null) bar.MarkConsumed();
+    private void HandleBeatConsumed(float beat) {
+        for (int i = activeBars.Count - 1; i >= 0; i--) {
+            if (Mathf.Approximately(activeBars[i].TargetBeat, beat)) {
+                Recycle(activeBars[i], i);
+                return;
+            }
+        }
     }
 
     /// <summary>
@@ -194,21 +202,13 @@ public class BeatTrackUI : MonoBehaviour {
     /// its own or was sacrificed to a whiff penalty. If no bar exists yet for this
     /// beat, SpawnBar's IsBeatResolved check will simply skip spawning it later.
     /// </summary>
-    private void HandleNoteDestroyed(int beat, DestroyReason reason) {
+    private void HandleNoteDestroyed(float beat, DestroyReason reason) {
         for (int i = activeBars.Count - 1; i >= 0; i--) {
-            if (activeBars[i].TargetBeat == beat) {
+            if (Mathf.Approximately(activeBars[i].TargetBeat, beat)) {
                 Recycle(activeBars[i], i);
                 return;
             }
         }
-    }
-
-    private BeatBar FindActiveBar(int beat) {
-        for (int i = 0; i < activeBars.Count; i++) {
-            if (activeBars[i].TargetBeat == beat) return activeBars[i];
-        }
-
-        return null;
     }
 
     private void Recycle(BeatBar bar, int index) {

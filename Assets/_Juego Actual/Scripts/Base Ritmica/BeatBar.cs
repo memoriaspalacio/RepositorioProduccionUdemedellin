@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class BeatBar : MonoBehaviour {
 
     /// <summary>The beat number this bar arrives at the heart on.</summary>
-    public int TargetBeat { get; private set; }
+    public float TargetBeat { get; private set; }
 
     /// <summary>True once the player successfully claimed this bar's beat.</summary>
     public bool Consumed { get; private set; }
@@ -27,7 +27,7 @@ public class BeatBar : MonoBehaviour {
     }
 
     /// <summary>Prepares this bar (fresh or reused from the pool) for a new beat.</summary>
-    public void Initialize(int targetBeat) {
+    public void Initialize(float targetBeat) {
         CacheComponents();
 
         TargetBeat = targetBeat;
