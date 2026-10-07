@@ -70,6 +70,18 @@ namespace UdeM.Characters
         // Guarda el nombre del trigger usado para comenzar la carga.
         [SerializeField] private string attackTrigger = "onAttack";
 
+        // Guarda el nombre del parametro trigger usado para la animacion de vuelo.
+        [SerializeField] private string flyParameter = "Fly";
+
+        // Posicion en el frame anterior para detectar movimiento.
+        private Vector3 lastPosition;
+
+        // Tiempo hasta el cual se considera que el angel sigue en movimiento.
+        private float stopMovingTime;
+
+        // Indica si el angel se encontraba moviendose en el frame anterior.
+        private bool wasMoving = false;
+
         // Define cuanto tiempo recarga el angel antes de iniciar su carga.
         [Min(0f)]
         [SerializeField] private float reloadTime = 1;
@@ -125,6 +137,33 @@ namespace UdeM.Characters
 
             if (animator == null)
                 animator = GetComponentInChildren<Animator>();
+
+            lastPosition = transform.position;
+        }
+
+        // Comprueba si el angel comienza a moverse y dispara el trigger Fly.
+        protected override void Update()
+        {
+            base.Update();
+
+            bool positionChanged = (transform.position - lastPosition).sqrMagnitude > 0.0001f;
+
+            if (positionChanged)
+            {
+                // El salto dura aprox 0.15s, asi que mantenemos el estado activo ese tiempo
+                stopMovingTime = Time.time + 0.2f;
+            }
+
+            bool isMoving = Time.time < stopMovingTime;
+
+            if (isMoving && !wasMoving)
+            {
+                if (animator != null)
+                    animator.SetTrigger(flyParameter);
+            }
+
+            wasMoving = isMoving;
+            lastPosition = transform.position;
         }
 
         // Ignora la deteccion normal para impedir que el angel persiga al jugador.

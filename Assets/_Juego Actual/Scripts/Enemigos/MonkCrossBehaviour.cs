@@ -49,6 +49,10 @@ namespace UdeM.Characters
         [Min(0.01f)]
         [SerializeField] private float travelTimePerCell = 0.12f;
 
+        // Define la altura del salto de la cruz al moverse.
+        [Min(0f)]
+        [SerializeField] private float attackHopHeight = 0.6f;
+
         // Define cuanto se eleva visualmente la cruz respecto a la altura del Monk.
         [SerializeField] private float unpossessedHeightOffset = 0.5f;
 
@@ -57,6 +61,10 @@ namespace UdeM.Characters
 
         // Guarda la referencia al sistema de vida del jugador.
         [SerializeField] private PlayerHealth playerHealth;
+
+        [Header("Efectos Visuales")]
+        [SerializeField] private Renderer crossRenderer;
+        [SerializeField] private Color teleportHighlightColor = Color.cyan;
 
         // Expone si la cruz se encuentra actualmente en posesion del Monk.
         public bool IsPossessed =>
@@ -100,6 +108,13 @@ namespace UdeM.Characters
                 monk.transform,
                 true
             );
+
+            // Convierte todos los colliders en triggers para que no levanten fisicamente a los personajes
+            Collider[] colliders = GetComponentsInChildren<Collider>();
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                colliders[i].isTrigger = true;
+            }
         }
 
         // Actualiza la posicion y celda logica mientras la cruz permanece poseida.
@@ -398,12 +413,18 @@ namespace UdeM.Characters
                         travelTimePerCell
                     );
 
-                transform.position =
+                Vector3 currentPos =
                     Vector3.Lerp(
                         startPosition,
                         targetPosition,
                         progress
                     );
+
+                // Parabola para el salto de la cruz
+                float hop = Mathf.Sin(progress * Mathf.PI) * attackHopHeight;
+                currentPos.y += hop;
+
+                transform.position = currentPos;
 
                 CheckPlayerImpact(
                     player
@@ -717,6 +738,34 @@ namespace UdeM.Characters
         private void OnDestroy()
         {
             ReleaseOccupiedCell();
+        }
+
+        // Ejecuta un destello visual cuando el Monje se teletransporta hacia esta cruz.
+        public void TriggerTeleportEffect()
+        {
+            // Puedes añadir instanciacion de particulas aqui despues.
+            StartCoroutine(TeleportFlashRoutine());
+        }
+
+        private IEnumerator TeleportFlashRoutine()
+        {
+            if (crossRenderer == null)
+                crossRenderer = GetComponentInChildren<Renderer>();
+
+            if (crossRenderer != null && crossRenderer.material != null)
+            {
+                Color originalColor = crossRenderer.material.color;
+                
+                // Cambiar al color de resalte
+                crossRenderer.material.color = teleportHighlightColor;
+                
+                // Esperar un instante para que sea visible
+                yield return new WaitForSeconds(0.5f);
+                
+                // Volver al color original
+                if (crossRenderer != null && crossRenderer.material != null)
+                    crossRenderer.material.color = originalColor;
+            }
         }
     }
 }

@@ -8,13 +8,28 @@ namespace UdeM.Characters
     public class MonkBehaviour : Character3DNavMeshGridNPCBehaviour
     {
         // Guarda el Animator usado por las animaciones del Monk.
-        [SerializeField] private Animator animator;
+        [Header("Animaciones")]
+        public Animator animator;
+
+        // Guarda el nombre del trigger usado para ejecutar el ataque.
+        [SerializeField]
+        private string attackTrigger = "Attack";
+        
+        [Tooltip("Escribe aqui el nombre del Trigger de Hurt (ej. onHurt) para reproducir la animacion despues del teletransporte.")]
+        [SerializeField] private string hurtTriggerAfterWarp = "onHurt";
+        
+        [Header("Configuracion de Teletransporte")]
+        [Min(0f)]
+        [SerializeField] private float stunDurationAfterDamage = 1f;
+        
+        [Header("Efectos Visuales")]
+        // Trail logic has been removed.
 
         // Guarda el prefab utilizado para crear las cruces.
         [SerializeField] private MonkCrossBehaviour crossPrefab;
 
-        // Define la cantidad de cruces creadas al comenzar el juego.
-        [Min(1)]
+        // Define el numero de cruces (Maximo 4 para evitar que se superpongan en la misma casilla).
+        [Range(1, 4)]
         [SerializeField] private int crossCount = 4;
 
         // Define la altura a la que flotan las cruces mientras estan en posesion.
@@ -23,6 +38,10 @@ namespace UdeM.Characters
         // Define el tiempo entre el lanzamiento inicial de cada cruz.
         [Min(0f)]
         [SerializeField] private float timeBetweenInitialLaunches = 0.6f;
+
+        // Define el tiempo que tarda en aparecer cada cruz de forma progresiva.
+        [Min(0f)]
+        [SerializeField] private float timeBetweenCrossSpawns = 0.5f;
 
         // Define el tiempo minimo antes de un ataque autonomo de las cruces.
         [Min(0f)]
@@ -45,13 +64,16 @@ namespace UdeM.Characters
         // Indica si las cruces estan realizando su secuencia inicial.
         private bool initialLaunchRunning = false;
 
-        // Guarda la corrutina usada por los turnos autonomos de las cruces.
+        // Guarda la corrutina de ataque autonomo.
         private Coroutine autonomousCrossRoutine;
 
-        // Guarda el indice usado para mantener turnos secuenciales entre cruces.
+        // Guarda la corrutina de lanzamiento inicial de las cruces.
+        private Coroutine launchRoutine;
+
+        // Guarda el indice de la cruz que debe atacar en el siguiente turno.
         private int autonomousTurnIndex = 0;
 
-        // Guarda las cuatro direcciones usadas para colocar las cruces alrededor del Monk.
+        // Direcciones locales correspondientes a cada cruz (arriba, derecha, abajo, izquierda).
         private readonly Vector2Int[] possessedDirections =
         {
             Vector2Int.up,
@@ -59,6 +81,12 @@ namespace UdeM.Characters
             Vector2Int.down,
             Vector2Int.left
         };
+
+        [Header("Configuracion Inicial")]
+        [SerializeField] private Vector2Int initialFacingDirection = Vector2Int.down;
+
+        // Guarda la posicion local inicial del modelo 3D para restaurarla despues de aparecer.
+        private Vector3 initialAnimatorLocalPos;
 
         // Inicializa referencias y crea las cruces pertenecientes al Monk.
         protected override void Start()
@@ -68,6 +96,10 @@ namespace UdeM.Characters
             if (animator == null)
                 animator = GetComponentInChildren<Animator>();
 
+            if (animator != null)
+                initialAnimatorLocalPos = animator.transform.localPosition;
+
+            FaceGridDirection(initialFacingDirection);
             SpawnCrosses();
         }
 
@@ -82,7 +114,7 @@ namespace UdeM.Characters
             UpdatePossessedCrossPositions();
         }
 
-        // Crea las cruces iniciales y las coloca bajo la jerarquia del Monk.
+        // Crea las cruces iniciales de forma progresiva y las coloca bajo la jerarquia del Monk.
         private void SpawnCrosses()
         {
             if (crossPrefab == null)
@@ -96,7 +128,11 @@ namespace UdeM.Characters
             }
 
             crosses.Clear();
+            StartCoroutine(SpawnCrossesRoutine());
+        }
 
+        private IEnumerator SpawnCrossesRoutine()
+        {
             for (int i = 0;
                  i < crossCount;
                  i++)
@@ -118,9 +154,11 @@ namespace UdeM.Characters
                 crosses.Add(
                     newCross
                 );
-            }
 
-            UpdatePossessedCrossPositions();
+                UpdatePossessedCrossPositions();
+
+                yield return new WaitForSeconds(timeBetweenCrossSpawns);
+            }
         }
 
         // Mantiene cada cruz poseida flotando alrededor del Monk segun la cuadricula.
@@ -169,7 +207,7 @@ namespace UdeM.Characters
 
         }
 
-        // Detecta al jugador y comienza la secuencia de lanzamiento de las cruces.
+        // Detecta al jugador y comienza la secuencia de lanzamiento de las cruces, y ahora persigue al jugador
         public override void PlayerDetected(GameObject detectedTarget)
         {
             if (isDead)
@@ -181,7 +219,9 @@ namespace UdeM.Characters
             detectedPlayer =
                 detectedTarget;
 
-            behaviourEnabled = false;
+            // Antes: behaviourEnabled = false; (esto lo congelaba)
+            // Ahora llamamos a la base para que persiga y salte al moverse:
+            base.PlayerDetected(detectedTarget);
 
             if (initialLaunchRunning)
                 return;
@@ -189,7 +229,7 @@ namespace UdeM.Characters
             if (!HasPossessedCross())
                 return;
 
-            StartCoroutine(
+            launchRoutine = StartCoroutine(
                 LaunchPossessedCrosses()
             );
         }
@@ -199,6 +239,8 @@ namespace UdeM.Characters
         {
             if (detectedPlayer != lostTarget)
                 return;
+
+            base.PlayerLost(lostTarget);
         }
 
         // Lanza una por una todas las cruces que actualmente pertenecen al Monk.
@@ -206,9 +248,8 @@ namespace UdeM.Characters
         {
             initialLaunchRunning = true;
 
-            StopMovementFor(
-                9999f
-            );
+            // Ya no lo congelamos para siempre, el seguira persiguiendo y saltando.
+            // Eliminamos: StopMovementFor(9999f);
 
             for (int i = 0;
                  i < crosses.Count;
@@ -223,12 +264,19 @@ namespace UdeM.Characters
                 if (cross == null)
                     continue;
 
+                if (cross.IsDead)
+                    continue;
+
                 if (!cross.IsPossessed)
                     continue;
 
                 if (detectedPlayer == null)
                     break;
 
+                if (animator != null)
+                    animator.SetTrigger(attackTrigger);
+
+                // Espera a que la cruz termine su ataque antes de lanzar la siguiente.
                 yield return StartCoroutine(
                     cross.AttackPlayer(
                         detectedPlayer
@@ -241,24 +289,26 @@ namespace UdeM.Characters
             }
 
             initialLaunchRunning = false;
+            launchRoutine = null;
 
-            StartAutonomousCrossTurns();
+            if (!isDead)
+                StartAutonomousAttackRoutine();
         }
 
-        // Inicia el ciclo independiente de ataques para las cruces fuera de posesion.
-        private void StartAutonomousCrossTurns()
+        // Comienza el ciclo en el que las cruces atacan por si solas.
+        private void StartAutonomousAttackRoutine()
         {
             if (autonomousCrossRoutine != null)
                 return;
 
             autonomousCrossRoutine =
                 StartCoroutine(
-                    AutonomousCrossTurnRoutine()
+                    AutonomousCrossSequence()
                 );
         }
 
-        // Ejecuta ataques autonomos de una cruz por turno usando intervalos aleatorios.
-        private IEnumerator AutonomousCrossTurnRoutine()
+        // Elige una cruz cada cierto tiempo para atacar al jugador.
+        private IEnumerator AutonomousCrossSequence()
         {
             while (!isDead)
             {
@@ -278,17 +328,21 @@ namespace UdeM.Characters
                     delay
                 );
 
-                MonkCrossBehaviour cross =
-                    GetNextAvailableUnpossessedCross();
+                MonkCrossBehaviour attackerCross =
+                    GetNextCrossForTurn();
 
-                if (cross == null)
+                if (attackerCross == null)
                 {
                     yield return null;
                     continue;
                 }
 
+                if (animator != null)
+                    animator.SetTrigger(attackTrigger);
+
+                // Solo una cruz ataca por turno; espera a que termine.
                 yield return StartCoroutine(
-                    cross.AttackPlayer(
+                    attackerCross.AttackPlayer(
                         detectedPlayer
                     )
                 );
@@ -297,46 +351,40 @@ namespace UdeM.Characters
             autonomousCrossRoutine = null;
         }
 
-        // Devuelve la siguiente cruz viva y no poseida respetando el orden de turnos.
-        private MonkCrossBehaviour GetNextAvailableUnpossessedCross()
+        // Selecciona la siguiente cruz en el orden definido para su ataque autonomo.
+        private MonkCrossBehaviour GetNextCrossForTurn()
         {
-            if (crosses.Count == 0)
-                return null;
+            int startIndex =
+                autonomousTurnIndex;
 
-            for (int checkedCount = 0;
-                 checkedCount < crosses.Count;
-                 checkedCount++)
+            int attempts = 0;
+
+            while (attempts < crosses.Count)
             {
-                int index =
-                    autonomousTurnIndex %
-                    crosses.Count;
+                MonkCrossBehaviour cross =
+                    crosses[
+                        autonomousTurnIndex
+                    ];
 
                 autonomousTurnIndex =
                     (autonomousTurnIndex + 1) %
                     crosses.Count;
 
-                MonkCrossBehaviour cross =
-                    crosses[index];
+                attempts++;
 
-                if (cross == null)
-                    continue;
-
-                if (cross.IsDead)
-                    continue;
-
-                if (cross.IsPossessed)
-                    continue;
-
-                if (cross.IsAttacking)
-                    continue;
-
-                return cross;
+                if (cross != null &&
+                    !cross.IsDead &&
+                    !cross.IsPossessed &&
+                    !cross.IsAttacking)
+                {
+                    return cross;
+                }
             }
 
             return null;
         }
 
-        // Comprueba si existe al menos una cruz viva actualmente en posesion.
+        // Verifica si queda al menos una cruz lista para ser lanzada.
         private bool HasPossessedCross()
         {
             for (int i = 0;
@@ -375,11 +423,14 @@ namespace UdeM.Characters
             if (isDead)
                 return;
 
+            StopMovementFor(stunDurationAfterDamage);
+
             MonkCrossBehaviour teleportCross =
                 GetRandomUnpossessedCross();
 
             if (teleportCross != null)
             {
+                teleportCross.TriggerTeleportEffect();
                 TeleportToCross(
                     teleportCross
                 );
@@ -455,6 +506,10 @@ namespace UdeM.Characters
                     0f
                 );
 
+            CancelVisualMovement();
+
+            Vector3 startWorldPos = transform.position;
+
             if (_navigator != null &&
                 _navigator.isOnNavMesh)
             {
@@ -485,15 +540,44 @@ namespace UdeM.Characters
                     destination;
             }
 
+
+
             Grid.TryOccupyCell(
                 destinationCell,
                 gameObject
             );
+
+            SetCurrentCell(destinationCell);
+
+            if (animator != null && !string.IsNullOrEmpty(hurtTriggerAfterWarp))
+            {
+                StartCoroutine(TriggerAnimationAfterWarp());
+            }
         }
+
+        private System.Collections.IEnumerator TriggerAnimationAfterWarp()
+        {
+            yield return null;
+            if (animator != null)
+            {
+                animator.SetTrigger(hurtTriggerAfterWarp);
+            }
+        }
+
+
 
         // Devuelve inmediatamente todas las cruces vivas al estado de posesion.
         private void RecallAllLivingCrosses()
         {
+            if (launchRoutine != null)
+            {
+                StopCoroutine(
+                    launchRoutine
+                );
+
+                launchRoutine = null;
+            }
+
             if (autonomousCrossRoutine != null)
             {
                 StopCoroutine(
@@ -554,21 +638,13 @@ namespace UdeM.Characters
 
             StopAllCoroutines();
 
-            for (int i = 0;
-                 i < crosses.Count;
-                 i++)
-            {
-                MonkCrossBehaviour cross =
-                    crosses[i];
+            autonomousCrossRoutine = null;
+            initialLaunchRunning = false;
 
-                if (cross == null)
-                    continue;
-
-                cross.CancelCurrentAttack();
-            }
+            StopAllCrossAttacks();
         }
 
-        // Desactiva el ataque adyacente heredado porque el Monk utiliza sus cruces.
+        // Desactiva el ataque adyacente heredado porque el Monk ataca con sus cruces.
         protected override bool Attack(
             Vector2Int direction,
             Vector2Int targetCell)

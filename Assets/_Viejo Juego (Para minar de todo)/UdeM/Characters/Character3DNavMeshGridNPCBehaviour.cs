@@ -37,6 +37,13 @@ namespace UdeM.Characters
         [Header("Ritmo")]
         [SerializeField] private bool requireRhythm = true;
 
+        [Header("Animacion de Movimiento")]
+        [SerializeField] private Transform visualTransform;
+        [SerializeField] private float hopHeight = 0.5f;
+        [SerializeField] private float hopDuration = 0.15f;
+        private Coroutine hopCoroutine;
+        private Vector3 initialVisualLocalPos;
+
         // Indica si la ventana actual de ritmo permite una accion.
         [SerializeField] private bool rhythmWindowOpen = false;
 
@@ -173,7 +180,7 @@ namespace UdeM.Characters
                 else
                 {
                     Debug.LogError(
-                        $"No se encontrÛ NavMesh cerca de {transform.position}",
+                        $"No se encontr√≥ NavMesh cerca de {transform.position}",
                         this
                     );
 
@@ -196,6 +203,24 @@ namespace UdeM.Characters
             }
 
             cellRegistered = true;
+
+            if (visualTransform == null)
+            {
+                Animator anim = GetComponentInChildren<Animator>();
+                if (anim != null)
+                {
+                    visualTransform = anim.transform;
+                }
+                else if (transform.childCount > 0)
+                {
+                    visualTransform = transform.GetChild(0);
+                }
+            }
+
+            if (visualTransform != null)
+            {
+                initialVisualLocalPos = visualTransform.localPosition;
+            }
 
             ConfigureNavigator();
             ConfigureVision();
@@ -267,7 +292,7 @@ namespace UdeM.Characters
             else
             {
                 Debug.LogWarning(
-                    $"{name} no est· sobre el NavMesh. PosiciÛn: {transform.position}",
+                    $"{name} no est√° sobre el NavMesh. Posici√≥n: {transform.position}",
                     this
                 );
             }
@@ -599,6 +624,13 @@ namespace UdeM.Characters
 
             _navigator.ResetPath();
 
+            Vector3 startWorldPos = Vector3.zero;
+            Vector3 originalLocalPos = initialVisualLocalPos;
+            if (visualTransform != null)
+            {
+                startWorldPos = visualTransform.position;
+            }
+
             bool warpSucceeded =
                 _navigator.Warp(destination);
 
@@ -623,6 +655,13 @@ namespace UdeM.Characters
                 }
 
                 return false;
+            }
+
+            if (visualTransform != null)
+            {
+                if (hopCoroutine != null)
+                    StopCoroutine(hopCoroutine);
+                hopCoroutine = StartCoroutine(VisualHopCoroutine(startWorldPos, visualTransform.position, originalLocalPos));
             }
 
             currentCell = nextCell;
@@ -793,6 +832,47 @@ namespace UdeM.Characters
             );
 
             cellRegistered = false;
+        }
+
+        // Permite a las clases derivadas actualizar la celda actual internamente (ej. tras un teletransporte).
+        protected void SetCurrentCell(Vector2Int newCell)
+        {
+            currentCell = newCell;
+        }
+
+        // Permite cancelar una animacion de movimiento en curso.
+        protected void CancelVisualMovement()
+        {
+            if (hopCoroutine != null)
+            {
+                StopCoroutine(hopCoroutine);
+                hopCoroutine = null;
+            }
+        }
+
+        private System.Collections.IEnumerator VisualHopCoroutine(Vector3 startPos, Vector3 endPos, Vector3 originalLocal)
+        {
+            float elapsed = 0f;
+            while (elapsed < hopDuration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / hopDuration);
+                
+                // Interpolacion suave
+                Vector3 currentPos = Vector3.Lerp(startPos, endPos, t);
+                
+                // Parabola para simular el salto
+                float height = Mathf.Sin(t * Mathf.PI) * hopHeight;
+                currentPos.y += height;
+
+                if (visualTransform != null)
+                    visualTransform.position = currentPos;
+
+                yield return null;
+            }
+
+            if (visualTransform != null)
+                visualTransform.localPosition = originalLocal;
         }
 
         // Libera la ocupacion de cuadricula para desplazamientos externos (p. ej. carga del angel).

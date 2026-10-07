@@ -8,12 +8,13 @@ namespace UdeM.Characters
         // Indica si el esqueleto ya se encuentra muerto.
         private bool isDead = false;
 
-        // Guarda el Animator usado por las animaciones del esqueleto.
-        [SerializeField] private Animator animator;
+        // Guarda el Animator usado por las animaciones del esqueleto. Puedes arrastrarlo desde el Inspector.
+        [Header("Animacion")]
+        public Animator animator;
 
-        // Guarda el nombre del trigger usado para caminar.
+        // Guarda el nombre del trigger usado para el estado inactivo.
         [SerializeField]
-        private string walkTrigger = "Walk";
+        private string idleTrigger = "Idle";
 
         // Guarda el nombre del trigger usado para ejecutar el ataque.
         [SerializeField]
@@ -81,11 +82,11 @@ namespace UdeM.Characters
             isPreparingAttack = true;
 
             FaceGridDirection(direction);
-            StopMovementFor(2.10f);
 
             if (animator != null)
-                animator.SetTrigger(walkTrigger);
+                animator.SetTrigger(attackTrigger);
 
+            // Esperamos el tiempo necesario (reloadTime) para que la animacion coincida con el impacto.
             yield return new WaitForSeconds(reloadTime);
 
             if (CurrentTarget != null)
@@ -106,8 +107,6 @@ namespace UdeM.Characters
                 {
                     FaceGridDirection(difference);
 
-                    if (animator != null)
-                        animator.SetTrigger(attackTrigger);
                     SoundManager.singleton.PlaySFX("esqueletoAtaque");
 
                     Debug.Log(
