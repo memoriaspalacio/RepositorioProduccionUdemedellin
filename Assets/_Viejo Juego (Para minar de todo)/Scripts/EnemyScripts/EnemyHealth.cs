@@ -9,12 +9,17 @@ public class EnemyHealth : MonoBehaviour
     public Animator anim;
     //public SkeletonBehaviour skeletonEnemy;
     public ContadorEnemigos contador;
+
+    [Header("Animaciones")]
+    public string hurtTrigger = "onHurt";
+    public string deathTrigger = "onDeath";
     public void Damage(float damage)
     {
         currentLife = currentLife - damage;
 
         Debug.Log("Enemy fue herido fue herido " + currentLife);
-        anim.SetTrigger("onHurt");
+        if (anim != null)
+            anim.SetTrigger(hurtTrigger);
 
         GetComponent<MonkCrossBehaviour>()?.SetDead();
         GetComponent<MonkBehaviour>()?.NotifyMonkDamaged();
@@ -35,7 +40,8 @@ public class EnemyHealth : MonoBehaviour
         Debug.Log("Enemy ha muerto");
         //skeletonEnemy.SetDead();
         contador.EnemyDied(gameObject);
-        anim.SetTrigger("onDeath");
+        if (anim != null)
+            anim.SetTrigger(deathTrigger);
         
     }
 }

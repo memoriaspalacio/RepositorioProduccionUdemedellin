@@ -12,11 +12,11 @@ namespace UdeM.Characters
         // Guarda el Animator usado por las animaciones de la monja.
         [SerializeField] private Animator animator;
 
-        // Guarda el nombre del trigger usado para preparar el ataque.
-        [SerializeField] private string reloadTrigger = "onReload";
-
         // Guarda el nombre del trigger usado para ejecutar el ataque final.
         [SerializeField] private string attackTrigger = "onAttack";
+
+        // Guarda el nombre del trigger usado para regresar al estado inactivo.
+        [SerializeField] private string idleTrigger = "onIdle";
 
         // Define el tiempo inicial antes de comenzar a expandir el ataque.
         [SerializeField] private float preparationTime = 0.5f;
@@ -101,6 +101,9 @@ namespace UdeM.Characters
             if (detectedTarget == null)
                 return;
 
+            // Llamamos a la base para que adopte el estado de ataque y persiga al jugador dando saltos por las casillas
+            base.PlayerDetected(detectedTarget);
+
             if (isPreparingAttack)
                 return;
 
@@ -119,6 +122,16 @@ namespace UdeM.Characters
             currentAttackRange = 0;
             nextBurnTime = Time.time;
 
+            if (target != null && Grid != null)
+            {
+                Vector2Int playerCell = Grid.WorldToCell(target.transform.position);
+                Vector2Int difference = playerCell - CurrentGridCell;
+                if (difference != Vector2Int.zero)
+                {
+                    FaceGridDirection(difference);
+                }
+            }
+
             ClearCrossArea();
 
             StopMovementFor(
@@ -128,7 +141,7 @@ namespace UdeM.Characters
             );
 
             if (animator != null)
-                animator.SetTrigger(reloadTrigger);
+                animator.SetTrigger(attackTrigger);
 
             yield return new WaitForSeconds(
                 preparationTime
@@ -169,12 +182,12 @@ namespace UdeM.Characters
                 yield break;
             }
 
-            if (animator != null)
-                animator.SetTrigger(attackTrigger);
-
             ExecuteFinalAttack(target);
 
             ClearCrossArea();
+
+            if (animator != null)
+                animator.SetTrigger(idleTrigger);
 
             nextAttackTime =
                 Time.time + attackCooldown;
