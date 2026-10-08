@@ -2742,8 +2742,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e05b8e2759a98ea48bbee85f6b3d0331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxLife: 20
-  currentLife: 20
+  maxLife: 13
+  currentLife: 13
   anim: {fileID: 318958396}
   contador: {fileID: 1983170459}
   hurtTrigger: onHurt
@@ -3610,8 +3610,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e05b8e2759a98ea48bbee85f6b3d0331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxLife: 20
-  currentLife: 20
+  maxLife: 13
+  currentLife: 13
   anim: {fileID: 361842210}
   contador: {fileID: 1983170459}
   hurtTrigger: onHurt
@@ -6159,8 +6159,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e05b8e2759a98ea48bbee85f6b3d0331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxLife: 20
-  currentLife: 20
+  maxLife: 13
+  currentLife: 13
   anim: {fileID: 827361322}
   contador: {fileID: 1983170459}
   hurtTrigger: onHurt
@@ -7897,8 +7897,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e05b8e2759a98ea48bbee85f6b3d0331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxLife: 20
-  currentLife: 20
+  maxLife: 13
+  currentLife: 13
   anim: {fileID: 981127846}
   contador: {fileID: 1983170459}
   hurtTrigger: onHurt
@@ -8015,7 +8015,7 @@ MonoBehaviour:
   updateWhenTransformChanges: 1
   cellCheckScale: 0.98
   showOccupiedCells: 1
-  occupiedCellCount: 56
+  occupiedCellCount: 42
   occupiedCells:
   - {x: 1, y: 2}
   - {x: 1, y: 4}
@@ -10179,8 +10179,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e05b8e2759a98ea48bbee85f6b3d0331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxLife: 20
-  currentLife: 20
+  maxLife: 13
+  currentLife: 13
   anim: {fileID: 1409329990}
   contador: {fileID: 1983170459}
   hurtTrigger: onHurt
@@ -10362,6 +10362,96 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &1427291781
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1427291783}
+  - component: {fileID: 1427291782}
+  m_Layer: 0
+  m_Name: Probes Iglesia
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!220 &1427291782
+LightProbeGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1427291781}
+  m_Enabled: 1
+  m_SourcePositions:
+  - {x: -10.3798895, y: -3.4648073, z: -19.998953}
+  - {x: -10.3798895, y: -3.4648073, z: -6.666317}
+  - {x: -10.3798895, y: -3.4648073, z: 6.666318}
+  - {x: -10.3798895, y: -3.4648073, z: 19.998953}
+  - {x: -10.3798895, y: 0, z: -19.998953}
+  - {x: -10.3798895, y: 0, z: -6.666317}
+  - {x: -10.3798895, y: 0, z: 6.666318}
+  - {x: -10.3798895, y: 0, z: 19.998953}
+  - {x: -10.3798895, y: 3.4648073, z: -19.998953}
+  - {x: -10.3798895, y: 3.4648073, z: -6.666317}
+  - {x: -10.3798895, y: 3.4648073, z: 6.666318}
+  - {x: -10.3798895, y: 3.4648073, z: 19.998953}
+  - {x: -3.459963, y: -3.4648073, z: -19.998953}
+  - {x: -3.459963, y: -3.4648073, z: -6.666317}
+  - {x: -3.459963, y: -3.4648073, z: 6.666318}
+  - {x: -3.459963, y: -3.4648073, z: 19.998953}
+  - {x: -3.459963, y: 0, z: -19.998953}
+  - {x: -3.459963, y: 0, z: -6.666317}
+  - {x: -3.459963, y: 0, z: 6.666318}
+  - {x: -3.459963, y: 0, z: 19.998953}
+  - {x: -3.459963, y: 3.4648073, z: -19.998953}
+  - {x: -3.459963, y: 3.4648073, z: -6.666317}
+  - {x: -3.459963, y: 3.4648073, z: 6.666318}
+  - {x: -3.459963, y: 3.4648073, z: 19.998953}
+  - {x: 3.459963, y: -3.4648073, z: -19.998953}
+  - {x: 3.459963, y: -3.4648073, z: -6.666317}
+  - {x: 3.459963, y: -3.4648073, z: 6.666318}
+  - {x: 3.459963, y: -3.4648073, z: 19.998953}
+  - {x: 3.459963, y: 0, z: -19.998953}
+  - {x: 3.459963, y: 0, z: -6.666317}
+  - {x: 3.459963, y: 0, z: 6.666318}
+  - {x: 3.459963, y: 0, z: 19.998953}
+  - {x: 3.459963, y: 3.4648073, z: -19.998953}
+  - {x: 3.459963, y: 3.4648073, z: -6.666317}
+  - {x: 3.459963, y: 3.4648073, z: 6.666318}
+  - {x: 3.459963, y: 3.4648073, z: 19.998953}
+  - {x: 10.3798895, y: -3.4648073, z: -19.998953}
+  - {x: 10.3798895, y: -3.4648073, z: -6.666317}
+  - {x: 10.3798895, y: -3.4648073, z: 6.666318}
+  - {x: 10.3798895, y: -3.4648073, z: 19.998953}
+  - {x: 10.3798895, y: 0, z: -19.998953}
+  - {x: 10.3798895, y: 0, z: -6.666317}
+  - {x: 10.3798895, y: 0, z: 6.666318}
+  - {x: 10.3798895, y: 0, z: 19.998953}
+  - {x: 10.3798895, y: 3.4648073, z: -19.998953}
+  - {x: 10.3798895, y: 3.4648073, z: -6.666317}
+  - {x: 10.3798895, y: 3.4648073, z: 6.666318}
+  - {x: 10.3798895, y: 3.4648073, z: 19.998953}
+  m_Dering: 1
+--- !u!4 &1427291783
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1427291781}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.0044116974, y: 3.4537194, z: -10.005241}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1434187463
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23796,3 +23886,4 @@ SceneRoots:
   - {fileID: 865966756}
   - {fileID: 1418075963}
   - {fileID: 1779133419}
+  - {fileID: 1427291783}
