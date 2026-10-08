@@ -207,7 +207,7 @@ namespace UdeM.Characters
 
         }
 
-        // Detecta al jugador y comienza la secuencia de lanzamiento de las cruces, y ahora persigue al jugador
+        // Detecta al jugador sin abandonar la patrulla ni perseguirlo directamente.
         public override void PlayerDetected(GameObject detectedTarget)
         {
             if (isDead)
@@ -218,10 +218,6 @@ namespace UdeM.Characters
 
             detectedPlayer =
                 detectedTarget;
-
-            // Antes: behaviourEnabled = false; (esto lo congelaba)
-            // Ahora llamamos a la base para que persiga y salte al moverse:
-            base.PlayerDetected(detectedTarget);
 
             if (initialLaunchRunning)
                 return;
@@ -234,13 +230,13 @@ namespace UdeM.Characters
             );
         }
 
-        // Mantiene la referencia del jugador aunque salga temporalmente del area de vision.
+        // Elimina la referencia cuando el jugador sale de la vision sin alterar la patrulla.
         public override void PlayerLost(GameObject lostTarget)
         {
             if (detectedPlayer != lostTarget)
                 return;
 
-            base.PlayerLost(lostTarget);
+            detectedPlayer = null;
         }
 
         // Lanza una por una todas las cruces que actualmente pertenecen al Monk.
@@ -248,8 +244,7 @@ namespace UdeM.Characters
         {
             initialLaunchRunning = true;
 
-            // Ya no lo congelamos para siempre, el seguira persiguiendo y saltando.
-            // Eliminamos: StopMovementFor(9999f);
+            // El Monk conserva su patrulla mientras coordina los turnos de las cruces.
 
             for (int i = 0;
                  i < crosses.Count;
@@ -272,6 +267,9 @@ namespace UdeM.Characters
 
                 if (detectedPlayer == null)
                     break;
+
+                if (!cross.CanAttackPlayer(detectedPlayer))
+                    continue;
 
                 if (animator != null)
                     animator.SetTrigger(attackTrigger);
@@ -329,7 +327,9 @@ namespace UdeM.Characters
                 );
 
                 MonkCrossBehaviour attackerCross =
-                    GetNextCrossForTurn();
+                    GetNextCrossForTurn(
+                        detectedPlayer
+                    );
 
                 if (attackerCross == null)
                 {
@@ -352,7 +352,8 @@ namespace UdeM.Characters
         }
 
         // Selecciona la siguiente cruz en el orden definido para su ataque autonomo.
-        private MonkCrossBehaviour GetNextCrossForTurn()
+        private MonkCrossBehaviour GetNextCrossForTurn(
+            GameObject player)
         {
             int startIndex =
                 autonomousTurnIndex;
@@ -375,7 +376,8 @@ namespace UdeM.Characters
                 if (cross != null &&
                     !cross.IsDead &&
                     !cross.IsPossessed &&
-                    !cross.IsAttacking)
+                    !cross.IsAttacking &&
+                    cross.CanAttackPlayer(player))
                 {
                     return cross;
                 }

@@ -83,8 +83,8 @@ namespace UdeM.Characters
 
             FaceGridDirection(direction);
 
-            if (animator != null)
-                animator.SetTrigger(attackTrigger);
+            //if (animator != null)
+                
 
             // Esperamos el tiempo necesario (reloadTime) para que la animacion coincida con el impacto.
             yield return new WaitForSeconds(reloadTime);
@@ -106,7 +106,7 @@ namespace UdeM.Characters
                 if (distance == 1)
                 {
                     FaceGridDirection(difference);
-
+                    animator.SetTrigger(attackTrigger);
                     SoundManager.singleton.PlaySFX("esqueletoAtaque");
 
                     Debug.Log(
