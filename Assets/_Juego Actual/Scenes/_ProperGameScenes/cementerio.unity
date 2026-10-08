@@ -3718,7 +3718,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ControladorContrarreloj
   minutos: 5
   segundos: 0
-  escenaDerrota: Derrota
+  escenaDerrota: Perder
   escenaVictoria: Victoria
   textoTiempo: {fileID: 1101033722}
 --- !u!4 &667535904

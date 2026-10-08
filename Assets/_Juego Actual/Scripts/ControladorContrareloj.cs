@@ -15,7 +15,7 @@ public class ControladorContrarreloj : MonoBehaviour
     [SerializeField] private int segundos = 0;
 
     [Header("Escenas")]
-    [SerializeField] private string escenaDerrota = "Derrota";
+    [SerializeField] private string escenaDerrota = "Perder";
     [SerializeField] private string escenaVictoria = "Victoria";
 
     [Header("Interfaz")]
