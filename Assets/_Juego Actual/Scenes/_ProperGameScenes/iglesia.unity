@@ -8015,7 +8015,7 @@ MonoBehaviour:
   updateWhenTransformChanges: 1
   cellCheckScale: 0.98
   showOccupiedCells: 1
-  occupiedCellCount: 56
+  occupiedCellCount: 104
   occupiedCells:
   - {x: 1, y: 2}
   - {x: 1, y: 4}
@@ -16201,7 +16201,7 @@ Transform:
   m_GameObject: {fileID: 3095283079973824623}
   serializedVersion: 2
   m_LocalRotation: {x: -5.9770054e-15, y: -0.00000015695824, z: 1, w: 0.0000000754979}
-  m_LocalPosition: {x: -0.010269508, y: 0.90650976, z: 6.275023}
+  m_LocalPosition: {x: -0.01, y: 0.38, z: 6.28}
   m_LocalScale: {x: -313.3141, y: -313.3141, z: -313.3141}
   m_ConstrainProportionsScale: 0
   m_Children:
