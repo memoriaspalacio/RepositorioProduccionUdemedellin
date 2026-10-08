@@ -20,8 +20,15 @@ namespace UdeM.Characters
         [SerializeField]
         private string attackTrigger = "Attack";
 
+        // Guarda el nombre del trigger usado para la animación de recarga.
+        [SerializeField]
+        private string cooldownTrigger = "Cooldown";
+
         // Define el tiempo entre la preparacion y la comprobacion del golpe.
         [SerializeField] private float reloadTime = 0.5f;
+
+        // Define el tiempo que dura la animación de ataque antes de poder actuar de nuevo.
+        [SerializeField] private float attackDuration = 0.5f;
 
         // Indica si existe un ataque en proceso.
         private bool isPreparingAttack;
@@ -83,8 +90,8 @@ namespace UdeM.Characters
 
             FaceGridDirection(direction);
 
-            //if (animator != null)
-                
+            if (animator != null)
+                animator.SetTrigger(cooldownTrigger);
 
             // Esperamos el tiempo necesario (reloadTime) para que la animacion coincida con el impacto.
             yield return new WaitForSeconds(reloadTime);
@@ -117,6 +124,10 @@ namespace UdeM.Characters
                     playerHealth.Damage(HitFunction());
                 }
             }
+
+            // Esperamos el tiempo necesario para que la animación de ataque termine
+            // antes de permitir que el esqueleto haga otra acción.
+            yield return new WaitForSeconds(attackDuration);
 
             isPreparingAttack = false;
         }

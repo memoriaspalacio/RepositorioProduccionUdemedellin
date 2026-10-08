@@ -8015,7 +8015,7 @@ MonoBehaviour:
   updateWhenTransformChanges: 1
   cellCheckScale: 0.98
   showOccupiedCells: 1
-  occupiedCellCount: 104
+  occupiedCellCount: 42
   occupiedCells:
   - {x: 1, y: 2}
   - {x: 1, y: 4}
@@ -8328,6 +8328,96 @@ MonoBehaviour:
   windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   windowClosingColor: {r: 0.6, g: 0.2, b: 0.15, a: 1}
   successColor: {r: 0.95, g: 0.3, b: 0.25, a: 1}
+--- !u!1 &1039739320
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1039739322}
+  - component: {fileID: 1039739321}
+  m_Layer: 0
+  m_Name: Probes Iglesia
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!220 &1039739321
+LightProbeGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1039739320}
+  m_Enabled: 1
+  m_SourcePositions:
+  - {x: -10.3798895, y: -3.4648073, z: -19.998953}
+  - {x: -10.3798895, y: -3.4648073, z: -6.666317}
+  - {x: -10.3798895, y: -3.4648073, z: 6.666318}
+  - {x: -10.3798895, y: -3.4648073, z: 19.998953}
+  - {x: -10.3798895, y: 0, z: -19.998953}
+  - {x: -10.3798895, y: 0, z: -6.666317}
+  - {x: -10.3798895, y: 0, z: 6.666318}
+  - {x: -10.3798895, y: 0, z: 19.998953}
+  - {x: -10.3798895, y: 3.4648073, z: -19.998953}
+  - {x: -10.3798895, y: 3.4648073, z: -6.666317}
+  - {x: -10.3798895, y: 3.4648073, z: 6.666318}
+  - {x: -10.3798895, y: 3.4648073, z: 19.998953}
+  - {x: -3.459963, y: -3.4648073, z: -19.998953}
+  - {x: -3.459963, y: -3.4648073, z: -6.666317}
+  - {x: -3.459963, y: -3.4648073, z: 6.666318}
+  - {x: -3.459963, y: -3.4648073, z: 19.998953}
+  - {x: -3.459963, y: 0, z: -19.998953}
+  - {x: -3.459963, y: 0, z: -6.666317}
+  - {x: -3.459963, y: 0, z: 6.666318}
+  - {x: -3.459963, y: 0, z: 19.998953}
+  - {x: -3.459963, y: 3.4648073, z: -19.998953}
+  - {x: -3.459963, y: 3.4648073, z: -6.666317}
+  - {x: -3.459963, y: 3.4648073, z: 6.666318}
+  - {x: -3.459963, y: 3.4648073, z: 19.998953}
+  - {x: 3.459963, y: -3.4648073, z: -19.998953}
+  - {x: 3.459963, y: -3.4648073, z: -6.666317}
+  - {x: 3.459963, y: -3.4648073, z: 6.666318}
+  - {x: 3.459963, y: -3.4648073, z: 19.998953}
+  - {x: 3.459963, y: 0, z: -19.998953}
+  - {x: 3.459963, y: 0, z: -6.666317}
+  - {x: 3.459963, y: 0, z: 6.666318}
+  - {x: 3.459963, y: 0, z: 19.998953}
+  - {x: 3.459963, y: 3.4648073, z: -19.998953}
+  - {x: 3.459963, y: 3.4648073, z: -6.666317}
+  - {x: 3.459963, y: 3.4648073, z: 6.666318}
+  - {x: 3.459963, y: 3.4648073, z: 19.998953}
+  - {x: 10.3798895, y: -3.4648073, z: -19.998953}
+  - {x: 10.3798895, y: -3.4648073, z: -6.666317}
+  - {x: 10.3798895, y: -3.4648073, z: 6.666318}
+  - {x: 10.3798895, y: -3.4648073, z: 19.998953}
+  - {x: 10.3798895, y: 0, z: -19.998953}
+  - {x: 10.3798895, y: 0, z: -6.666317}
+  - {x: 10.3798895, y: 0, z: 6.666318}
+  - {x: 10.3798895, y: 0, z: 19.998953}
+  - {x: 10.3798895, y: 3.4648073, z: -19.998953}
+  - {x: 10.3798895, y: 3.4648073, z: -6.666317}
+  - {x: 10.3798895, y: 3.4648073, z: 6.666318}
+  - {x: 10.3798895, y: 3.4648073, z: 19.998953}
+  m_Dering: 1
+--- !u!4 &1039739322
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1039739320}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.0044116974, y: 3.4537194, z: -10.005241}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1115188530
 GameObject:
   m_ObjectHideFlags: 0
@@ -23796,3 +23886,4 @@ SceneRoots:
   - {fileID: 865966756}
   - {fileID: 1418075963}
   - {fileID: 1779133419}
+  - {fileID: 1039739322}
