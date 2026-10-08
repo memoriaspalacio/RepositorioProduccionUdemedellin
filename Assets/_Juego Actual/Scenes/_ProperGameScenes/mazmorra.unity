@@ -443,8 +443,8 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
-      insertIndex: 0
-      addedObject: {fileID: 1995643491}
+      insertIndex: -1
+      addedObject: {fileID: 1882412621}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
@@ -547,6 +547,8 @@ MonoBehaviour:
   currentLife: 1
   anim: {fileID: 33352299}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!114 &33352307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -571,15 +573,19 @@ MonoBehaviour:
   pauseDuration: 1
   timeBetweenCells: 0.1
   requireRhythm: 1
+  visualTransform: {fileID: 0}
+  hopHeight: 0.5
+  hopDuration: 0.15
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
   movementConsumedThisWindow: 0
   movedCells: 0
   cellsBeforePause: 0
-  animator: {fileID: 370628115}
+  animator: {fileID: 1882412622}
   reloadTrigger: onReload
   attackTrigger: onAttack
+  flyParameter: Fly
   reloadTime: 2
   chargeTimePerCell: 0.12
   attackDamage: 5
@@ -874,6 +880,8 @@ MonoBehaviour:
   currentLife: 20
   anim: {fileID: 85292678}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!114 &85292686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -898,6 +906,9 @@ MonoBehaviour:
   pauseDuration: 1
   timeBetweenCells: 0.1
   requireRhythm: 1
+  visualTransform: {fileID: 0}
+  hopHeight: 0.5
+  hopDuration: 0.15
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
@@ -907,6 +918,7 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
+  flyParameter: Fly
   reloadTime: 0.75
   chargeTimePerCell: 0.12
   attackDamage: 5
@@ -1201,6 +1213,8 @@ MonoBehaviour:
   currentLife: 20
   anim: {fileID: 126750405}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!114 &126750413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1225,6 +1239,9 @@ MonoBehaviour:
   pauseDuration: 1
   timeBetweenCells: 0.1
   requireRhythm: 1
+  visualTransform: {fileID: 0}
+  hopHeight: 0.5
+  hopDuration: 0.15
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
@@ -1234,6 +1251,7 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
+  flyParameter: Fly
   reloadTime: 0.75
   chargeTimePerCell: 0.12
   attackDamage: 5
@@ -2511,6 +2529,8 @@ MonoBehaviour:
   currentLife: 10
   anim: {fileID: 361842210}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!23 &361842215
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2592,6 +2612,9 @@ MonoBehaviour:
   pauseDuration: 1
   timeBetweenCells: 0.1
   requireRhythm: 1
+  visualTransform: {fileID: 0}
+  hopHeight: 0.5
+  hopDuration: 0.15
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
@@ -2601,6 +2624,7 @@ MonoBehaviour:
   animator: {fileID: 361842210}
   reloadTrigger: onReload
   attackTrigger: onAttack
+  flyParameter: Fly
   reloadTime: 0.75
   chargeTimePerCell: 0.12
   attackDamage: 5
@@ -2895,6 +2919,8 @@ MonoBehaviour:
   currentLife: 20
   anim: {fileID: 370628115}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!114 &370628123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2919,6 +2945,9 @@ MonoBehaviour:
   pauseDuration: 1
   timeBetweenCells: 0.1
   requireRhythm: 1
+  visualTransform: {fileID: 0}
+  hopHeight: 0.5
+  hopDuration: 0.15
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
@@ -2928,6 +2957,7 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
+  flyParameter: Fly
   reloadTime: 0.75
   chargeTimePerCell: 0.12
   attackDamage: 5
@@ -3033,6 +3063,9 @@ MonoBehaviour:
   pauseDuration: 3
   timeBetweenCells: 1
   requireRhythm: 0
+  visualTransform: {fileID: 0}
+  hopHeight: 0.5
+  hopDuration: 0.15
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
@@ -3040,7 +3073,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  walkTrigger: Walk
+  idleTrigger: Idle
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 0}
@@ -3060,6 +3093,8 @@ MonoBehaviour:
   currentLife: 20
   anim: {fileID: 1350811594}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!1 &422656232
 GameObject:
   m_ObjectHideFlags: 0
@@ -3156,6 +3191,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
   m_PrefabInstance: {fileID: 434767925}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &435128363
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1345655858}
+    m_Modifications:
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5757252551828092422, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_Name
+      value: angelAnimated
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
 --- !u!1 &481481441
 GameObject:
   m_ObjectHideFlags: 0
@@ -3444,7 +3536,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3663,6 +3755,8 @@ MonoBehaviour:
   currentLife: 1
   anim: {fileID: 572176875}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!114 &572176883
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3687,6 +3781,9 @@ MonoBehaviour:
   pauseDuration: 1
   timeBetweenCells: 0.1
   requireRhythm: 1
+  visualTransform: {fileID: 0}
+  hopHeight: 0.5
+  hopDuration: 0.15
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
@@ -3696,6 +3793,7 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
+  flyParameter: Fly
   reloadTime: 2
   chargeTimePerCell: 0.12
   attackDamage: 5
@@ -3732,6 +3830,8 @@ MonoBehaviour:
   currentLife: 20
   anim: {fileID: 1185477624}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!114 &664701261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3756,6 +3856,9 @@ MonoBehaviour:
   pauseDuration: 1
   timeBetweenCells: 0.1
   requireRhythm: 1
+  visualTransform: {fileID: 0}
+  hopHeight: 0.5
+  hopDuration: 0.15
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
@@ -3765,6 +3868,7 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
+  flyParameter: Fly
   reloadTime: 0.75
   chargeTimePerCell: 0.12
   attackDamage: 5
@@ -4547,6 +4651,8 @@ MonoBehaviour:
   currentLife: 20
   anim: {fileID: 294286123}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!114 &879223020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4571,6 +4677,9 @@ MonoBehaviour:
   pauseDuration: 1
   timeBetweenCells: 0.1
   requireRhythm: 1
+  visualTransform: {fileID: 0}
+  hopHeight: 0.5
+  hopDuration: 0.15
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
@@ -4580,6 +4689,7 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
+  flyParameter: Fly
   reloadTime: 0.75
   chargeTimePerCell: 0.12
   attackDamage: 5
@@ -5224,7 +5334,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5443,6 +5553,8 @@ MonoBehaviour:
   currentLife: 1
   anim: {fileID: 1092455412}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!114 &1092455420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5467,6 +5579,9 @@ MonoBehaviour:
   pauseDuration: 1
   timeBetweenCells: 0.1
   requireRhythm: 1
+  visualTransform: {fileID: 0}
+  hopHeight: 0.5
+  hopDuration: 0.15
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
@@ -5476,6 +5591,7 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
+  flyParameter: Fly
   reloadTime: 2
   chargeTimePerCell: 0.12
   attackDamage: 5
@@ -6242,6 +6358,8 @@ MonoBehaviour:
   currentLife: 20
   anim: {fileID: 1167960962}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!114 &1167960970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6266,6 +6384,9 @@ MonoBehaviour:
   pauseDuration: 1
   timeBetweenCells: 0.1
   requireRhythm: 1
+  visualTransform: {fileID: 0}
+  hopHeight: 0.5
+  hopDuration: 0.15
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
@@ -6275,6 +6396,7 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
+  flyParameter: Fly
   reloadTime: 0.75
   chargeTimePerCell: 0.12
   attackDamage: 5
@@ -6997,8 +7119,8 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
-      insertIndex: 0
-      addedObject: {fileID: 1885598069}
+      insertIndex: -1
+      addedObject: {fileID: 1601517926}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
@@ -7101,6 +7223,8 @@ MonoBehaviour:
   currentLife: 1
   anim: {fileID: 1345655859}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!114 &1345655867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7125,15 +7249,19 @@ MonoBehaviour:
   pauseDuration: 1
   timeBetweenCells: 0.1
   requireRhythm: 1
+  visualTransform: {fileID: 0}
+  hopHeight: 0.5
+  hopDuration: 0.15
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
   movementConsumedThisWindow: 0
   movedCells: 0
   cellsBeforePause: 0
-  animator: {fileID: 370628115}
+  animator: {fileID: 1601517927}
   reloadTrigger: onReload
   attackTrigger: onAttack
+  flyParameter: Fly
   reloadTime: 2
   chargeTimePerCell: 0.12
   attackDamage: 5
@@ -7144,6 +7272,63 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 5180268599392299982, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
   m_PrefabInstance: {fileID: 1788141263}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1383978142
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 33352298}
+    m_Modifications:
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.012
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.158
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5757252551828092422, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+      propertyPath: m_Name
+      value: angelAnimated
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
 --- !u!1 &1437059695
 GameObject:
   m_ObjectHideFlags: 0
@@ -7630,6 +7815,16 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
+--- !u!4 &1601517926 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+  m_PrefabInstance: {fileID: 435128363}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1601517927 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6354098212072055235, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+  m_PrefabInstance: {fileID: 435128363}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1609262914
 GameObject:
   m_ObjectHideFlags: 0
@@ -7776,7 +7971,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -7995,6 +8190,8 @@ MonoBehaviour:
   currentLife: 1
   anim: {fileID: 1637367254}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!114 &1637367262
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8019,6 +8216,9 @@ MonoBehaviour:
   pauseDuration: 1
   timeBetweenCells: 0.1
   requireRhythm: 1
+  visualTransform: {fileID: 0}
+  hopHeight: 0.5
+  hopDuration: 0.15
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
@@ -8028,6 +8228,7 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
+  flyParameter: Fly
   reloadTime: 2
   chargeTimePerCell: 0.12
   attackDamage: 5
@@ -8369,6 +8570,8 @@ MonoBehaviour:
   currentLife: 20
   anim: {fileID: 1440218699}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!114 &1788141266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8397,6 +8600,9 @@ MonoBehaviour:
   pauseDuration: 3
   timeBetweenCells: 1
   requireRhythm: 0
+  visualTransform: {fileID: 0}
+  hopHeight: 0.5
+  hopDuration: 0.15
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
@@ -8404,7 +8610,7 @@ MonoBehaviour:
   movedCells: 0
   cellsBeforePause: 0
   animator: {fileID: 0}
-  walkTrigger: Walk
+  idleTrigger: Idle
   attackTrigger: onAttack
   reloadTime: 2
   playerHealth: {fileID: 0}
@@ -8806,67 +9012,15 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1878608292}
   m_CullTransparentMesh: 1
---- !u!1001 &1885598068
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1345655858}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.0392
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.04913
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.14
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071067
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_Name
-      value: Angel
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
---- !u!4 &1885598069 stripped
+--- !u!4 &1882412621 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-  m_PrefabInstance: {fileID: 1885598068}
+  m_CorrespondingSourceObject: {fileID: 4948908561655459004, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+  m_PrefabInstance: {fileID: 1383978142}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1882412622 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6354098212072055235, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+  m_PrefabInstance: {fileID: 1383978142}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1894882662
 PrefabInstance:
@@ -9332,7 +9486,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -9551,6 +9705,8 @@ MonoBehaviour:
   currentLife: 1
   anim: {fileID: 1955960647}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!114 &1955960655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9575,6 +9731,9 @@ MonoBehaviour:
   pauseDuration: 1
   timeBetweenCells: 0.1
   requireRhythm: 1
+  visualTransform: {fileID: 0}
+  hopHeight: 0.5
+  hopDuration: 0.15
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
@@ -9584,6 +9743,7 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
+  flyParameter: Fly
   reloadTime: 2
   chargeTimePerCell: 0.12
   attackDamage: 5
@@ -9727,68 +9887,6 @@ MonoBehaviour:
   soundMusicBeat: {fileID: 1776775016}
   screenLose: {fileID: 1004086648}
   screenWin: {fileID: 1712180125}
---- !u!1001 &1995643490
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 33352298}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.0392
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.04913
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.14
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071067
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-      propertyPath: m_Name
-      value: Angel
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
---- !u!4 &1995643491 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8c59b64e57ca8ee428200437e981d619, type: 3}
-  m_PrefabInstance: {fileID: 1995643490}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1998217936 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1a5532cc84629dc43b283ee54d0791c9, type: 3}
@@ -10202,7 +10300,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2640464060165118663, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -10421,6 +10519,8 @@ MonoBehaviour:
   currentLife: 1
   anim: {fileID: 2132965248}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!114 &2132965256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10445,6 +10545,9 @@ MonoBehaviour:
   pauseDuration: 1
   timeBetweenCells: 0.1
   requireRhythm: 1
+  visualTransform: {fileID: 0}
+  hopHeight: 0.5
+  hopDuration: 0.15
   rhythmWindowOpen: 0
   navMeshSampleDistance: 2
   currentCell: {x: 0, y: 0}
@@ -10454,6 +10557,7 @@ MonoBehaviour:
   animator: {fileID: 370628115}
   reloadTrigger: onReload
   attackTrigger: onAttack
+  flyParameter: Fly
   reloadTime: 2
   chargeTimePerCell: 0.12
   attackDamage: 5
