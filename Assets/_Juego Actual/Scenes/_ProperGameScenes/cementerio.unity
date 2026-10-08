@@ -5850,7 +5850,7 @@ MonoBehaviour:
   halfBeatNoteChance: 0.046875
   earlyTolerance: 0.05
   lateTolerance: 0.05
-  penaltyNoteCount: 1
+  penaltyNoteCount: 0
   logActions: 0
 --- !u!114 &1150939307
 MonoBehaviour:

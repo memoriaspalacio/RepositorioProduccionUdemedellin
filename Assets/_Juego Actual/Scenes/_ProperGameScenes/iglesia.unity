@@ -8879,11 +8879,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
   noteInterval: 2
-  midBeatNoteChance: 0.1875
-  halfBeatNoteChance: 0.09375
+  midBeatNoteChance: 0.09375
+  halfBeatNoteChance: 0.046875
   earlyTolerance: 0.5
   lateTolerance: 0.25
-  penaltyNoteCount: 1
+  penaltyNoteCount: 0
   logActions: 1
 --- !u!1 &1158727593
 GameObject:

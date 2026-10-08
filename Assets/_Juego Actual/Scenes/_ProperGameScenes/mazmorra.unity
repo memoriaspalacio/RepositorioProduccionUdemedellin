@@ -6018,7 +6018,7 @@ MonoBehaviour:
   halfBeatNoteChance: 0.0468
   earlyTolerance: 0.5
   lateTolerance: 0.25
-  penaltyNoteCount: 1
+  penaltyNoteCount: 0
   logActions: 1
 --- !u!1 &1158727593
 GameObject:
