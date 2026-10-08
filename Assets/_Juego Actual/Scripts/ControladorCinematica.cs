@@ -16,9 +16,20 @@ public class ControladorCinematica : MonoBehaviour
     [Header("Interfaz")]
     [SerializeField] private TextMeshProUGUI textoOmitir;
 
+    [Header("Musica del Menu")]
+    [SerializeField] private AudioSource audioMenu;
+    [SerializeField] private AudioClip musicaMenu;
+    [Range(0f, 1f)]
+    [SerializeField] private float volumenMenu = 0.7f;
+    [Min(0f)]
+    [SerializeField] private float duracionFade = 2f;
+
     private VideoPlayer videoPlayer;
     private float tiempoInicio;
     private bool cinematicaTerminada = false;
+
+    private bool aumentandoVolumen = false;
+    private float tiempoFade = 0f;
 
     void Awake()
     {
@@ -36,6 +47,13 @@ public class ControladorCinematica : MonoBehaviour
 
         if (textoOmitir != null)
             textoOmitir.gameObject.SetActive(false);
+
+        if (audioMenu != null)
+        {
+            audioMenu.playOnAwake = false;
+            audioMenu.loop = true;
+            audioMenu.Stop();
+        }
     }
 
     void Start()
@@ -46,6 +64,12 @@ public class ControladorCinematica : MonoBehaviour
 
     void Update()
     {
+        // Controlar el fade de la musica
+        if (aumentandoVolumen)
+        {
+            ActualizarFade();
+        }
+
         if (cinematicaTerminada || !permitirOmitir)
             return;
 
@@ -55,6 +79,8 @@ public class ControladorCinematica : MonoBehaviour
         if (textoOmitir != null)
             textoOmitir.gameObject.SetActive(true);
 
+        // Omitir con teclado, raton o mando
+        // compatible con el Input Manager clasico
         if (Input.anyKeyDown)
         {
             TerminarCinematica();
@@ -85,17 +111,63 @@ public class ControladorCinematica : MonoBehaviour
 
         cinematicaTerminada = true;
 
+        // Detener y ocultar video
         videoPlayer.Stop();
+        videoPlayer.enabled = false;
 
         if (textoOmitir != null)
             textoOmitir.gameObject.SetActive(false);
 
+        // Mostrar menu principal
         if (menuPrincipal != null)
             menuPrincipal.SetActive(true);
-        else
-            Debug.LogWarning("No se asigno el menu principal.");
 
-        gameObject.SetActive(false);
+        // Reproducir musica del menu
+        if (audioMenu != null && musicaMenu != null)
+        {
+            audioMenu.clip = musicaMenu;
+            audioMenu.loop = true;
+            audioMenu.volume = 0f;
+            audioMenu.Play();
+
+            tiempoFade = 0f;
+
+            if (duracionFade <= 0f)
+            {
+                audioMenu.volume = volumenMenu;
+            }
+            else
+            {
+                aumentandoVolumen = true;
+            }
+        }
+    }
+
+    void ActualizarFade()
+    {
+        if (audioMenu == null)
+        {
+            aumentandoVolumen = false;
+            return;
+        }
+
+        tiempoFade += Time.unscaledDeltaTime;
+
+        float progreso = Mathf.Clamp01(
+            tiempoFade / duracionFade
+        );
+
+        audioMenu.volume = Mathf.Lerp(
+            0f,
+            volumenMenu,
+            progreso
+        );
+
+        if (progreso >= 1f)
+        {
+            audioMenu.volume = volumenMenu;
+            aumentandoVolumen = false;
+        }
     }
 
     void OnDestroy()
