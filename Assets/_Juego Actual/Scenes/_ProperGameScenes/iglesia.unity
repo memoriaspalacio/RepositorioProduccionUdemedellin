@@ -2664,6 +2664,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
       addedObject: {fileID: 318958398}
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 318958400}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!4 &318958395 stripped
 Transform:
@@ -2748,6 +2751,18 @@ MonoBehaviour:
   contador: {fileID: 1983170459}
   hurtTrigger: onHurt
   deathTrigger: onDeath
+--- !u!114 &318958400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 318958397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757e97903c8b1674281c9f230e0c6297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OffScreenTarget
 --- !u!1 &327550372
 GameObject:
   m_ObjectHideFlags: 0
@@ -3582,6 +3597,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
       addedObject: {fileID: 361842214}
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 361842215}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!4 &361842209 stripped
 Transform:
@@ -3666,6 +3684,18 @@ MonoBehaviour:
   playerHealth: {fileID: 1792752532}
   attackCellPrefab: {fileID: 3440353448881964017, guid: 38722416446bebe4f9c8249f6b1dc361, type: 3}
   indicatorHeight: 0.08
+--- !u!114 &361842215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 361842211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757e97903c8b1674281c9f230e0c6297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OffScreenTarget
 --- !u!1 &364610520 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 69b06c83d7cb922439f54b7a2f8153c2, type: 3}
@@ -3805,7 +3835,9 @@ MonoBehaviour:
   animator: {fileID: 0}
   idleTrigger: Idle
   attackTrigger: onAttack
+  cooldownTrigger: Cooldown
   reloadTime: 2
+  attackDuration: 0.5
   playerHealth: {fileID: 1792752532}
 --- !u!114 &406492266
 MonoBehaviour:
@@ -6131,6 +6163,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
       addedObject: {fileID: 827361328}
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 827361329}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!4 &827361321 stripped
 Transform:
@@ -6215,6 +6250,18 @@ MonoBehaviour:
   playerHealth: {fileID: 1792752532}
   attackCellPrefab: {fileID: 3440353448881964017, guid: 38722416446bebe4f9c8249f6b1dc361, type: 3}
   indicatorHeight: 0.08
+--- !u!114 &827361329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 827361323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757e97903c8b1674281c9f230e0c6297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OffScreenTarget
 --- !u!1 &829959134 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 69b06c83d7cb922439f54b7a2f8153c2, type: 3}
@@ -7869,6 +7916,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
       addedObject: {fileID: 981127852}
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 981127853}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!4 &981127845 stripped
 Transform:
@@ -7953,6 +8003,18 @@ MonoBehaviour:
   playerHealth: {fileID: 1792752532}
   attackCellPrefab: {fileID: 3440353448881964017, guid: 38722416446bebe4f9c8249f6b1dc361, type: 3}
   indicatorHeight: 0.08
+--- !u!114 &981127853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981127847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757e97903c8b1674281c9f230e0c6297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OffScreenTarget
 --- !u!1 &1003182219
 GameObject:
   m_ObjectHideFlags: 0
@@ -10241,6 +10303,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1409329997}
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1409329998}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!4 &1409329989 stripped
 Transform:
@@ -10325,6 +10390,18 @@ MonoBehaviour:
   playerHealth: {fileID: 1792752532}
   attackCellPrefab: {fileID: 3440353448881964017, guid: 38722416446bebe4f9c8249f6b1dc361, type: 3}
   indicatorHeight: 0.08
+--- !u!114 &1409329998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1409329991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757e97903c8b1674281c9f230e0c6297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OffScreenTarget
 --- !u!1 &1418075961
 GameObject:
   m_ObjectHideFlags: 0
@@ -13283,6 +13360,67 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!1001 &2073864916
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1341.9095
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 485.7189
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7231055927588260355, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: indicatorContainer
+      value: 
+      objectReference: {fileID: 1983170458}
+    - target: {fileID: 7868558930451705722, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_Name
+      value: OffScreenManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
 --- !u!1 &2089667804
 GameObject:
   m_ObjectHideFlags: 0
@@ -23875,6 +24013,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1140715655}
+  - {fileID: 2073864916}
   - {fileID: 1776775017}
   - {fileID: 1983170458}
   - {fileID: 1115188533}
