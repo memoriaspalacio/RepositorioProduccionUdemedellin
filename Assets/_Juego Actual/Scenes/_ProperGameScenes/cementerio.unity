@@ -5365,6 +5365,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3367075916116438923, guid: d2170765e6712504387a7eed41974a15, type: 3}
   m_PrefabInstance: {fileID: 1059130815}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &1059130817 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6503443130894978401, guid: d2170765e6712504387a7eed41974a15, type: 3}
+  m_PrefabInstance: {fileID: 1059130815}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1087981498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6516,6 +6521,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3367075916116438923, guid: d2170765e6712504387a7eed41974a15, type: 3}
   m_PrefabInstance: {fileID: 1356268097}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &1356268099 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6503443130894978401, guid: d2170765e6712504387a7eed41974a15, type: 3}
+  m_PrefabInstance: {fileID: 1356268097}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1360052462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7473,9 +7483,9 @@ MonoBehaviour:
   movementConsumedThisWindow: 0
   movedCells: 0
   cellsBeforePause: 0
-  animator: {fileID: 1936263363}
+  animator: {fileID: 1356268099}
   idleTrigger: Idle
-  attackTrigger: onAttack
+  attackTrigger: Attack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
 --- !u!1 &1760784772
@@ -8018,11 +8028,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1924857350}
   m_CullTransparentMesh: 1
---- !u!95 &1936263363 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 1986001824924112646, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
-  m_PrefabInstance: {fileID: 233945029}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1938030493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8694,9 +8699,9 @@ MonoBehaviour:
   movementConsumedThisWindow: 0
   movedCells: 0
   cellsBeforePause: 0
-  animator: {fileID: 1936263363}
+  animator: {fileID: 1059130817}
   idleTrigger: Idle
-  attackTrigger: onAttack
+  attackTrigger: Attack
   reloadTime: 2
   playerHealth: {fileID: 1792752532}
 --- !u!1 &1983170454
