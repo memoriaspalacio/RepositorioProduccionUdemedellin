@@ -129,9 +129,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UdeM.Characters.MonkCrossBehaviour
   attackDamage: 4
   travelTimePerCell: 0.12
-  groundHeightOffset: 0
+  attackHopHeight: 0.6
+  unpossessedHeightOffset: 0.5
   possessedRotationSpeed: 90
   playerHealth: {fileID: 0}
+  crossRenderer: {fileID: 0}
+  teleportHighlightColor: {r: 0, g: 1, b: 1, a: 1}
 --- !u!114 &-447072630256678296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,6 +151,8 @@ MonoBehaviour:
   currentLife: 7
   anim: {fileID: -3434982810493667782}
   contador: {fileID: 0}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!95 &-3434982810493667782
 Animator:
   serializedVersion: 7
