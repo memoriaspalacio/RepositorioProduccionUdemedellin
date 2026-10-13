@@ -755,6 +755,10 @@ PrefabInstance:
       propertyPath: beatJudge
       value: 
       objectReference: {fileID: 1140715656}
+    - target: {fileID: 5264282115128844298, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
+      propertyPath: startHightOffset
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 5389053593820512191, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
       propertyPath: m_Layer
       value: 6
