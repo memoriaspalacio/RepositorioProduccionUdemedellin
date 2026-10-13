@@ -45,6 +45,11 @@ public class BeatTrackUI : MonoBehaviour {
     public float TravelBeats => travelBeats;
 
     [Header("Colors")]
+    [Tooltip("How many beats after the window opens before a note starts changing color. " +
+             "Only the color waits - the window still opens on time and input works as normal. " +
+             "If this is as long as the window itself, the color never shows.")]
+    [SerializeField, Min(0f)] private float colorDelayBeats = 0.5f;
+
     [Tooltip("Before the beat's window opens.")]
     [SerializeField] private Color idleColor = new Color(0.42f, 0.17f, 0.17f, 1f);
 
@@ -171,21 +176,31 @@ public class BeatTrackUI : MonoBehaviour {
     }
 
     /// <summary>
-    /// Picks a bar's color from timing alone: neutral until its window opens, then
-    /// degrading from open to closing color across the window, or the success color
-    /// once the player has claimed it. The window is asymmetric - it opens
-    /// earlyTolerance before the beat and closes lateTolerance after it - so the
-    /// highlight has to be read from the judge rather than assumed symmetric.
+    /// Picks a bar's color from timing alone: neutral until its color starts, then
+    /// degrading from open to closing color until the window closes, or the success
+    /// color once the player has claimed it. The window is asymmetric - it opens
+    /// earlyTolerance before the beat and closes lateTolerance after it - so it has
+    /// to be read from the judge rather than assumed symmetric.
+    ///
+    /// The color starts colorDelayBeats AFTER the window opens. That delay is purely
+    /// visual: the judge still accepts input from the moment the window opens.
     /// </summary>
     private Color ResolveColor(BeatBar bar, float beatsPastTarget, float earlyTolerance, float lateTolerance) {
         if (bar.Consumed) return successColor;
 
-        if (beatsPastTarget < -earlyTolerance || beatsPastTarget > lateTolerance) return idleColor;
+        // The window opens at -earlyTolerance, but the color waits colorDelayBeats longer.
+        float colorStart = -earlyTolerance + colorDelayBeats;
 
-        // 0 as the window opens, 1 as it closes.
-        float windowProgress = (beatsPastTarget + earlyTolerance) / (earlyTolerance + lateTolerance);
+        // A delay as long as the window leaves no time to show any color.
+        if (colorStart >= lateTolerance) return idleColor;
 
-        return Color.Lerp(windowOpenColor, windowClosingColor, windowProgress);
+        if (beatsPastTarget < colorStart || beatsPastTarget > lateTolerance) return idleColor;
+
+        // 0 when the color starts, 1 as the window closes - so it still ends on the
+        // closing color exactly when the window does, instead of popping in half-blended.
+        float colorProgress = (beatsPastTarget - colorStart) / (lateTolerance - colorStart);
+
+        return Color.Lerp(windowOpenColor, windowClosingColor, colorProgress);
     }
 
     private void HandleBeatConsumed(float beat) {
