@@ -13,13 +13,33 @@ public class EnemyHealth : MonoBehaviour
     [Header("Animaciones")]
     public string hurtTrigger = "onHurt";
     public string deathTrigger = "onDeath";
-    public void Damage(float damage)
+    public void Damage(float damage, Vector3? attackerPosition = null)
     {
         currentLife = currentLife - damage;
 
         Debug.Log("Enemy fue herido fue herido " + currentLife);
         if (anim != null)
             anim.SetTrigger(hurtTrigger);
+
+        // Retroalimentacion de golpe estilo Minecraft (Flash rojo + shake/tilt)
+        MinecraftHitFeedback hitFeedback = GetComponent<MinecraftHitFeedback>();
+        if (hitFeedback == null)
+        {
+            hitFeedback = gameObject.AddComponent<MinecraftHitFeedback>();
+        }
+
+        if (attackerPosition.HasValue)
+        {
+            hitFeedback.PlayHitFeedbackFromAttacker(attackerPosition.Value);
+        }
+        else
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+                hitFeedback.PlayHitFeedbackFromAttacker(player.transform.position);
+            else
+                hitFeedback.PlayHitFeedback();
+        }
 
         GetComponent<MonkCrossBehaviour>()?.SetDead();
         GetComponent<MonkBehaviour>()?.NotifyMonkDamaged();

@@ -666,7 +666,8 @@ namespace UdeM.Characters
             if (playerHealth != null)
             {
                 playerHealth.Damage(
-                    attackDamage
+                    attackDamage,
+                    transform.position
                 );
             }
 
