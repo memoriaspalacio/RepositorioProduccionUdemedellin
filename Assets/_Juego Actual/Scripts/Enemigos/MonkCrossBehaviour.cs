@@ -53,6 +53,10 @@ namespace UdeM.Characters
         [Min(0f)]
         [SerializeField] private float attackHopHeight = 0.6f;
 
+        // Define la distancia minima en celdas necesaria para iniciar un ataque.
+        [Min(2)]
+        [SerializeField] private int minimumAttackCellDistance = 2;
+
         // Define cuanto se eleva visualmente la cruz respecto a la altura del Monk.
         [SerializeField] private float unpossessedHeightOffset = 0.5f;
 
@@ -143,6 +147,58 @@ namespace UdeM.Characters
             );
         }
 
+        // Comprueba si existe suficiente distancia en celdas para permitir un ataque.
+        public bool CanAttackPlayer(
+            GameObject player)
+        {
+            if (IsDead)
+                return false;
+
+            if (player == null)
+                return false;
+
+            if (grid == null)
+                return false;
+
+            Vector2Int playerCell =
+                grid.WorldToCell(
+                    player.transform.position
+                );
+
+            Vector2Int attackOriginCell =
+                currentCell;
+
+            if (IsPossessed &&
+                owner != null)
+            {
+                attackOriginCell =
+                    grid.WorldToCell(
+                        transform.position
+                    );
+            }
+
+            int deltaX =
+                Mathf.Abs(
+                    playerCell.x -
+                    attackOriginCell.x
+                );
+
+            int deltaY =
+                Mathf.Abs(
+                    playerCell.y -
+                    attackOriginCell.y
+                );
+
+            int cellDistance =
+                Mathf.Max(
+                    deltaX,
+                    deltaY
+                );
+
+            return cellDistance >=
+                   minimumAttackCellDistance;
+        }
+
         // Registra al jugador al comenzar el turno y lanza la cruz por celdas en linea recta.
         public IEnumerator AttackPlayer(
             GameObject player)
@@ -157,6 +213,9 @@ namespace UdeM.Characters
                 yield break;
 
             if (grid == null)
+                yield break;
+
+            if (!CanAttackPlayer(player))
                 yield break;
 
             isAttacking = true;

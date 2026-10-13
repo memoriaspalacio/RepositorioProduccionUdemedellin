@@ -4327,26 +4327,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2521028516836949071, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2521028516836949071, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2521028516836949071, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2521028516836949071, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2521028516836949071, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2671328518192151799, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_Name
       value: Gametime UI
@@ -4416,6 +4396,55 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+--- !u!1 &667535902
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 667535904}
+  - component: {fileID: 667535903}
+  m_Layer: 0
+  m_Name: Contrareloj
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &667535903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667535902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 601b31eaaa3fca84ba1a1d39409ab56a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ControladorContrarreloj
+  minutos: 5
+  segundos: 0
+  escenaDerrota: Perder
+  escenaVictoria: Victoria
+  textoTiempo: {fileID: 1101033722}
+--- !u!4 &667535904
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667535902}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.3852, y: 0.59003, z: -0.50912}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &689248516
 GameObject:
   m_ObjectHideFlags: 0
@@ -6405,6 +6434,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 625703232248823309, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
   m_PrefabInstance: {fileID: 661014466}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1101033722 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7399644879444384438, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+  m_PrefabInstance: {fileID: 661014466}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &1101234936
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6618,10 +6658,9 @@ MonoBehaviour:
   updateWhenTransformChanges: 1
   cellCheckScale: 0.98
   showOccupiedCells: 1
-  occupiedCellCount: 4
+  occupiedCellCount: 3
   occupiedCells:
   - {x: 3, y: 2}
-  - {x: 3, y: 3}
   - {x: 4, y: 2}
   - {x: 4, y: 3}
 --- !u!1 &1139778889
@@ -6857,7 +6896,7 @@ MonoBehaviour:
   halfBeatNoteChance: 0.046875
   earlyTolerance: 0.05
   lateTolerance: 0.05
-  penaltyNoteCount: 1
+  penaltyNoteCount: 0
   logActions: 0
 --- !u!114 &1150939307
 MonoBehaviour:
@@ -10714,12 +10753,13 @@ GameObject:
   - component: {fileID: 6209770352251857928}
   - component: {fileID: 1646580242716273545}
   - component: {fileID: 4478477701027227575}
+  - component: {fileID: 6209770352251857929}
   m_Layer: 0
   m_Name: tapa10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &248900337861970095
 Transform:
@@ -12416,7 +12456,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &1358423287607327846
 Transform:
@@ -12646,12 +12686,13 @@ GameObject:
   - component: {fileID: 5059237025138928911}
   - component: {fileID: 1828900010088051534}
   - component: {fileID: 4559293046782778117}
+  - component: {fileID: 5059237025138928912}
   m_Layer: 0
   m_Name: tapa2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!23 &1674702638981156047
 MeshRenderer:
@@ -15744,7 +15785,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!1 &4782608922856919647
 GameObject:
@@ -16163,6 +16204,44 @@ Transform:
   m_Children: []
   m_Father: {fileID: 543450653051282179}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5059237025138928912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1647635822822318068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4875c8f89001f6946b997d03f3426310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RhythmicAnimator
+  modelTransform: {fileID: 0}
+  enableBop: 1
+  enableTilt: 1
+  enableSquashAndStretch: 0
+  applyPreset: 0
+  bopHeight: 0.08
+  bopCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  tiltAngle: 2
+  tiltCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  squashAmount: 0.05
+  deformationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &5071970786211678455
 Transform:
   m_ObjectHideFlags: 0
@@ -16212,12 +16291,13 @@ GameObject:
   - component: {fileID: 7625066582118277867}
   - component: {fileID: 1289402513905772441}
   - component: {fileID: 3618491703705317106}
+  - component: {fileID: 7625066582118277868}
   m_Layer: 0
   m_Name: tapa5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &5179425945586354834
 Transform:
@@ -16246,12 +16326,13 @@ GameObject:
   - component: {fileID: 5960676475740269075}
   - component: {fileID: 8524565513324507232}
   - component: {fileID: 1120130387}
+  - component: {fileID: 8524565513324507233}
   m_Layer: 0
   m_Name: tapa6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &5195480425850936998
 Transform:
@@ -16842,13 +16923,52 @@ GameObject:
   - component: {fileID: 2028567501786794108}
   - component: {fileID: 15759297680220003}
   - component: {fileID: 379671760536155832}
+  - component: {fileID: 5935086692364882448}
   m_Layer: 0
   m_Name: tapa11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &5935086692364882448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5935086692364882447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4875c8f89001f6946b997d03f3426310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RhythmicAnimator
+  modelTransform: {fileID: 0}
+  enableBop: 1
+  enableTilt: 1
+  enableSquashAndStretch: 0
+  applyPreset: 0
+  bopHeight: 0.08
+  bopCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  tiltAngle: 2
+  tiltCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  squashAmount: 0.05
+  deformationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!33 &5960676475740269075
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -16896,6 +17016,44 @@ Transform:
   m_Children: []
   m_Father: {fileID: 543450653051282179}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6209770352251857929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220727642263934196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4875c8f89001f6946b997d03f3426310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RhythmicAnimator
+  modelTransform: {fileID: 0}
+  enableBop: 1
+  enableTilt: 1
+  enableSquashAndStretch: 0
+  applyPreset: 0
+  bopHeight: 0.08
+  bopCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  tiltAngle: 2
+  tiltCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  squashAmount: 0.05
+  deformationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!23 &6221156195513226631
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -17346,12 +17504,13 @@ GameObject:
   - component: {fileID: 6822176815861128919}
   - component: {fileID: 4362947120143699062}
   - component: {fileID: 13146191}
+  - component: {fileID: 7896309642379843335}
   m_Layer: 0
   m_Name: tapa9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!33 &6517145298616186880
 MeshFilter:
@@ -17453,13 +17612,52 @@ GameObject:
   - component: {fileID: 411077859398829014}
   - component: {fileID: 307253889418672100}
   - component: {fileID: 1687388292}
+  - component: {fileID: 6620709460719266537}
   m_Layer: 0
   m_Name: tapa12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &6620709460719266537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6620709460719266536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4875c8f89001f6946b997d03f3426310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RhythmicAnimator
+  modelTransform: {fileID: 0}
+  enableBop: 1
+  enableTilt: 1
+  enableSquashAndStretch: 0
+  applyPreset: 0
+  bopHeight: 0.08
+  bopCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  tiltAngle: 2
+  tiltCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  squashAmount: 0.05
+  deformationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &6624070849308540448
 Transform:
   m_ObjectHideFlags: 0
@@ -17799,12 +17997,13 @@ GameObject:
   - component: {fileID: 3126272533205283710}
   - component: {fileID: 8314797145973172063}
   - component: {fileID: 8509832956015353178}
+  - component: {fileID: 8509832956015353179}
   m_Layer: 0
   m_Name: tapa4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!1 &6970729383159587787
 GameObject:
@@ -18379,6 +18578,44 @@ Transform:
   m_Children: []
   m_Father: {fileID: 543450653051282179}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7625066582118277868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5135204033801137831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4875c8f89001f6946b997d03f3426310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RhythmicAnimator
+  modelTransform: {fileID: 0}
+  enableBop: 1
+  enableTilt: 1
+  enableSquashAndStretch: 0
+  applyPreset: 0
+  bopHeight: 0.08
+  bopCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  tiltAngle: 2
+  tiltCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  squashAmount: 0.05
+  deformationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7673354983117905742
 GameObject:
   m_ObjectHideFlags: 0
@@ -18794,6 +19031,44 @@ Transform:
   m_Children: []
   m_Father: {fileID: 543450653051282179}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7896309642379843335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6510606565581069459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4875c8f89001f6946b997d03f3426310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RhythmicAnimator
+  modelTransform: {fileID: 0}
+  enableBop: 1
+  enableTilt: 1
+  enableSquashAndStretch: 0
+  applyPreset: 0
+  bopHeight: 0.08
+  bopCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  tiltAngle: 2
+  tiltCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  squashAmount: 0.05
+  deformationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!23 &7907293569466948764
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -19005,13 +19280,52 @@ GameObject:
   - component: {fileID: 8021475699766130224}
   - component: {fileID: 2555681532829179421}
   - component: {fileID: 1647101583734728057}
+  - component: {fileID: 8141390929234248004}
   m_Layer: 0
   m_Name: tapa3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8141390929234248004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8141390929234248003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4875c8f89001f6946b997d03f3426310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RhythmicAnimator
+  modelTransform: {fileID: 0}
+  enableBop: 1
+  enableTilt: 1
+  enableSquashAndStretch: 0
+  applyPreset: 0
+  bopHeight: 0.08
+  bopCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  tiltAngle: 2
+  tiltCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  squashAmount: 0.05
+  deformationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &8147868336578084499
 Transform:
   m_ObjectHideFlags: 0
@@ -19404,6 +19718,44 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8509832956015353179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6968362105201043368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4875c8f89001f6946b997d03f3426310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RhythmicAnimator
+  modelTransform: {fileID: 0}
+  enableBop: 1
+  enableTilt: 1
+  enableSquashAndStretch: 0
+  applyPreset: 0
+  bopHeight: 0.08
+  bopCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  tiltAngle: 2
+  tiltCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  squashAmount: 0.05
+  deformationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &8518133739337101883
 Transform:
   m_ObjectHideFlags: 0
@@ -19486,6 +19838,44 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8524565513324507233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5193935068045606238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4875c8f89001f6946b997d03f3426310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RhythmicAnimator
+  modelTransform: {fileID: 0}
+  enableBop: 1
+  enableTilt: 1
+  enableSquashAndStretch: 0
+  applyPreset: 0
+  bopHeight: 0.08
+  bopCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  tiltAngle: 2
+  tiltCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  squashAmount: 0.05
+  deformationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &8534640106789493800
 Transform:
   m_ObjectHideFlags: 0
@@ -20126,13 +20516,52 @@ GameObject:
   - component: {fileID: 5098183824894423608}
   - component: {fileID: 106833768500969392}
   - component: {fileID: 5660517767152556054}
+  - component: {fileID: 9191835198719195124}
   m_Layer: 0
   m_Name: tapa13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &9191835198719195124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9191835198719195123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4875c8f89001f6946b997d03f3426310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RhythmicAnimator
+  modelTransform: {fileID: 0}
+  enableBop: 1
+  enableTilt: 1
+  enableSquashAndStretch: 0
+  applyPreset: 0
+  bopHeight: 0.08
+  bopCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  tiltAngle: 2
+  tiltCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  squashAmount: 0.05
+  deformationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &9202800128094891137
 GameObject:
   m_ObjectHideFlags: 0
@@ -20227,3 +20656,4 @@ SceneRoots:
   - {fileID: 1731232081}
   - {fileID: 915093859}
   - {fileID: 2068982885502489996}
+  - {fileID: 667535904}
