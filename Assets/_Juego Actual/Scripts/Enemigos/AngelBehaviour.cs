@@ -1031,7 +1031,7 @@ namespace UdeM.Characters
                 );
 
             if (health != null)
-                health.Damage(attackDamage);
+                health.Damage(attackDamage, transform.position);
 
             Vector2Int playerCell =
                 Grid.WorldToCell(

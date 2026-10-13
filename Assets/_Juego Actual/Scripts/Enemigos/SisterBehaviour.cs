@@ -243,7 +243,7 @@ namespace UdeM.Characters
                 Time.time + burnInterval;
 
             if (playerHealth != null)
-                playerHealth.Damage(burnDamage);
+                playerHealth.Damage(burnDamage, transform.position);
         }
 
         // Ejecuta el dano fuerte si el jugador permanece dentro de la cruz completa.
@@ -275,7 +275,7 @@ namespace UdeM.Characters
             );
 
             if (playerHealth != null)
-                playerHealth.Damage(finalAttackDamage);
+                playerHealth.Damage(finalAttackDamage, transform.position);
         }
 
         // Crea una marca visual y registra su celda como parte del ataque activo.

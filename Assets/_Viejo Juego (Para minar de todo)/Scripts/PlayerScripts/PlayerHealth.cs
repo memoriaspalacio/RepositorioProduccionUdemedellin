@@ -26,7 +26,7 @@ public class PlayerHealth : MonoBehaviour
             lifeBar.value = currentLife;
         }
     }
-    public void Damage(float damage)
+    public void Damage(float damage, Vector3? attackerPosition = null)
     {
         currentLife = currentLife - damage;
 
@@ -38,7 +38,19 @@ public class PlayerHealth : MonoBehaviour
         if (anim != null)
             anim.SetTrigger("onHurt");
 
-        // NUEVO: Solo reproduce el sonido si ya pasó el tiempo de espera mínimo
+        // Retroalimentacion de golpe estilo Minecraft (Flash rojo + HurtCam / Shake)
+        MinecraftHitFeedback hitFeedback = GetComponent<MinecraftHitFeedback>();
+        if (hitFeedback == null)
+        {
+            hitFeedback = gameObject.AddComponent<MinecraftHitFeedback>();
+        }
+
+        if (attackerPosition.HasValue)
+            hitFeedback.PlayHitFeedbackFromAttacker(attackerPosition.Value);
+        else
+            hitFeedback.PlayHitFeedback();
+
+        // NUEVO: Solo reproduce el sonido si ya pasÃ³ el tiempo de espera mÃ­nimo
         if (Time.time >= siguienteTiempoSonidoDano)
         {
             SoundManager.singleton.PlaySFX("danoJugador");
@@ -70,3 +82,4 @@ public class PlayerHealth : MonoBehaviour
 
 
 }
+
