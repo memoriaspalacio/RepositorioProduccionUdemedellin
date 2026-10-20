@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 575afeb747574bb4c8ba1bd0c18d8a86, type: 3}
+  m_Name: Perfil_Cementerio
+  m_EditorClassIdentifier: Assembly-CSharp::PerfilAmbientacion
+  rutaEscena: Assets/_Juego Actual/Scenes/_ProperGameScenes/cementerio.unity
+  prefijosLimite:
+  - valla
+  - vaya
+  skybox: {fileID: 2100000, guid: 6a7caee66587f1248b0a4f9f35099c05, type: 2}
+  intensidadReflejos: 0.5
+  ambienteCielo: {r: 0.16, g: 0.2, b: 0.33, a: 1}
+  ambienteHorizonte: {r: 0.08, g: 0.1, b: 0.14, a: 1}
+  ambienteSuelo: {r: 0.03, g: 0.04, b: 0.035, a: 1}
+  colorLuna: {r: 0.58, g: 0.68, b: 1, a: 1}
+  intensidadLuna: 1.1
+  elevacionLuna: 32
+  azimutLuna: 15
+  fuerzaSombras: 0.75
+  modoLuna: 1
+  niebla: 1
+  modoNiebla: 3
+  colorNiebla: {r: 0.085, g: 0.11, b: 0.15, a: 1}
+  densidadNiebla: 0.025
+  lucesAcento:
+  - prefijoObjeto: lampara
+    color: {r: 1, g: 0.16, b: 0.72, a: 1}
+    intensidad: 6
+    rango: 8
+    alturaRelativa: 0.7
+    modo: 2
+    emision: 2.5
+  - prefijoObjeto: pilar
+    color: {r: 1, g: 0.12, b: 0.08, a: 1}
+    intensidad: 2.5
+    rango: 3.5
+    alturaRelativa: 1.1
+    modo: 2
+    emision: 0
+  nieblaParticulas: 1
+  materialNiebla: {fileID: 2100000, guid: 0d92c25d2a12e45479f89960dac9f618, type: 2}
+  colorParticulas: {r: 0.55, g: 0.64, b: 0.78, a: 1}
+  alturaNieblaSuelo: 1.2
+  particulasSuelo: 70
+  tamanoSuelo: {x: 5, y: 9}
+  opacidadSuelo: 0.3
+  particulasExterior: 50
+  tamanoExterior: {x: 10, y: 18}
+  opacidadExterior: 0.45
+  viento: {x: 0.15, y: 0.05}
+  postProceso: 1
+  perfilVolumen: {fileID: 11400000, guid: 5d862b7b4c1a7854a91919adc952396a, type: 2}
+  ajustesHorneado: {fileID: 4890085278179872738, guid: bfa96b2d69704ae4c887683700c986eb, type: 2}
+  texelesPorUnidad: 16
+  tamanoAtlas: 2048
+  oclusionAmbiental: 1
+  rebotes: 2
+  separacionSondas: 3
+  alturasSondas:
+  - 0.3
+  - 1.5
+  - 3
+  calidadesSinParticulas: 
+  calidadesSinPostProceso: 
