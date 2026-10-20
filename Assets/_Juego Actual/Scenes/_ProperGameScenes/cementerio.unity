@@ -9453,8 +9453,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 601b31eaaa3fca84ba1a1d39409ab56a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ControladorContrarreloj
-  minutos: 0
-  segundos: 17
+  minutos: 5
+  segundos: 0
+  minutosEntreEscena: 0
+  segundosEntreEscena: 0
   escenaDerrota: Perder
   escenaVictoria: Victoria
   textoTiempo: {fileID: 1101033722}
@@ -11115,6 +11117,7 @@ MonoBehaviour:
   barPrefab: {fileID: 1763768325479063683, guid: ee83b12492d592d499d90b08e2d2a06c, type: 3}
   barParent: {fileID: 1092442724}
   travelBeats: 4
+  colorDelayBeats: 0.5
   idleColor: {r: 0.79622644, g: 0.7616732, b: 0.7616732, a: 1}
   windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   windowClosingColor: {r: 0.6, g: 0.2, b: 0.15, a: 1}

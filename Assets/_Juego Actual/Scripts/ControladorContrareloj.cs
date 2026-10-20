@@ -1,7 +1,8 @@
 
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
+using static UnityEngine.Rendering.DebugUI;
 
 public class ControladorContrarreloj : MonoBehaviour
 {
@@ -14,6 +15,13 @@ public class ControladorContrarreloj : MonoBehaviour
     [Range(0, 59)]
     [SerializeField] private int segundos = 0;
 
+    [Header("Tiempo guardado entre escenas. ")]
+    [Min(0)]
+    [SerializeField] private int minutosEntreEscena;
+
+    [Range(0, 59)]
+    [SerializeField] private int segundosEntreEscena;
+
     [Header("Escenas")]
     [SerializeField] private string escenaDerrota = "Perder";
     [SerializeField] private string escenaVictoria = "Victoria";
@@ -21,7 +29,7 @@ public class ControladorContrarreloj : MonoBehaviour
     [Header("Interfaz")]
     [SerializeField] private TMP_Text textoTiempo;
 
-    private float tiempoRestante;
+    private float tiempoRestante, tiempoRestanteEntreEscenas;
     private bool contando = false;
     private bool terminado = false;
 
@@ -42,6 +50,11 @@ public class ControladorContrarreloj : MonoBehaviour
 
         tiempoRestante = minutos * 60f + segundos;
 
+        tiempoRestanteEntreEscenas = tiempoRestante;
+
+        minutosEntreEscena = minutos;
+        segundosEntreEscena = segundos;
+
         SceneManager.sceneLoaded += EscenaCargada;
     }
 
@@ -54,6 +67,7 @@ public class ControladorContrarreloj : MonoBehaviour
 
     void Update()
     {
+
         if (!contando || terminado)
             return;
 
@@ -100,10 +114,30 @@ public class ControladorContrarreloj : MonoBehaviour
         SceneManager.LoadScene(escenaDerrota);
     }
 
+    public void GuardarTiempoEntreEscena() {
+        tiempoRestanteEntreEscenas = Mathf.CeilToInt(tiempoRestante);
 
-    public void ReiniciarContrarreloj()
+        minutosEntreEscena = Mathf.FloorToInt(tiempoRestanteEntreEscenas / 60);
+        segundosEntreEscena = Mathf.FloorToInt(tiempoRestanteEntreEscenas % 60);
+    }
+
+    public void ReiniciarContrarReloj()
     {
         tiempoRestante = minutos * 60f + segundos;
+
+        terminado = false;
+        contando = true;
+
+        BuscarTextoTiempo();
+        ActualizarTexto();
+    }
+
+    public void ReiniciarContrarRelojAlInicioDeEscena() {
+        float diff = tiempoRestanteEntreEscenas - tiempoRestante;
+        tiempoRestanteEntreEscenas -= diff/2;
+        tiempoRestante = tiempoRestanteEntreEscenas;
+
+        // tiempoRestante = tiempoRestante - (minutosEntreEscena * 60f) / 2 + (segundosEntreEscena) / 2;
 
         terminado = false;
         contando = true;
@@ -116,7 +150,7 @@ public class ControladorContrarreloj : MonoBehaviour
     // Reinicia el tiempo y carga el nivel inicial
     public void ReiniciarJuego(string nombreEscena)
     {
-        ReiniciarContrarreloj();
+        ReiniciarContrarReloj();
         Time.timeScale = 1f;
         
     }
@@ -164,12 +198,16 @@ public class ControladorContrarreloj : MonoBehaviour
         }
     }
 
-    void OnDestroy()
+    public void OnDestroy()
     {
+        /*
         if (Instancia == this)
         {
             SceneManager.sceneLoaded -= EscenaCargada;
             Instancia = null;
         }
+        */
+
+        Destroy(gameObject);
     }
 }
