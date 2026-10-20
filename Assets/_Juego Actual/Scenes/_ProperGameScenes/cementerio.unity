@@ -4425,8 +4425,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 601b31eaaa3fca84ba1a1d39409ab56a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ControladorContrarreloj
-  minutos: 5
-  segundos: 0
+  minutos: 0
+  segundos: 17
   escenaDerrota: Perder
   escenaVictoria: Victoria
   textoTiempo: {fileID: 1101033722}

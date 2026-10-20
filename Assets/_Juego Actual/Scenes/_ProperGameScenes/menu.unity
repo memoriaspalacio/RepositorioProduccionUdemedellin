@@ -759,6 +759,7 @@ GameObject:
   - component: {fileID: 934844417}
   - component: {fileID: 934844416}
   - component: {fileID: 934844419}
+  - component: {fileID: 934844420}
   m_Layer: 5
   m_Name: Jugar
   m_TagString: Untagged
@@ -892,6 +893,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f95a1e2db014bf41bcf82e0640ef763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Scenes
+--- !u!114 &934844420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 934844414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2552ce7164ccd3a40a3d36bcec2f3521, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BotonReiniciar
+  escenaInicial: cementerio
 --- !u!1 &1114597367
 GameObject:
   m_ObjectHideFlags: 0

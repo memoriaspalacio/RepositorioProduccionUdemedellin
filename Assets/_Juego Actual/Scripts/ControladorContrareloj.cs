@@ -100,13 +100,25 @@ public class ControladorContrarreloj : MonoBehaviour
         SceneManager.LoadScene(escenaDerrota);
     }
 
+
     public void ReiniciarContrarreloj()
     {
         tiempoRestante = minutos * 60f + segundos;
+
         terminado = false;
         contando = true;
 
+        BuscarTextoTiempo();
         ActualizarTexto();
+    }
+
+
+    // Reinicia el tiempo y carga el nivel inicial
+    public void ReiniciarJuego(string nombreEscena)
+    {
+        ReiniciarContrarreloj();
+        Time.timeScale = 1f;
+        
     }
 
     void ActualizarTexto()
@@ -114,8 +126,7 @@ public class ControladorContrarreloj : MonoBehaviour
         if (textoTiempo == null)
             return;
 
-        int totalSegundos =
-            Mathf.CeilToInt(tiempoRestante);
+        int totalSegundos = Mathf.CeilToInt(tiempoRestante);
 
         int minutosActuales = totalSegundos / 60;
         int segundosActuales = totalSegundos % 60;
@@ -128,11 +139,18 @@ public class ControladorContrarreloj : MonoBehaviour
     {
         BuscarTextoTiempo();
         ActualizarTexto();
+
+        // No contar en las escenas finales
+        if (escena.name == escenaVictoria ||
+            escena.name == escenaDerrota)
+        {
+            contando = false;
+            terminado = true;
+        }
     }
 
     void BuscarTextoTiempo()
     {
-        // Busca el texto del cronometro en la escena actual
         GameObject objetoTexto =
             GameObject.Find("TextoContrarreloj");
 
