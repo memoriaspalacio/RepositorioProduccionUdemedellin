@@ -16,6 +16,7 @@ MonoBehaviour:
   prefijosLimite:
   - valla
   - vaya
+  desactivarObjetos: []
   skybox: {fileID: 2100000, guid: 6a7caee66587f1248b0a4f9f35099c05, type: 2}
   intensidadReflejos: 0.5
   ambienteCielo: {r: 0.16, g: 0.2, b: 0.33, a: 1}
@@ -33,19 +34,37 @@ MonoBehaviour:
   densidadNiebla: 0.025
   lucesAcento:
   - prefijoObjeto: lampara
+    excluirPrefijos: []
     color: {r: 1, g: 0.16, b: 0.72, a: 1}
     intensidad: 6
     rango: 8
     alturaRelativa: 0.7
+    separacionInterior: 0
     modo: 2
     emision: 2.5
   - prefijoObjeto: pilar
+    excluirPrefijos: []
     color: {r: 1, g: 0.12, b: 0.08, a: 1}
     intensidad: 2.5
     rango: 3.5
     alturaRelativa: 1.1
+    separacionInterior: 0
     modo: 2
     emision: 0
+  materialesEmisivos: []
+  haces:
+    activo: 0
+    material: {fileID: 0}
+    materialVentanas: {fileID: 0}
+    color: {r: 0.55, g: 0.7, b: 1, a: 1}
+    opacidad: 0.12
+    largo: 9
+    inclinacion: 38
+    apertura: 1.8
+    crearLuces: 1
+    intensidadLuz: 30
+    rangoLuz: 13
+    anguloLuz: 50
   nieblaParticulas: 1
   materialNiebla: {fileID: 2100000, guid: 0d92c25d2a12e45479f89960dac9f618, type: 2}
   colorParticulas: {r: 0.55, g: 0.64, b: 0.78, a: 1}
@@ -71,3 +90,4 @@ MonoBehaviour:
   - 3
   calidadesSinParticulas: 
   calidadesSinPostProceso: 
+  calidadesSinVolumetricos: 
