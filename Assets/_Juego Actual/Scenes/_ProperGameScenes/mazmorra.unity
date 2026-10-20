@@ -309,6 +309,9 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 294559530}
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 294559529}
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
@@ -649,6 +652,9 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 33352308}
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 33352303}
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
@@ -792,6 +798,18 @@ MonoBehaviour:
   attackDamage: 5
   timeBetweenBatches: 1
   playerHealth: {fileID: 0}
+--- !u!114 &33352308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 33352300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757e97903c8b1674281c9f230e0c6297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OffScreenTarget
 --- !u!1001 &104127193
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1463,6 +1481,18 @@ MonoBehaviour:
   contador: {fileID: 1983170459}
   hurtTrigger: onHurt
   deathTrigger: onDeath
+--- !u!114 &220502385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220502379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757e97903c8b1674281c9f230e0c6297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OffScreenTarget
 --- !u!1001 &233945029
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1718,6 +1748,10 @@ PrefabInstance:
     - target: {fileID: 5166891632509829937, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5264282115128844298, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
+      propertyPath: startHightOffset
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 5389053593820512191, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
       propertyPath: m_Layer
@@ -2117,6 +2151,18 @@ MonoBehaviour:
   contador: {fileID: 1983170459}
   hurtTrigger: onHurt
   deathTrigger: onDeath
+--- !u!114 &288291717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288291711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757e97903c8b1674281c9f230e0c6297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OffScreenTarget
 --- !u!1 &294559524 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
@@ -2244,6 +2290,18 @@ MonoBehaviour:
   contador: {fileID: 1983170459}
   hurtTrigger: onHurt
   deathTrigger: onDeath
+--- !u!114 &294559530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 294559524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757e97903c8b1674281c9f230e0c6297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OffScreenTarget
 --- !u!1 &305105208
 GameObject:
   m_ObjectHideFlags: 0
@@ -2807,7 +2865,9 @@ MonoBehaviour:
   animator: {fileID: 0}
   idleTrigger: Idle
   attackTrigger: onAttack
+  cooldownTrigger: Cooldown
   reloadTime: 2
+  attackDuration: 0.5
   playerHealth: {fileID: 0}
 --- !u!114 &406492266
 MonoBehaviour:
@@ -2827,6 +2887,18 @@ MonoBehaviour:
   contador: {fileID: 1983170459}
   hurtTrigger: onHurt
   deathTrigger: onDeath
+--- !u!114 &406492267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 406492257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757e97903c8b1674281c9f230e0c6297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OffScreenTarget
 --- !u!1001 &417194170
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3015,6 +3087,9 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 926781239}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1374914595}
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1374914594}
@@ -3514,6 +3589,9 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 798125020}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 220502385}
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
       addedObject: {fileID: 220502384}
@@ -4943,6 +5021,9 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 288291717}
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 288291716}
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
@@ -5383,6 +5464,18 @@ MonoBehaviour:
   contador: {fileID: 1983170459}
   hurtTrigger: onHurt
   deathTrigger: onDeath
+--- !u!114 &968820353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968820347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757e97903c8b1674281c9f230e0c6297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OffScreenTarget
 --- !u!1 &1004086648 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6305918671090303674, guid: 0a876161f67c83a408037c9c3155141e, type: 3}
@@ -6018,7 +6111,7 @@ MonoBehaviour:
   halfBeatNoteChance: 0.0468
   earlyTolerance: 0.5
   lateTolerance: 0.25
-  penaltyNoteCount: 1
+  penaltyNoteCount: 0
   logActions: 1
 --- !u!1 &1158727593
 GameObject:
@@ -6924,6 +7017,9 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 968820353}
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 968820352}
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
@@ -7062,6 +7158,18 @@ MonoBehaviour:
   contador: {fileID: 1983170459}
   hurtTrigger: onHurt
   deathTrigger: onDeath
+--- !u!114 &1374914595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1374914589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757e97903c8b1674281c9f230e0c6297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OffScreenTarget
 --- !u!1001 &1383978142
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7946,6 +8054,9 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1637367263}
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1637367258}
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
@@ -8089,6 +8200,18 @@ MonoBehaviour:
   attackDamage: 5
   timeBetweenBatches: 1
   playerHealth: {fileID: 0}
+--- !u!114 &1637367263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637367255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757e97903c8b1674281c9f230e0c6297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OffScreenTarget
 --- !u!1 &1702100233
 GameObject:
   m_ObjectHideFlags: 0
@@ -8645,6 +8768,9 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 406492267}
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 406492262}
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
@@ -8844,6 +8970,67 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d6fbac3169bde34b8dee9c834f81b6b, type: 3}
+--- !u!1001 &1825704275
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1339.5336
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 500.91357
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7231055927588260355, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: indicatorContainer
+      value: 
+      objectReference: {fileID: 1983170458}
+    - target: {fileID: 7868558930451705722, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_Name
+      value: OffScreenManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
 --- !u!1 &1878608292
 GameObject:
   m_ObjectHideFlags: 0
@@ -12803,6 +12990,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1140715655}
+  - {fileID: 1825704275}
   - {fileID: 1776775017}
   - {fileID: 1983170458}
   - {fileID: 1115188533}

@@ -119,6 +119,67 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &20514560
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1341.9095
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 485.7189
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775444907619968967, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7231055927588260355, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: indicatorContainer
+      value: 
+      objectReference: {fileID: 1983170458}
+    - target: {fileID: 7868558930451705722, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
+      propertyPath: m_Name
+      value: OffScreenManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3a9aab980b1e81048846885635b1e018, type: 3}
 --- !u!1 &26255077
 GameObject:
   m_ObjectHideFlags: 0
@@ -694,6 +755,10 @@ PrefabInstance:
       propertyPath: beatJudge
       value: 
       objectReference: {fileID: 1140715656}
+    - target: {fileID: 5264282115128844298, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
+      propertyPath: startHightOffset
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 5389053593820512191, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -3371,11 +3436,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
   noteInterval: 2
-  midBeatNoteChance: 0.1875
-  halfBeatNoteChance: 0.09375
+  midBeatNoteChance: 0.09375
+  halfBeatNoteChance: 0.046875
   earlyTolerance: 0.5
   lateTolerance: 0.25
-  penaltyNoteCount: 2
+  penaltyNoteCount: 0
   logActions: 1
 --- !u!1 &1158727593
 GameObject:
@@ -3923,6 +3988,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1518774653}
+    - targetCorrespondingSourceObject: {fileID: 1772452350650382355, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1518774658}
   m_SourcePrefab: {fileID: 100100000, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
 --- !u!4 &1518774650 stripped
 Transform:
@@ -4005,6 +4073,18 @@ MonoBehaviour:
   minimumAutonomousDelay: 1
   maximumAutonomousDelay: 3
   initialFacingDirection: {x: 0, y: -1}
+--- !u!114 &1518774658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518774652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757e97903c8b1674281c9f230e0c6297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OffScreenTarget
 --- !u!1 &1609262914
 GameObject:
   m_ObjectHideFlags: 0
@@ -7597,6 +7677,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1140715655}
+  - {fileID: 20514560}
   - {fileID: 1776775017}
   - {fileID: 1983170458}
   - {fileID: 1115188533}
