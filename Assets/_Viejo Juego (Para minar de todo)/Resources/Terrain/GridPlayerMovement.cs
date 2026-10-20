@@ -520,7 +520,8 @@ protected virtual void ExecuteAttack()
     }
 
     enemyHealth.Damage(
-        HitFunction()
+        HitFunction(),
+        transform.position
     );
 }
 
