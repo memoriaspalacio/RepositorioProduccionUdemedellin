@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: M_RhythmCircleIndicator
+  m_Shader: {fileID: 4800000, guid: c7a19e482bf544329da87612f01ac53b, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3100
+  stringTagMap:
+    RenderType: Transparent
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _ApproachRingScale: 2
+    - _BeatPulse: 0
+    - _CoreRadius: 0.08
+    - _DstBlend: 10
+    - _FillMode: 3
+    - _FillProgress: 0
+    - _GlowIntensity: 2.84
+    - _HitFeedback: 0
+    - _MissFeedback: 0
+    - _RingThickness: 0.045
+    - _Smoothness: 0.0196
+    - _SrcBlend: 5
+    - _TargetRadius: 0.7
+    - _WindowOpen: 0
+    - _ZOffsetFactor: -4
+    - _ZOffsetUnits: -8
+    - _ZTest: 4
+    m_Colors:
+    - _BaseColor: {r: 0.15, g: 0.65, b: 1, a: 0.45}
+    - _FillColor: {r: 0.2, g: 0.9, b: 1, a: 0.9}
+    - _HitColor: {r: 1, g: 0.98, b: 0.5, a: 1}
+    - _MissColor: {r: 1, g: 0.2, b: 0.2, a: 0.8}
+    - _ReadyColor: {r: 1, g: 0.88, b: 0.2, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
