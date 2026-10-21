@@ -13,16 +13,22 @@ Shader "Custom/FloorGrid"
         _LineThickness ("Grosor de Línea", Range(0.001, 0.5)) = 0.03
         
         _BeatPulse ("Pulso del Beat (0 a 1)", Range(0.0, 1.0)) = 1.0
+        
+        [Header(Depth and Rendering Order)]
+        [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest ("Prueba de Profundidad (ZTest: 4=LEqual, 8=Always)", Float) = 4
+        _ZOffsetFactor ("Z Offset Factor (Bias contra el suelo)", Float) = -4
+        _ZOffsetUnits ("Z Offset Units", Float) = -4
     }
     SubShader
     {
-        Tags { "RenderType"="Transparent" "Queue"="Transparent" }
+        Tags { "RenderType"="Transparent" "Queue"="Transparent+50" "IgnoreProjector"="True" }
         LOD 100
         
         // El modo de fusión ahora es dinámico y expuesto en el Inspector
         Blend [_SrcBlend] [_DstBlend]
         ZWrite Off
-        Offset -1, -1
+        ZTest [_ZTest]
+        Offset [_ZOffsetFactor], [_ZOffsetUnits]
 
         Pass
         {

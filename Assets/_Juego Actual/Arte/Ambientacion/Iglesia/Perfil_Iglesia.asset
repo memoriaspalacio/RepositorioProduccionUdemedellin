@@ -1,0 +1,112 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 575afeb747574bb4c8ba1bd0c18d8a86, type: 3}
+  m_Name: Perfil_Iglesia
+  m_EditorClassIdentifier: Assembly-CSharp::PerfilAmbientacion
+  rutaEscena: Assets/_Juego Actual/Scenes/_ProperGameScenes/iglesia.unity
+  prefijosLimite:
+  - Ventanal
+  desactivarObjetos:
+  - Luz Nave
+  - Luz Altar
+  - Luz Velas
+  - Probes Iglesia
+  skybox: {fileID: 2100000, guid: dfa3c24341f6a5e41be5841ce8b12894, type: 2}
+  intensidadReflejos: 0.35
+  ambienteCielo: {r: 0.06, g: 0.08, b: 0.13, a: 1}
+  ambienteHorizonte: {r: 0.04, g: 0.05, b: 0.07, a: 1}
+  ambienteSuelo: {r: 0.025, g: 0.02, b: 0.018, a: 1}
+  colorLuna: {r: 0.5, g: 0.62, b: 0.95, a: 1}
+  intensidadLuna: 0.35
+  elevacionLuna: 65
+  azimutLuna: 60
+  fuerzaSombras: 0.6
+  modoLuna: 1
+  niebla: 1
+  modoNiebla: 3
+  colorNiebla: {r: 0.045, g: 0.06, b: 0.085, a: 1}
+  densidadNiebla: 0.018
+  lucesAcento:
+  - prefijoObjeto: Vela
+    excluirPrefijos: []
+    color: {r: 1, g: 0.55, b: 0.22, a: 1}
+    intensidad: 1.2
+    rango: 3.5
+    alturaRelativa: 1.05
+    separacionInterior: 0
+    modo: 2
+    emision: 0
+  - prefijoObjeto: Mesa
+    excluirPrefijos: []
+    color: {r: 1, g: 0.5, b: 0.18, a: 1}
+    intensidad: 8
+    rango: 7
+    alturaRelativa: 1.4
+    separacionInterior: 0
+    modo: 2
+    emision: 0
+  - prefijoObjeto: Pilar
+    excluirPrefijos:
+    - PilarCurvo
+    color: {r: 1, g: 0.55, b: 0.22, a: 1}
+    intensidad: 3
+    rango: 4.5
+    alturaRelativa: 0.4
+    separacionInterior: 0.8
+    modo: 2
+    emision: 0
+  materialesEmisivos:
+  - material: {fileID: 2100000, guid: 985eeee6ef58f644ba737e24a9df9ea0, type: 2}
+    color: {r: 0.88000005, g: 1.1520001, b: 1.6, a: 1.6}
+    usarTextura: 1
+  - material: {fileID: 2100000, guid: 907a366abcfcdaf47bfa9ca7359b1a0a, type: 2}
+    color: {r: 4, g: 2, b: 0.6, a: 4}
+    usarTextura: 1
+  haces:
+    activo: 1
+    material: {fileID: 2100000, guid: 87bbf8ab5a5444e47a615a3ffcd2cd52, type: 2}
+    materialVentanas: {fileID: 2100000, guid: 985eeee6ef58f644ba737e24a9df9ea0, type: 2}
+    color: {r: 0.55, g: 0.7, b: 1, a: 1}
+    opacidad: 0.12
+    largo: 9
+    inclinacion: 38
+    apertura: 1.8
+    crearLuces: 1
+    intensidadLuz: 30
+    rangoLuz: 13
+    anguloLuz: 50
+  nieblaParticulas: 1
+  materialNiebla: {fileID: 2100000, guid: 8916815f7b61e88418aeee43d1c0f2a6, type: 2}
+  colorParticulas: {r: 0.4, g: 0.48, b: 0.62, a: 1}
+  alturaNieblaSuelo: 1
+  particulasSuelo: 60
+  tamanoSuelo: {x: 5, y: 9}
+  opacidadSuelo: 0.18
+  particulasExterior: 0
+  tamanoExterior: {x: 10, y: 18}
+  opacidadExterior: 0.45
+  viento: {x: 0.15, y: 0.05}
+  postProceso: 1
+  perfilVolumen: {fileID: 11400000, guid: e1990fb955f1d7a4995d8e98e143d118, type: 2}
+  ajustesHorneado: {fileID: 4890085278179872738, guid: cfb725eced7517e439eecb048f57b72c, type: 2}
+  texelesPorUnidad: 16
+  tamanoAtlas: 2048
+  oclusionAmbiental: 1
+  rebotes: 2
+  separacionSondas: 3
+  alturasSondas:
+  - 0.3
+  - 1.5
+  - 3
+  calidadesSinParticulas: 
+  calidadesSinPostProceso: 
+  calidadesSinVolumetricos: 
