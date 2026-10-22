@@ -178,6 +178,28 @@ public class BeatActionJudge : MonoBehaviour {
         return TryGetIndex(Mathf.RoundToInt(beat * SlotsPerBeat), out index) && tracked[index].resolved;
     }
 
+    /// <summary>
+    /// True while at least one unclaimed note's window is open - the moment a press would
+    /// count as a hit. Read by views that light up while it's time to act.
+    /// </summary>
+    public bool IsWindowOpen {
+        get {
+            if (!initialized) return false;
+            if (BeatManager.Instance == null || !BeatManager.Instance.IsPlaying) return false;
+
+            double beatPosition = BeatManager.Instance.CurrentSongTime / BeatManager.Instance.SecPerBeat;
+
+            for (int i = 0; i < tracked.Count; i++) {
+                if (tracked[i].resolved) continue;
+
+                double offset = beatPosition - BeatOfSlot(tracked[i].slot);
+                if (offset >= -earlyTolerance && offset <= lateTolerance) return true;
+            }
+
+            return false;
+        }
+    }
+
     private static float BeatOfSlot(int slot) {
         return slot / (float)SlotsPerBeat;
     }
