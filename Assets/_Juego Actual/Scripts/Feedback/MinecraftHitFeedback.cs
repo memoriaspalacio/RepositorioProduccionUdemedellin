@@ -533,6 +533,27 @@ public class MinecraftHitFeedback : MonoBehaviour
 
     #endregion
 
+    /// <summary>
+    /// Corta el flash, la inclinación y el shake en curso y deja el modelo con sus materiales
+    /// y pose originales. EfectoMuerte lo usa para capturar el cuerpo sin el rojo del golpe final.
+    /// </summary>
+    public void RestaurarAspecto()
+    {
+        if (flashRoutine != null)
+        {
+            StopCoroutine(flashRoutine);
+            flashRoutine = null;
+        }
+
+        if (tiltAndShakeRoutine != null)
+        {
+            StopCoroutine(tiltAndShakeRoutine);
+            tiltAndShakeRoutine = null;
+        }
+
+        ResetVisualState();
+    }
+
     private void ResetVisualState()
     {
         if (hasVisualBase && visualTransform != null)
