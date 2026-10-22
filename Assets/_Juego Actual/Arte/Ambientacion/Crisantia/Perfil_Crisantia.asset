@@ -73,7 +73,19 @@ MonoBehaviour:
     separacionInterior: 1.5
     modo: 2
     emision: 0.35
-  materialesEmisivos: []
+  - prefijoObjeto: armario
+    excluirPrefijos: []
+    color: {r: 1, g: 0.62, b: 0.3, a: 1}
+    intensidad: 4
+    rango: 6
+    alturaRelativa: 0.9
+    separacionInterior: 1.2
+    modo: 2
+    emision: 0
+  materialesEmisivos:
+  - material: {fileID: 2100000, guid: e5eb27812295c8845b6094072bd54018, type: 2}
+    color: {r: 0.6, g: 0.4, b: 0.15, a: 1}
+    usarTextura: 1
   haces:
     activo: 1
     modo: 1
@@ -110,6 +122,18 @@ MonoBehaviour:
   tamanoPolvo: {x: 0.04, y: 0.1}
   alturaPolvo: 4
   viento: {x: 0.15, y: 0.05}
+  zonasVivas:
+  - prefijoObjeto: armario
+    luciernagas: 14
+    radio: 1.5
+    tamano: {x: 0.06, y: 0.14}
+    lucesReales: 4
+    colorLuz: {r: 1, g: 0.72, b: 0.35, a: 1}
+    intensidadLuz: 1.6
+    rangoLuz: 2.2
+    hazDelCielo: 1
+    anchoHaz: 2.2
+  materialLuciernagas: {fileID: 2100000, guid: c04a98c1d78643346a7589cfd8077f17, type: 2}
   postProceso: 1
   perfilVolumen: {fileID: 11400000, guid: 7a8ffe866dc73694d9e12cb36a9c2b83, type: 2}
   ajustesHorneado: {fileID: 4890085278179872738, guid: 0b3df5cf11cd3a843bbd4e41eacc3c5b, type: 2}

@@ -24,6 +24,13 @@ Shader "UdeM/Ambientacion/SkyboxNoche"
         _BrilloEstrellas ("Brillo", Range(0, 10)) = 2.2
         _Titileo ("Titileo", Range(0, 10)) = 2
 
+        [Header(Fuego alrededor de la luna (apocalipsis))]
+        _IntensidadFuego ("Intensidad", Range(0, 10)) = 0
+        [HDR] _ColorFuego ("Color fuego", Color) = (1, 0.6, 0.15, 1)
+        [HDR] _ColorFuegoBorde ("Color borde", Color) = (0.8, 0.1, 0.04, 1)
+        _TamanoFuego ("Concentracion", Range(0.5, 20)) = 2.2
+        _VelocidadFuego ("Velocidad", Range(0, 1)) = 0.12
+
         [Header(Nubes)]
         _ColorNubes ("Color nubes iluminadas", Color) = (0.42, 0.5, 0.64, 1)
         _ColorNubesSombra ("Color nubes en sombra", Color) = (0.035, 0.045, 0.08, 1)
@@ -66,6 +73,12 @@ Shader "UdeM/Ambientacion/SkyboxNoche"
             float _CantidadEstrellas;
             float _BrilloEstrellas;
             float _Titileo;
+
+            float _IntensidadFuego;
+            float4 _ColorFuego;
+            float4 _ColorFuegoBorde;
+            float _TamanoFuego;
+            float _VelocidadFuego;
 
             float4 _ColorNubes;
             float4 _ColorNubesSombra;
@@ -190,6 +203,17 @@ Shader "UdeM/Ambientacion/SkyboxNoche"
                 float opacidad = nubes * _OpacidadNubes;
                 cielo = lerp(cielo, colorNubes, opacidad);
                 cielo += _ColorHalo.rgb * halo * 0.35 * opacidad;
+
+                if (_IntensidadFuego > 0.0)
+                {
+                    float2 alrededor = float2(dot(dir, tangente), dot(dir, bitangente));
+                    float mascara = exp(-angulo * _TamanoFuego) * step(0.0, cosLuna);
+                    float llamas = fbm(alrededor * 5.0 + float2(0.0, -_Time.y * _VelocidadFuego));
+                    llamas = llamas * 0.7 + fbm(alrededor * 11.0 - float2(_Time.y * _VelocidadFuego * 0.6, 0.0)) * 0.3;
+                    float forma = smoothstep(0.35, 0.85, llamas + mascara * 0.6) * pow(mascara, 1.3);
+                    float3 fuego = lerp(_ColorFuegoBorde.rgb, _ColorFuego.rgb, saturate(llamas * 1.4 + mascara - 0.4));
+                    cielo += fuego * forma * _IntensidadFuego * (1.0 - opacidad * 0.45);
+                }
 
                 float bruma = 1.0 - smoothstep(-0.03, _AlturaBruma, dir.y);
                 cielo = lerp(cielo, _ColorBruma.rgb, bruma);

@@ -14,7 +14,10 @@ public static class AplicadorAmbientacion
     const string ShaderSkybox = "UdeM/Ambientacion/SkyboxNoche";
     const string ShaderNiebla = "UdeM/Ambientacion/NieblaParticula";
     const string ShaderHaz = "UdeM/Ambientacion/HazDeLuz";
+    const string ShaderOjos = "UdeM/Ambientacion/BrilloOjos";
+    const string NombreCapaPersonajes = "Personajes";
     const string RutaTexturaNiebla = CarpetaRaiz + "/T_NieblaPuff.png";
+    const string RutaTexturaBrillo = CarpetaRaiz + "/T_Brillo.png";
 
     const string NombreRaiz = "== Ambientacion ==";
     const string NombreParticulas = "Particulas";
@@ -57,6 +60,8 @@ public static class AplicadorAmbientacion
         ConfigurarSondas(perfil, raiz, limites, suelo);
         ConfigurarHorneado(perfil);
         ConfigurarAtmosfera(perfil, raiz, particulas, volumen, haces);
+        ConfigurarLuzPersonajes(perfil, raiz);
+        ConfigurarOjos(perfil, raiz, limites, carpeta);
 
         EditorUtility.SetDirty(perfil);
         EditorSceneManager.MarkSceneDirty(escena);
@@ -65,6 +70,27 @@ public static class AplicadorAmbientacion
 
         Debug.Log("Ambientacion '" + perfil.name + "' aplicada en " + escena.name + ". Hornea para fijar la luz.");
         return true;
+    }
+
+    public static void AplicarSoloLuzPersonajes()
+    {
+        Scene escena = SceneManager.GetActiveScene();
+        PerfilAmbientacion perfil = null;
+        string[] guids = AssetDatabase.FindAssets("t:PerfilAmbientacion");
+        for (int i = 0; i < guids.Length && perfil == null; i++)
+        {
+            PerfilAmbientacion candidato = AssetDatabase.LoadAssetAtPath<PerfilAmbientacion>(AssetDatabase.GUIDToAssetPath(guids[i]));
+            if (candidato != null && candidato.rutaEscena == escena.path)
+                perfil = candidato;
+        }
+
+        if (perfil == null)
+            perfil = ScriptableObject.CreateInstance<PerfilAmbientacion>();
+
+        ConfigurarLuzPersonajes(perfil, BuscarOCrear(NombreRaiz, null));
+        EditorSceneManager.MarkSceneDirty(escena);
+        EditorSceneManager.SaveScene(escena);
+        Debug.Log("Luz de personajes agregada en " + escena.name + ".");
     }
 
     public static void Hornear()
@@ -135,6 +161,28 @@ public static class AplicadorAmbientacion
             perfil.materialPolvo = polvo;
         }
 
+        if (TieneLuciernagas(perfil) && perfil.materialLuciernagas == null)
+        {
+            Material luciernagas = new Material(Shader.Find(ShaderNiebla));
+            luciernagas.SetTexture("_BaseMap", TexturaBrillo());
+            luciernagas.SetColor("_BaseColor", new Color(5f, 3.6f, 1.6f));
+            luciernagas.SetFloat("_SuavizadoProfundidad", 0.1f);
+            luciernagas.SetFloat("_CercaInicio", 0.3f);
+            luciernagas.SetFloat("_CercaFin", 1.2f);
+            luciernagas.renderQueue = (int)RenderQueue.Transparent;
+            AssetDatabase.CreateAsset(luciernagas, carpeta + "/M_Luciernagas_" + nombre + ".mat");
+            perfil.materialLuciernagas = luciernagas;
+        }
+
+        if (perfil.datosOjos != null && perfil.materialOjos == null)
+        {
+            Material ojos = new Material(Shader.Find(ShaderOjos));
+            ojos.SetTexture("_BaseMap", TexturaBrillo());
+            ojos.renderQueue = (int)RenderQueue.Transparent + 2;
+            AssetDatabase.CreateAsset(ojos, carpeta + "/M_Ojos_" + nombre + ".mat");
+            perfil.materialOjos = ojos;
+        }
+
         if (perfil.haces.activo && perfil.haces.material == null)
         {
             Material haz = new Material(Shader.Find(ShaderHaz));
@@ -153,6 +201,57 @@ public static class AplicadorAmbientacion
             AssetDatabase.CreateAsset(ajustes, carpeta + "/Iluminacion_" + nombre + ".lighting");
             perfil.ajustesHorneado = ajustes;
         }
+    }
+
+    static bool TieneLuciernagas(PerfilAmbientacion perfil)
+    {
+        for (int i = 0; i < perfil.zonasVivas.Length; i++)
+        {
+            if (perfil.zonasVivas[i].luciernagas > 0)
+                return true;
+        }
+
+        return false;
+    }
+
+    static Texture2D TexturaBrillo()
+    {
+        Texture2D existente = AssetDatabase.LoadAssetAtPath<Texture2D>(RutaTexturaBrillo);
+        if (existente != null)
+            return existente;
+
+        const int lado = 64;
+        Texture2D textura = new Texture2D(lado, lado, TextureFormat.RGBA32, false);
+        Color32[] pixeles = new Color32[lado * lado];
+
+        for (int y = 0; y < lado; y++)
+        {
+            for (int x = 0; x < lado; x++)
+            {
+                float u = (x + 0.5f) / lado - 0.5f;
+                float v = (y + 0.5f) / lado - 0.5f;
+                float r = Mathf.Sqrt(u * u + v * v) * 2f;
+                float nucleo = Mathf.Exp(-r * r * 18f);
+                float halo = Mathf.Exp(-r * r * 4f) * 0.45f;
+                float alfa = Mathf.Clamp01((nucleo + halo) * Mathf.Clamp01(1f - r));
+                pixeles[y * lado + x] = new Color32(255, 255, 255, (byte)(alfa * 255f));
+            }
+        }
+
+        textura.SetPixels32(pixeles);
+        textura.Apply();
+        File.WriteAllBytes(RutaTexturaBrillo, textura.EncodeToPNG());
+        Object.DestroyImmediate(textura);
+
+        AssetDatabase.ImportAsset(RutaTexturaBrillo);
+        TextureImporter importador = (TextureImporter)AssetImporter.GetAtPath(RutaTexturaBrillo);
+        importador.textureType = TextureImporterType.Default;
+        importador.alphaSource = TextureImporterAlphaSource.FromInput;
+        importador.alphaIsTransparency = true;
+        importador.wrapMode = TextureWrapMode.Clamp;
+        importador.SaveAndReimport();
+
+        return AssetDatabase.LoadAssetAtPath<Texture2D>(RutaTexturaBrillo);
     }
 
     static Texture2D TexturaNiebla()
@@ -440,7 +539,7 @@ public static class AplicadorAmbientacion
         Mesh malla = MallaHaz(carpeta + "/Malla_Haz_" + perfil.name.Replace("Perfil_", "") + ".asset", haces.apertura);
         if (modoCielo)
         {
-            HacesDelCielo(haces, contenedor, malla, material, limites, suelo, luna);
+            HacesDelCielo(perfil, raiz, contenedor, malla, material, limites, suelo, luna);
             for (int i = luces.childCount - 1; i >= 0; i--)
                 Object.DestroyImmediate(luces.GetChild(i).gameObject);
             return contenedor.gameObject;
@@ -494,8 +593,9 @@ public static class AplicadorAmbientacion
         return contenedor.gameObject;
     }
 
-    static void HacesDelCielo(HacesDeLuz haces, Transform contenedor, Mesh malla, Material material, Bounds limites, float suelo, Light luna)
+    static void HacesDelCielo(PerfilAmbientacion perfil, Transform raiz, Transform contenedor, Mesh malla, Material material, Bounds limites, float suelo, Light luna)
     {
+        HacesDeLuz haces = perfil.haces;
         Vector3 direccion = luna.transform.forward;
         float seno = Mathf.Max(0.2f, -direccion.y);
         float largo = haces.alturaCielo / seno;
@@ -520,7 +620,27 @@ public static class AplicadorAmbientacion
 
         Random.state = estado;
 
-        for (int i = contenedor.childCount - 1; i >= haces.cantidadCielo; i--)
+        int total = haces.cantidadCielo;
+        for (int z = 0; z < perfil.zonasVivas.Length; z++)
+        {
+            ZonaViva zona = perfil.zonasVivas[z];
+            if (!zona.hazDelCielo || !BoundsDe(zona.prefijoObjeto, raiz, out Bounds objeto))
+                continue;
+
+            Vector3 haciaCentro = limites.center - objeto.center;
+            haciaCentro.y = 0f;
+            Vector3 llegada = objeto.ClosestPoint(new Vector3(limites.center.x, objeto.center.y, limites.center.z))
+                + haciaCentro.normalized * zona.anchoHaz * 0.5f;
+            llegada.y = suelo;
+
+            Transform haz = BuscarOCrear("Haz " + (total + 1), contenedor);
+            haz.SetPositionAndRotation(llegada - direccion * largo, Quaternion.LookRotation(direccion, Vector3.up));
+            haz.localScale = new Vector3(zona.anchoHaz, zona.anchoHaz, largo);
+            ConfigurarRenderHaz(haz, malla, material);
+            total++;
+        }
+
+        for (int i = contenedor.childCount - 1; i >= total; i--)
             Object.DestroyImmediate(contenedor.GetChild(i).gameObject);
     }
 
@@ -649,14 +769,15 @@ public static class AplicadorAmbientacion
                 if (CoincidePrefijo(renderer.gameObject.name, acento.excluirPrefijos))
                     continue;
 
-                Light luz = renderer.GetComponentInChildren<Light>(true);
-                if (luz == null)
+                Light[] hijas = renderer.GetComponentsInChildren<Light>(true);
+                Light luz = null;
+                if (hijas.Length == 0)
                 {
                     Transform existente = contenedor.Find("Luz " + renderer.name);
                     luz = existente != null ? existente.GetComponent<Light>() : null;
                 }
 
-                if (luz == null)
+                if (hijas.Length == 0 && luz == null)
                 {
                     luz = new GameObject("Luz " + renderer.name).AddComponent<Light>();
                     luz.transform.SetParent(contenedor, false);
@@ -669,15 +790,20 @@ public static class AplicadorAmbientacion
                     luz.transform.position = posicion;
                 }
 
-                luz.type = LightType.Point;
-                luz.color = acento.color;
-                luz.intensity = acento.intensidad;
-                luz.range = acento.rango;
-                luz.bounceIntensity = 1f;
-                luz.lightmapBakeType = acento.modo;
-                luz.shadows = acento.modo == LightmapBakeType.Baked ? LightShadows.Soft : LightShadows.None;
-                luz.shadowRadius = 0.15f;
-                EditorUtility.SetDirty(luz);
+                Light[] luces = hijas.Length > 0 ? hijas : new[] { luz };
+                for (int l = 0; l < luces.Length; l++)
+                {
+                    Light actual = luces[l];
+                    actual.type = LightType.Point;
+                    actual.color = acento.color;
+                    actual.intensity = acento.intensidad;
+                    actual.range = acento.rango;
+                    actual.bounceIntensity = 1f;
+                    actual.lightmapBakeType = acento.modo;
+                    actual.shadows = acento.modo == LightmapBakeType.Baked ? LightShadows.Soft : LightShadows.None;
+                    actual.shadowRadius = 0.15f;
+                    EditorUtility.SetDirty(actual);
+                }
 
                 if (acento.emision > 0f)
                     AplicarEmision(renderer, acento, carpeta);
@@ -717,6 +843,207 @@ public static class AplicadorAmbientacion
 
         renderer.sharedMaterials = materiales;
         EditorUtility.SetDirty(renderer);
+    }
+
+    static void ConfigurarZonasVivas(PerfilAmbientacion perfil, Transform contenedor, Transform raiz)
+    {
+        string carpeta = Path.GetDirectoryName(AssetDatabase.GetAssetPath(perfil)).Replace('\\', '/');
+        if (perfil.materialLuciernagas != null)
+        {
+            perfil.materialLuciernagas.SetColor("_BaseColor", perfil.colorLuciernagas);
+            EditorUtility.SetDirty(perfil.materialLuciernagas);
+        }
+
+        HashSet<string> usadas = new HashSet<string>();
+
+        for (int z = 0; z < perfil.zonasVivas.Length; z++)
+        {
+            ZonaViva zona = perfil.zonasVivas[z];
+            if (zona.luciernagas <= 0 || perfil.materialLuciernagas == null || !BoundsDe(zona.prefijoObjeto, raiz, out Bounds objeto))
+                continue;
+
+            string nombre = "Vida " + zona.prefijoObjeto;
+            usadas.Add(nombre);
+            ParticleSystem sistema = ObtenerSistema(contenedor, nombre);
+            sistema.gameObject.SetActive(true);
+            sistema.transform.position = objeto.center;
+            ConfigurarLuciernagas(sistema, zona, objeto, perfil.materialLuciernagas);
+            if (zona.emitirDesdeLuces)
+                EmitirDesdeLuces(sistema, zona, raiz, carpeta);
+            sistema.Play();
+        }
+
+        for (int i = contenedor.childCount - 1; i >= 0; i--)
+        {
+            Transform hijo = contenedor.GetChild(i);
+            if (hijo.name.StartsWith("Vida ") && !usadas.Contains(hijo.name))
+                Object.DestroyImmediate(hijo.gameObject);
+        }
+    }
+
+    static void ConfigurarLuciernagas(ParticleSystem sistema, ZonaViva zona, Bounds objeto, Material material)
+    {
+        const float vida = 7f;
+        int cantidad = Mathf.Max(1, zona.luciernagas);
+
+        sistema.useAutoRandomSeed = false;
+        sistema.randomSeed = 404;
+
+        ParticleSystem.MainModule principal = sistema.main;
+        principal.duration = vida;
+        principal.loop = true;
+        principal.prewarm = true;
+        principal.playOnAwake = true;
+        principal.startLifetime = new ParticleSystem.MinMaxCurve(vida * 0.7f, vida * 1.3f);
+        principal.startSpeed = 0f;
+        principal.startSize = new ParticleSystem.MinMaxCurve(zona.tamano.x, zona.tamano.y);
+        principal.startColor = new ParticleSystem.MinMaxGradient(new Color(1f, 1f, 1f, 0.7f), Color.white);
+        principal.maxParticles = Mathf.CeilToInt(cantidad * 1.3f);
+        principal.simulationSpace = ParticleSystemSimulationSpace.World;
+
+        ParticleSystem.EmissionModule emision = sistema.emission;
+        emision.enabled = true;
+        emision.rateOverTime = cantidad / vida;
+
+        ParticleSystem.ShapeModule forma = sistema.shape;
+        forma.shapeType = ParticleSystemShapeType.Box;
+        forma.scale = objeto.size + new Vector3(zona.radio * 2f, zona.radio, zona.radio * 2f);
+        forma.rotation = Vector3.zero;
+
+        ParticleSystem.VelocityOverLifetimeModule velocidad = sistema.velocityOverLifetime;
+        velocidad.enabled = true;
+        velocidad.space = ParticleSystemSimulationSpace.World;
+        velocidad.x = new ParticleSystem.MinMaxCurve(-0.02f, 0.02f);
+        velocidad.y = new ParticleSystem.MinMaxCurve(zona.velocidadSubida * 0.3f, zona.velocidadSubida);
+        velocidad.z = new ParticleSystem.MinMaxCurve(-0.02f, 0.02f);
+
+        ParticleSystem.NoiseModule ruido = sistema.noise;
+        ruido.enabled = true;
+        ruido.strength = 0.6f;
+        ruido.frequency = 0.5f;
+        ruido.scrollSpeed = 0.35f;
+        ruido.damping = true;
+        ruido.quality = ParticleSystemNoiseQuality.Medium;
+        ruido.sizeAmount = new ParticleSystem.MinMaxCurve(0.6f);
+
+        ParticleSystem.ColorOverLifetimeModule color = sistema.colorOverLifetime;
+        color.enabled = true;
+        Gradient titileo = new Gradient();
+        titileo.SetKeys(
+            new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+            new[]
+            {
+                new GradientAlphaKey(0f, 0f),
+                new GradientAlphaKey(1f, 0.15f),
+                new GradientAlphaKey(0.45f, 0.3f),
+                new GradientAlphaKey(1f, 0.45f),
+                new GradientAlphaKey(0.55f, 0.6f),
+                new GradientAlphaKey(1f, 0.78f),
+                new GradientAlphaKey(0f, 1f)
+            });
+        color.color = titileo;
+
+        Transform plantillaTransform = BuscarOCrear("Plantilla Luz", sistema.transform);
+        plantillaTransform.gameObject.SetActive(false);
+        Light plantilla = plantillaTransform.GetComponent<Light>();
+        if (plantilla == null)
+            plantilla = plantillaTransform.gameObject.AddComponent<Light>();
+        plantilla.type = LightType.Point;
+        plantilla.color = zona.colorLuz;
+        plantilla.intensity = zona.intensidadLuz;
+        plantilla.range = zona.rangoLuz;
+        plantilla.shadows = LightShadows.None;
+        plantilla.lightmapBakeType = LightmapBakeType.Realtime;
+        EditorUtility.SetDirty(plantilla);
+
+        ParticleSystem.LightsModule luces = sistema.lights;
+        luces.enabled = zona.lucesReales > 0;
+        luces.light = plantilla;
+        luces.ratio = 1f;
+        luces.maxLights = zona.lucesReales;
+        luces.useRandomDistribution = true;
+        luces.useParticleColor = false;
+        luces.sizeAffectsRange = false;
+        luces.alphaAffectsIntensity = true;
+        luces.intensityMultiplier = 1f;
+        luces.rangeMultiplier = 1f;
+
+        ConfigurarRender(sistema, material, ParticleSystemRenderMode.Billboard);
+    }
+
+    static void EmitirDesdeLuces(ParticleSystem sistema, ZonaViva zona, Transform raiz, string carpeta)
+    {
+        List<Vector3> puntos = new List<Vector3>();
+        Renderer[] renderers = Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            Renderer renderer = renderers[i];
+            if (renderer.transform.IsChildOf(raiz) || !renderer.gameObject.name.StartsWith(zona.prefijoObjeto, System.StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            Light[] luces = renderer.GetComponentsInChildren<Light>(true);
+            for (int l = 0; l < luces.Length; l++)
+                puntos.Add(sistema.transform.InverseTransformPoint(luces[l].transform.position));
+        }
+
+        if (puntos.Count == 0)
+            return;
+
+        string ruta = carpeta + "/Puntos_" + zona.prefijoObjeto + ".asset";
+        Mesh malla = AssetDatabase.LoadAssetAtPath<Mesh>(ruta);
+        bool nueva = malla == null;
+        if (nueva)
+            malla = new Mesh { name = "Puntos " + zona.prefijoObjeto };
+        malla.Clear();
+        malla.SetVertices(puntos);
+        int[] indices = new int[puntos.Count];
+        for (int i = 0; i < indices.Length; i++)
+            indices[i] = i;
+        malla.SetIndices(indices, MeshTopology.Points, 0);
+        malla.RecalculateBounds();
+        if (nueva)
+            AssetDatabase.CreateAsset(malla, ruta);
+        else
+            EditorUtility.SetDirty(malla);
+
+        ParticleSystem.ShapeModule forma = sistema.shape;
+        forma.shapeType = ParticleSystemShapeType.Mesh;
+        forma.meshShapeType = ParticleSystemMeshShapeType.Vertex;
+        forma.mesh = malla;
+        forma.scale = Vector3.one;
+        forma.rotation = Vector3.zero;
+        forma.position = Vector3.zero;
+        forma.randomPositionAmount = zona.radio * 0.2f;
+    }
+
+    static bool BoundsDe(string prefijo, Transform raiz, out Bounds limites)
+    {
+        limites = new Bounds();
+        bool encontrado = false;
+        if (string.IsNullOrEmpty(prefijo))
+            return false;
+
+        Renderer[] renderers = Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            Renderer renderer = renderers[i];
+            if (renderer.transform.IsChildOf(raiz) || renderer is ParticleSystemRenderer)
+                continue;
+            if (!renderer.gameObject.name.StartsWith(prefijo, System.StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            if (!encontrado)
+            {
+                limites = renderer.bounds;
+                encontrado = true;
+            }
+            else
+            {
+                limites.Encapsulate(renderer.bounds);
+            }
+        }
+
+        return encontrado;
     }
 
     static GameObject ConfigurarParticulas(PerfilAmbientacion perfil, Transform raiz, Bounds limites, float suelo)
@@ -760,6 +1087,8 @@ public static class AplicadorAmbientacion
         exterior.Play();
         polvo.Play();
 
+        ConfigurarZonasVivas(perfil, contenedor, raiz);
+
         return contenedor.gameObject;
     }
 
@@ -797,7 +1126,7 @@ public static class AplicadorAmbientacion
         velocidad.enabled = true;
         velocidad.space = ParticleSystemSimulationSpace.World;
         velocidad.x = new ParticleSystem.MinMaxCurve(-0.05f, 0.05f);
-        velocidad.y = new ParticleSystem.MinMaxCurve(0.04f, 0.18f);
+        velocidad.y = new ParticleSystem.MinMaxCurve(perfil.subidaPolvo.x, perfil.subidaPolvo.y);
         velocidad.z = new ParticleSystem.MinMaxCurve(-0.05f, 0.05f);
 
         ParticleSystem.NoiseModule ruido = sistema.noise;
@@ -1039,6 +1368,235 @@ public static class AplicadorAmbientacion
         atmosfera.objetosVolumetricos = haces != null ? new[] { haces } : new GameObject[0];
         atmosfera.Aplicar();
         EditorUtility.SetDirty(atmosfera);
+    }
+
+    static void ConfigurarLuzPersonajes(PerfilAmbientacion perfil, Transform raiz)
+    {
+        NombrarCapaPersonajes();
+
+        Transform rig = BuscarOCrear("Luz Personajes", raiz);
+        rig.gameObject.SetActive(perfil.luzPersonajes);
+
+        LuzPersonajes componente = rig.GetComponent<LuzPersonajes>();
+        if (componente == null)
+            componente = rig.gameObject.AddComponent<LuzPersonajes>();
+
+        componente.relleno = LuzDeRig(rig, "Relleno", perfil.colorRellenoPersonajes, perfil.intensidadRellenoPersonajes);
+        componente.contorno = LuzDeRig(rig, "Contorno", perfil.colorContornoPersonajes, perfil.intensidadContornoPersonajes);
+        componente.Buscar();
+        EditorUtility.SetDirty(componente);
+    }
+
+    static Light LuzDeRig(Transform rig, string nombre, Color color, float intensidad)
+    {
+        Transform hijo = BuscarOCrear(nombre, rig);
+        Light luz = hijo.GetComponent<Light>();
+        if (luz == null)
+            luz = hijo.gameObject.AddComponent<Light>();
+
+        luz.lightmapBakeType = LightmapBakeType.Realtime;
+        LuzPersonajes.ConfigurarLuz(luz, color, intensidad);
+        EditorUtility.SetDirty(luz);
+        return luz;
+    }
+
+    static void NombrarCapaPersonajes()
+    {
+        Object[] gestor = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset");
+        if (gestor == null || gestor.Length == 0)
+            return;
+
+        SerializedObject serializado = new SerializedObject(gestor[0]);
+        SerializedProperty capas = serializado.FindProperty("m_RenderingLayers");
+        if (capas == null || !capas.isArray || capas.arraySize <= LuzPersonajes.CapaPersonajes)
+            return;
+
+        SerializedProperty capa = capas.GetArrayElementAtIndex(LuzPersonajes.CapaPersonajes);
+        if (capa.stringValue == NombreCapaPersonajes)
+            return;
+
+        capa.stringValue = NombreCapaPersonajes;
+        serializado.ApplyModifiedProperties();
+    }
+
+#pragma warning disable 0649
+    [System.Serializable]
+    class DatosOjos
+    {
+        public ObjetoOjos[] objetos;
+    }
+
+    [System.Serializable]
+    class ObjetoOjos
+    {
+        public string nombre;
+        public Ojo[] ojos;
+        public PilarOjos[] pilares;
+    }
+
+    [System.Serializable]
+    class Ojo
+    {
+        public float[] p;
+        public float[] n;
+        public float t;
+        public float f;
+    }
+
+    [System.Serializable]
+    class PilarOjos
+    {
+        public float[] c;
+        public float r;
+        public float alto;
+    }
+
+#pragma warning restore 0649
+
+    static void ConfigurarOjos(PerfilAmbientacion perfil, Transform raiz, Bounds limites, string carpeta)
+    {
+        Transform contenedor = raiz.Find("Ojos Calaveras");
+        Transform luces = raiz.Find("Ojos Calaveras (luces)");
+        if (perfil.datosOjos == null || perfil.materialOjos == null)
+        {
+            if (contenedor != null)
+                contenedor.gameObject.SetActive(false);
+            if (luces != null)
+                luces.gameObject.SetActive(false);
+            return;
+        }
+
+        perfil.materialOjos.SetColor("_Color", perfil.colorOjos);
+        EditorUtility.SetDirty(perfil.materialOjos);
+
+        DatosOjos datos = JsonUtility.FromJson<DatosOjos>(perfil.datosOjos.text);
+        contenedor = BuscarOCrear("Ojos Calaveras", raiz);
+        contenedor.gameObject.SetActive(true);
+        contenedor.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+        contenedor.localScale = Vector3.one;
+        luces = BuscarOCrear("Ojos Calaveras (luces)", raiz);
+        luces.gameObject.SetActive(perfil.lucesPilares);
+
+        List<Vector3> vertices = new List<Vector3>();
+        List<Color> colores = new List<Color>();
+        List<Vector2> uvs = new List<Vector2>();
+        List<int> triangulos = new List<int>();
+        int indiceLuz = 0;
+
+        for (int o = 0; o < datos.objetos.Length; o++)
+        {
+            ObjetoOjos objeto = datos.objetos[o];
+            Transform dueno = BuscarRenderer(objeto.nombre, raiz);
+            if (dueno == null)
+            {
+                Debug.LogWarning("No se encontro '" + objeto.nombre + "' para los ojos de calaveras.");
+                continue;
+            }
+
+            float escala = Mathf.Abs(dueno.lossyScale.x);
+            for (int i = 0; i < objeto.ojos.Length; i++)
+            {
+                Ojo ojo = objeto.ojos[i];
+                Vector3 centro = dueno.TransformPoint(new Vector3(ojo.p[0], ojo.p[1], ojo.p[2]));
+                Vector3 normal = dueno.TransformDirection(new Vector3(ojo.n[0], ojo.n[1], ojo.n[2])).normalized;
+                Vector3 arriba = Vector3.ProjectOnPlane(Vector3.up, normal);
+                if (arriba.sqrMagnitude < 0.01f)
+                    arriba = Vector3.ProjectOnPlane(Vector3.forward, normal);
+                arriba.Normalize();
+                Vector3 derecha = Vector3.Cross(arriba, -normal).normalized;
+                float medio = ojo.t * escala * perfil.tamanoOjos * 0.5f;
+                float intensidad = Mathf.Lerp(0.65f, 1f, Mathf.Repeat(ojo.f * 7.31f, 1f));
+                Color color = new Color(intensidad, intensidad, intensidad, ojo.f);
+
+                int baseIndice = vertices.Count;
+                vertices.Add(centro - derecha * medio - arriba * medio);
+                vertices.Add(centro - derecha * medio + arriba * medio);
+                vertices.Add(centro + derecha * medio + arriba * medio);
+                vertices.Add(centro + derecha * medio - arriba * medio);
+                colores.Add(color);
+                colores.Add(color);
+                colores.Add(color);
+                colores.Add(color);
+                uvs.Add(new Vector2(0f, 0f));
+                uvs.Add(new Vector2(0f, 1f));
+                uvs.Add(new Vector2(1f, 1f));
+                uvs.Add(new Vector2(1f, 0f));
+                triangulos.AddRange(new[] { baseIndice, baseIndice + 1, baseIndice + 2, baseIndice, baseIndice + 2, baseIndice + 3 });
+            }
+
+            for (int i = 0; i < objeto.pilares.Length; i++)
+            {
+                PilarOjos pilar = objeto.pilares[i];
+                Vector3 centro = dueno.TransformPoint(new Vector3(pilar.c[0], pilar.c[1], pilar.c[2]));
+                Vector3 haciaCentro = limites.center - centro;
+                haciaCentro.y = 0f;
+                Vector3 posicion = centro + haciaCentro.normalized * (pilar.r * escala + 0.7f);
+
+                indiceLuz++;
+                Transform hijo = BuscarOCrear("Luz Pilar " + indiceLuz, luces);
+                hijo.position = posicion;
+                Light luz = hijo.GetComponent<Light>();
+                if (luz == null)
+                    luz = hijo.gameObject.AddComponent<Light>();
+                luz.type = LightType.Point;
+                luz.color = perfil.colorLucesPilares;
+                luz.intensity = perfil.intensidadLucesPilares;
+                luz.range = perfil.rangoLucesPilares;
+                luz.bounceIntensity = 0.5f;
+                luz.lightmapBakeType = LightmapBakeType.Baked;
+                luz.shadows = LightShadows.Soft;
+                luz.shadowRadius = 0.2f;
+                EditorUtility.SetDirty(luz);
+            }
+        }
+
+        for (int i = luces.childCount - 1; i >= indiceLuz; i--)
+            Object.DestroyImmediate(luces.GetChild(i).gameObject);
+
+        string ruta = carpeta + "/Malla_Ojos_" + perfil.name.Replace("Perfil_", "") + ".asset";
+        Mesh malla = AssetDatabase.LoadAssetAtPath<Mesh>(ruta);
+        bool nueva = malla == null;
+        if (nueva)
+            malla = new Mesh { name = "Ojos Calaveras" };
+        malla.Clear();
+        malla.indexFormat = vertices.Count > 65000 ? IndexFormat.UInt32 : IndexFormat.UInt16;
+        malla.SetVertices(vertices);
+        malla.SetColors(colores);
+        malla.SetUVs(0, uvs);
+        malla.SetTriangles(triangulos, 0);
+        malla.RecalculateBounds();
+        if (nueva)
+            AssetDatabase.CreateAsset(malla, ruta);
+        else
+            EditorUtility.SetDirty(malla);
+
+        MeshFilter filtro = contenedor.GetComponent<MeshFilter>();
+        if (filtro == null)
+            filtro = contenedor.gameObject.AddComponent<MeshFilter>();
+        filtro.sharedMesh = malla;
+
+        MeshRenderer render = contenedor.GetComponent<MeshRenderer>();
+        if (render == null)
+            render = contenedor.gameObject.AddComponent<MeshRenderer>();
+        render.sharedMaterial = perfil.materialOjos;
+        render.shadowCastingMode = ShadowCastingMode.Off;
+        render.receiveShadows = false;
+        render.lightProbeUsage = LightProbeUsage.Off;
+        render.reflectionProbeUsage = ReflectionProbeUsage.Off;
+        GameObjectUtility.SetStaticEditorFlags(contenedor.gameObject, 0);
+        EditorUtility.SetDirty(render);
+    }
+
+    static Transform BuscarRenderer(string nombre, Transform raiz)
+    {
+        Renderer[] renderers = Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i].name == nombre && !renderers[i].transform.IsChildOf(raiz))
+                return renderers[i].transform;
+        }
+
+        return null;
     }
 
     static Bounds Limites(PerfilAmbientacion perfil, Transform raiz)

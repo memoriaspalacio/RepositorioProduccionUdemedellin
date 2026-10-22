@@ -11,6 +11,10 @@ public static class PresetsAmbientacion
     const string CarpetaCrisantia = AplicadorAmbientacion.CarpetaRaiz + "/Crisantia";
     const string RutaPerfilCrisantia = CarpetaCrisantia + "/Perfil_Crisantia.asset";
     const string RutaEscenaCrisantia = "Assets/_Juego Actual/Scenes/_ProperGameScenes/crisantia.unity";
+    const string CarpetaMazmorra = AplicadorAmbientacion.CarpetaRaiz + "/Mazmorra";
+    const string RutaPerfilMazmorra = CarpetaMazmorra + "/Perfil_Mazmorra.asset";
+    const string RutaEscenaMazmorra = "Assets/_Juego Actual/Scenes/_ProperGameScenes/mazmorra.unity";
+    const string RutaOjosMazmorra = CarpetaMazmorra + "/OjosCalaveras.json";
 
     [MenuItem("Herramientas/Ambientacion/Cementerio/Aplicar ambientacion", priority = 0)]
     static void AplicarCementerio()
@@ -72,7 +76,33 @@ public static class PresetsAmbientacion
         EditorGUIUtility.PingObject(Selection.activeObject);
     }
 
-    [MenuItem("Herramientas/Ambientacion/Hornear escena activa", priority = 20)]
+    [MenuItem("Herramientas/Ambientacion/Mazmorra/Aplicar ambientacion", priority = 17)]
+    static void AplicarMazmorra()
+    {
+        AplicadorAmbientacion.Aplicar(PerfilMazmorra());
+    }
+
+    [MenuItem("Herramientas/Ambientacion/Mazmorra/Aplicar y hornear", priority = 18)]
+    static void AplicarYHornearMazmorra()
+    {
+        if (AplicadorAmbientacion.Aplicar(PerfilMazmorra()))
+            AplicadorAmbientacion.Hornear();
+    }
+
+    [MenuItem("Herramientas/Ambientacion/Mazmorra/Seleccionar perfil", priority = 19)]
+    static void SeleccionarPerfilMazmorra()
+    {
+        Selection.activeObject = PerfilMazmorra();
+        EditorGUIUtility.PingObject(Selection.activeObject);
+    }
+
+    [MenuItem("Herramientas/Ambientacion/Luz de personajes en escena activa", priority = 31)]
+    static void LuzPersonajesEscenaActiva()
+    {
+        AplicadorAmbientacion.AplicarSoloLuzPersonajes();
+    }
+
+    [MenuItem("Herramientas/Ambientacion/Hornear escena activa", priority = 30)]
     static void HornearEscenaActiva()
     {
         AplicadorAmbientacion.Hornear();
@@ -159,7 +189,30 @@ public static class PresetsAmbientacion
             },
             CuadroIluminado("cuadro"),
             CuadroIluminado("cuadors"),
-            CuadroIluminado("cruzpared")
+            CuadroIluminado("cruzpared"),
+            new LuzAcento
+            {
+                prefijoObjeto = "armario",
+                color = calido,
+                intensidad = 4f,
+                rango = 6f,
+                alturaRelativa = 0.9f,
+                separacionInterior = 1.2f
+            }
+        };
+
+        perfil.materialesEmisivos = new[]
+        {
+            new MaterialEmisivo
+            {
+                material = AssetDatabase.LoadAssetAtPath<Material>("Assets/_Juego Actual/Arte/Textures/Materials/manijas_armario.mat"),
+                color = new Color(0.6f, 0.4f, 0.15f)
+            }
+        };
+
+        perfil.zonasVivas = new[]
+        {
+            new ZonaViva { prefijoObjeto = "armario" }
         };
 
         perfil.haces = new HacesDeLuz
@@ -207,6 +260,169 @@ public static class PresetsAmbientacion
         AssetDatabase.CreateAsset(perfil, RutaPerfilCrisantia);
         AssetDatabase.SaveAssets();
         return perfil;
+    }
+
+    public static PerfilAmbientacion PerfilMazmorra()
+    {
+        PerfilAmbientacion perfil = AssetDatabase.LoadAssetAtPath<PerfilAmbientacion>(RutaPerfilMazmorra);
+        if (perfil != null)
+        {
+            if (perfil.datosOjos == null)
+            {
+                perfil.datosOjos = AssetDatabase.LoadAssetAtPath<TextAsset>(RutaOjosMazmorra);
+                EditorUtility.SetDirty(perfil);
+            }
+            return perfil;
+        }
+
+        AplicadorAmbientacion.CrearCarpeta(CarpetaMazmorra);
+
+        perfil = ScriptableObject.CreateInstance<PerfilAmbientacion>();
+        perfil.rutaEscena = RutaEscenaMazmorra;
+        perfil.prefijosLimite = new[] { "Wall" };
+        perfil.desactivarObjetos = new[] { "Luz Area Mazmorra" };
+
+        perfil.skybox = CrearSkyboxApocalipsis(CarpetaMazmorra + "/Skybox_Mazmorra.mat");
+        perfil.intensidadReflejos = 0.5f;
+        perfil.ambienteCielo = new Color(0.12f, 0.1f, 0.22f);
+        perfil.ambienteHorizonte = new Color(0.22f, 0.11f, 0.08f);
+        perfil.ambienteSuelo = new Color(0.04f, 0.03f, 0.035f);
+
+        perfil.colorLuna = new Color(1f, 0.52f, 0.22f);
+        perfil.intensidadLuna = 1.6f;
+        perfil.elevacionLuna = 22f;
+        perfil.azimutLuna = 0f;
+        perfil.fuerzaSombras = 0.85f;
+
+        perfil.colorNiebla = new Color(0.16f, 0.09f, 0.1f);
+        perfil.densidadNiebla = 0.022f;
+
+        perfil.lucesAcento = new[]
+        {
+            new LuzAcento
+            {
+                prefijoObjeto = "Antorchas2",
+                color = new Color(1f, 0.5f, 0.18f),
+                intensidad = 4f,
+                rango = 7f
+            },
+            new LuzAcento
+            {
+                prefijoObjeto = "Arco2",
+                color = new Color(1f, 0.35f, 0.1f),
+                intensidad = 14f,
+                rango = 16f,
+                alturaRelativa = 0.6f,
+                separacionInterior = 2f
+            },
+            new LuzAcento
+            {
+                prefijoObjeto = "Arco",
+                excluirPrefijos = new[] { "Arco2" },
+                color = new Color(0.35f, 0.45f, 1f),
+                intensidad = 8f,
+                rango = 13f,
+                alturaRelativa = 0.6f,
+                separacionInterior = 2f
+            }
+        };
+
+        perfil.materialesEmisivos = new[]
+        {
+            new MaterialEmisivo
+            {
+                material = AssetDatabase.LoadAssetAtPath<Material>(CarpetaMateriales + "/Fuego 1.mat"),
+                color = new Color(1f, 0.45f, 0.12f) * 5f
+            }
+        };
+
+        perfil.haces = new HacesDeLuz
+        {
+            activo = true,
+            modo = ModoHaces.Cielo,
+            color = new Color(1f, 0.5f, 0.2f),
+            opacidad = 0.09f,
+            apertura = 1.3f,
+            cantidadCielo = 5,
+            alturaCielo = 6f,
+            anchoCielo = new Vector2(2f, 4f),
+            semilla = 66
+        };
+
+        perfil.colorParticulas = new Color(0.4f, 0.3f, 0.3f);
+        perfil.alturaNieblaSuelo = 1f;
+        perfil.particulasSuelo = 50;
+        perfil.opacidadSuelo = 0.25f;
+        perfil.particulasExterior = 45;
+        perfil.tamanoExterior = new Vector2(10f, 18f);
+        perfil.opacidadExterior = 0.6f;
+        perfil.alturaExterior = 4f;
+        perfil.radioExterior = 1.15f;
+        perfil.particulasPolvo = 240;
+        perfil.colorPolvo = new Color(5f, 1.7f, 0.35f);
+        perfil.tamanoPolvo = new Vector2(0.03f, 0.08f);
+        perfil.alturaPolvo = 7f;
+        perfil.subidaPolvo = new Vector2(0.25f, 0.8f);
+
+        perfil.datosOjos = AssetDatabase.LoadAssetAtPath<TextAsset>(RutaOjosMazmorra);
+        perfil.colorLuciernagas = new Color(6f, 2.2f, 0.45f);
+        perfil.zonasVivas = new[]
+        {
+            new ZonaViva
+            {
+                prefijoObjeto = "Antorchas2",
+                luciernagas = 50,
+                emitirDesdeLuces = true,
+                velocidadSubida = 0.7f,
+                tamano = new Vector2(0.03f, 0.07f),
+                radio = 0.6f,
+                lucesReales = 0,
+                hazDelCielo = false
+            }
+        };
+
+        perfil.perfilVolumen = AplicadorAmbientacion.CrearPerfilVolumen(CarpetaMazmorra + "/Volumen_Mazmorra.asset", new AjustesVolumen
+        {
+            exposicion = 0.1f,
+            contraste = 20f,
+            saturacion = 10f,
+            filtro = new Color(1f, 0.93f, 0.88f),
+            umbralBloom = 0.9f,
+            intensidadBloom = 1.3f,
+            tinteBloom = new Color(1f, 0.7f, 0.45f),
+            sombras = new Color(0.3f, 0.3f, 0.55f),
+            luces = new Color(0.95f, 0.62f, 0.35f),
+            balance = 15f,
+            colorVineta = new Color(0.04f, 0.02f, 0.06f),
+            intensidadVineta = 0.4f,
+            grano = 0.15f
+        });
+
+        AssetDatabase.CreateAsset(perfil, RutaPerfilMazmorra);
+        AssetDatabase.SaveAssets();
+        return perfil;
+    }
+
+    static Material CrearSkyboxApocalipsis(string ruta)
+    {
+        Material skybox = AplicadorAmbientacion.CrearSkybox(ruta);
+        skybox.SetColor("_ColorCenit", new Color(0.02f, 0.018f, 0.05f));
+        skybox.SetColor("_ColorHorizonte", new Color(0.13f, 0.06f, 0.09f));
+        skybox.SetColor("_ColorLuna", new Color(1f, 0.75f, 0.4f));
+        skybox.SetFloat("_TamanoLuna", 0.1f);
+        skybox.SetFloat("_BrilloLuna", 10f);
+        skybox.SetColor("_ColorHalo", new Color(1f, 0.35f, 0.08f));
+        skybox.SetFloat("_TamanoHalo", 3.5f);
+        skybox.SetFloat("_BrilloHalo", 2.5f);
+        skybox.SetFloat("_CantidadEstrellas", 0.06f);
+        skybox.SetColor("_ColorNubes", new Color(1f, 0.42f, 0.14f));
+        skybox.SetColor("_ColorNubesSombra", new Color(0.07f, 0.045f, 0.11f));
+        skybox.SetFloat("_CoberturaNubes", 0.62f);
+        skybox.SetFloat("_IntensidadFuego", 2.5f);
+        skybox.SetColor("_ColorFuego", new Color(1.5f, 0.7f, 0.15f));
+        skybox.SetColor("_ColorFuegoBorde", new Color(0.9f, 0.12f, 0.04f));
+        EditorUtility.SetDirty(skybox);
+        return skybox;
     }
 
     static LuzAcento CuadroIluminado(string prefijo)

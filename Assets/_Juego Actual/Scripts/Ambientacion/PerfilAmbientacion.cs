@@ -68,7 +68,32 @@ public class PerfilAmbientacion : ScriptableObject
     [ColorUsage(false, true)] public Color colorPolvo = new Color(3f, 2.2f, 1.2f);
     public Vector2 tamanoPolvo = new Vector2(0.04f, 0.1f);
     public float alturaPolvo = 4f;
+    [Tooltip("Velocidad de subida del polvo (minimo y maximo). Brasas: mas rapido.")]
+    public Vector2 subidaPolvo = new Vector2(0.04f, 0.18f);
     public Vector2 viento = new Vector2(0.15f, 0.05f);
+
+    [Header("Zonas vivas (luciernagas alrededor de objetos)")]
+    public ZonaViva[] zonasVivas = { };
+    public Material materialLuciernagas;
+    [ColorUsage(false, true)] public Color colorLuciernagas = new Color(5f, 3.6f, 1.6f);
+
+    [Header("Luz de personajes (solo los afecta a ellos)")]
+    public bool luzPersonajes = true;
+    public Color colorRellenoPersonajes = new Color(1f, 0.95f, 0.88f);
+    [Range(0f, 4f)] public float intensidadRellenoPersonajes = 0.6f;
+    public Color colorContornoPersonajes = new Color(0.65f, 0.8f, 1f);
+    [Range(0f, 8f)] public float intensidadContornoPersonajes = 1.8f;
+
+    [Header("Ojos brillantes de calaveras")]
+    [Tooltip("Datos con la posicion de cada ojo (OjosCalaveras.json). Vacio = sin ojos.")]
+    public TextAsset datosOjos;
+    public Material materialOjos;
+    [ColorUsage(false, true)] public Color colorOjos = new Color(0.5f, 1.3f, 4f);
+    [Range(0.2f, 3f)] public float tamanoOjos = 1f;
+    public bool lucesPilares = true;
+    public Color colorLucesPilares = new Color(0.4f, 0.6f, 1f);
+    [Range(0f, 10f)] public float intensidadLucesPilares = 2.5f;
+    [Range(0.5f, 10f)] public float rangoLucesPilares = 4.5f;
 
     [Header("Post proceso")]
     public bool postProceso = true;
@@ -145,6 +170,28 @@ public class LuzAcento
     public LightmapBakeType modo = LightmapBakeType.Baked;
     [Tooltip("Brillo del material del objeto. 0 = no tocar el material.")]
     [Range(0f, 10f)] public float emision = 0f;
+}
+
+[System.Serializable]
+public class ZonaViva
+{
+    public string prefijoObjeto = "armario";
+    [Range(0, 60)] public int luciernagas = 14;
+    [Tooltip("Metros alrededor del objeto donde revolotean.")]
+    public float radio = 1.5f;
+    public Vector2 tamano = new Vector2(0.06f, 0.14f);
+    [Tooltip("Nacen en las luces hijas del objeto (por ejemplo, las llamas de las antorchas) en vez de alrededor de todo el objeto.")]
+    public bool emitirDesdeLuces;
+    [Tooltip("Velocidad maxima de subida. Luciernagas: 0.06. Brasas: 0.6 o mas.")]
+    public float velocidadSubida = 0.06f;
+    [Tooltip("Cuantas luciernagas llevan una luz real que ilumina lo que tienen cerca.")]
+    [Range(0, 8)] public int lucesReales = 4;
+    public Color colorLuz = new Color(1f, 0.72f, 0.35f);
+    [Range(0f, 10f)] public float intensidadLuz = 1.6f;
+    [Range(0.5f, 6f)] public float rangoLuz = 2.2f;
+    [Tooltip("Agrega un haz del cielo que cae delante del objeto (solo con haces en modo Cielo).")]
+    public bool hazDelCielo = true;
+    public float anchoHaz = 2.2f;
 }
 
 public enum ModoHaces

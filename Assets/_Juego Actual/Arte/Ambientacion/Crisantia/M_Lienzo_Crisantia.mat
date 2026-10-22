@@ -30,14 +30,14 @@ Material:
     m_Ints: []
     m_Floats:
     - _AnchoBorde: 0.018
-    - _Brillo: 0.45
-    - _Contraste: 1.18
+    - _Brillo: 0.83
+    - _Contraste: 2
     - _IntensidadBorde: 0.3
-    - _LuzGaleria: 0.45
+    - _LuzGaleria: 0.65
     - _Redondo: 0
-    - _Saturacion: 1.25
-    - _Vineta: 0.15
     - _ResistenciaNiebla: 0.7
+    - _Saturacion: 1.25
+    - _Vineta: 0.6
     m_Colors:
     - _Barniz: {r: 1, g: 0.97, b: 0.9, a: 1}
     - _ColorBorde: {r: 1, g: 0.78, b: 0.39999998, a: 1}
