@@ -10,6 +10,10 @@ public class PerfilAmbientacion : ScriptableObject
     public string[] prefijosLimite = { };
     [Tooltip("Nombres exactos de objetos de iluminaciones anteriores que se desactivan al aplicar.")]
     public string[] desactivarObjetos = { };
+    [Tooltip("Nombres de objetos cuyos renderers (y los de sus hijos) se marcan como estaticos para el horneado.")]
+    public string[] objetosEstaticos = { };
+    [Tooltip("Rutas de modelos (.fbx) a los que se les activa Generate Lightmap UVs.")]
+    public string[] modelosLightmap = { };
 
     [Header("Cielo")]
     public Material skybox;
@@ -54,6 +58,16 @@ public class PerfilAmbientacion : ScriptableObject
     public int particulasExterior = 50;
     public Vector2 tamanoExterior = new Vector2(10f, 18f);
     [Range(0f, 1f)] public float opacidadExterior = 0.45f;
+    [Tooltip("Altura sobre el suelo de la niebla exterior.")]
+    public float alturaExterior = 1.5f;
+    [Tooltip("Radio de la niebla exterior respecto al tamano de la escena.")]
+    [Range(0.5f, 4f)] public float radioExterior = 2f;
+    [Tooltip("Motas de polvo o brasas flotando. 0 = sin polvo.")]
+    public int particulasPolvo = 0;
+    public Material materialPolvo;
+    [ColorUsage(false, true)] public Color colorPolvo = new Color(3f, 2.2f, 1.2f);
+    public Vector2 tamanoPolvo = new Vector2(0.04f, 0.1f);
+    public float alturaPolvo = 4f;
     public Vector2 viento = new Vector2(0.15f, 0.05f);
 
     [Header("Post proceso")]
@@ -91,6 +105,7 @@ public class MaterialEmisivo
 public class HacesDeLuz
 {
     public bool activo;
+    public ModoHaces modo = ModoHaces.Ventanas;
     public Material material;
     [Tooltip("Los objetos con este material se consideran ventanas.")]
     public Material materialVentanas;
@@ -102,7 +117,13 @@ public class HacesDeLuz
     [Tooltip("Cuanto se abre el haz al final (1 = no se abre).")]
     [Range(1f, 4f)] public float apertura = 1.8f;
 
-    [Header("Luz horneada en el piso")]
+    [Header("Solo modo Cielo")]
+    [Range(1, 40)] public int cantidadCielo = 8;
+    public float alturaCielo = 10f;
+    public Vector2 anchoCielo = new Vector2(1.5f, 3f);
+    public int semilla = 7;
+
+    [Header("Luz horneada en el piso (solo modo Ventanas)")]
     public bool crearLuces = true;
     [Range(0f, 200f)] public float intensidadLuz = 30f;
     [Range(1f, 40f)] public float rangoLuz = 13f;
@@ -124,4 +145,10 @@ public class LuzAcento
     public LightmapBakeType modo = LightmapBakeType.Baked;
     [Tooltip("Brillo del material del objeto. 0 = no tocar el material.")]
     [Range(0f, 10f)] public float emision = 0f;
+}
+
+public enum ModoHaces
+{
+    Ventanas,
+    Cielo
 }

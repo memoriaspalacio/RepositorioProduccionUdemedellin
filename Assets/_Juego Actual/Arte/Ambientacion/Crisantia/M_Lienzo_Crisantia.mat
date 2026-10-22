@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: M_Lienzo_Crisantia
+  m_Shader: {fileID: 4800000, guid: ae2ca554e4e195246993e3928b8c8cb9, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AnchoBorde: 0.018
+    - _Brillo: 0.45
+    - _Contraste: 1.18
+    - _IntensidadBorde: 0.3
+    - _LuzGaleria: 0.45
+    - _Redondo: 0
+    - _Saturacion: 1.25
+    - _Vineta: 0.15
+    - _ResistenciaNiebla: 0.7
+    m_Colors:
+    - _Barniz: {r: 1, g: 0.97, b: 0.9, a: 1}
+    - _ColorBorde: {r: 1, g: 0.78, b: 0.39999998, a: 1}
+    - _Recorte: {r: 1, g: 1, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
