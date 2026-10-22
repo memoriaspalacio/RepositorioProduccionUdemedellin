@@ -67,6 +67,7 @@ public class BeatActionJudge : MonoBehaviour {
     [Header("Penalty")]
     [Tooltip("How many upcoming notes are destroyed when the player whiffs (presses with nothing open).")]
     [SerializeField, Min(0)] private int penaltyNoteCount = 2;
+    [SerializeField, Min(0)] private float penaltySeconds = 5f; 
 
     [Header("Debug")]
     [SerializeField] private bool logActions = true;
@@ -291,10 +292,12 @@ public class BeatActionJudge : MonoBehaviour {
     /// are skipped rather than counted.
     /// </summary>
     private void ApplyPenalty(double beatPosition) {
-        if (penaltyNoteCount <= 0) return;
+        if (penaltyNoteCount <= 0 && penaltySeconds <= 0) return;
 
         int candidate = Mathf.FloorToInt((float)((beatPosition + earlyTolerance) * SlotsPerBeat)) + 1;
         int destroyed = 0;
+
+        ControladorContrarreloj.Instancia.PenalizarTiempo(penaltySeconds);
 
         while (destroyed < penaltyNoteCount) {
             TrackUpTo(candidate);

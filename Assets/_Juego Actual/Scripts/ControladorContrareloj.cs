@@ -114,6 +114,10 @@ public class ControladorContrarreloj : MonoBehaviour
         SceneManager.LoadScene(escenaDerrota);
     }
 
+    public void PenalizarTiempo(float restar) {
+        tiempoRestante = tiempoRestante - restar;
+    }
+
     public void GuardarTiempoEntreEscena() {
         tiempoRestanteEntreEscenas = Mathf.CeilToInt(tiempoRestante);
 
