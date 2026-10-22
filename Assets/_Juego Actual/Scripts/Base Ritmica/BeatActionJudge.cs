@@ -23,10 +23,13 @@ using UnityEngine;
 /// consumes the OLDEST open note - the one closest to being destroyed - never a
 /// newer one.
 ///
-/// Mistakes cost time, not notes: a whiff (a press with nothing open) or a note
-/// that slips past unclaimed takes penaltySeconds off ControladorContrarreloj.
-/// After a penalty the judge locks itself until a NEW note's window opens (the
-/// note enters the heart zone), so mashing keys costs one penalty, not one per press.
+/// Mistakes cost time, not notes: a whiff (a press with nothing open) takes
+/// penaltySeconds off ControladorContrarreloj, an enemy hit (PenalizeHit, called by
+/// PlayerHealth) takes hitPenaltySeconds - and so can a note that slips past
+/// unclaimed, if penalizeMissedNotes is on. After a penalty the judge locks itself
+/// until a NEW note's window opens (the note enters the heart zone), so whatever
+/// caused it, the player loses time at most once per note. Nothing costs time while
+/// the countdown is stopped (level won or lost).
 ///
 /// Runs after the zones (which set tolerances) and before everything else, so
 /// tolerances are fresh and the tracked range is current by the time a consumer
@@ -72,9 +75,14 @@ public class BeatActionJudge : MonoBehaviour {
     [Tooltip("Seconds taken off the countdown (ControladorContrarreloj) on a whiff or a missed note.")]
     [SerializeField, Min(0)] private float penaltySeconds = 5f;
 
+    [Tooltip("Seconds taken off the countdown when an enemy hits the player (PlayerHealth calls PenalizeHit). " +
+             "Shares the lock with whiffs: at most one time penalty per note, whatever caused it.")]
+    [SerializeField, Min(0)] private float hitPenaltySeconds = 5f;
+
     [Tooltip("If on, a note that slips past the heart without being claimed also costs penaltySeconds. " +
-             "If off, only whiffs (pressing with nothing open) are penalized.")]
-    [SerializeField] private bool penalizeMissedNotes = true;
+             "Off by default: only an actual press that misses (a whiff) costs time, so standing still " +
+             "or taking a hit doesn't drain the clock note after note.")]
+    [SerializeField] private bool penalizeMissedNotes = false;
 
     [Header("Debug")]
     [SerializeField] private bool logActions = true;
@@ -103,6 +111,13 @@ public class BeatActionJudge : MonoBehaviour {
     /// <summary>Normal notes appear on every Nth beat. Read by views that draw the track.</summary>
     public int NoteInterval => noteInterval;
 
+    /// <summary>
+    /// How many notes have entered the heart zone so far. Anything that should happen at
+    /// most once per note (PlayerHealth taking a hit, for instance) can remember this
+    /// value and wait for it to change.
+    /// </summary>
+    public int NotesEnteredZone => notesEnteredZone;
+
     private struct TrackedNote {
         public int slot;
         public bool resolved; // consumed or destroyed - or never a note to begin with
@@ -121,8 +136,9 @@ public class BeatActionJudge : MonoBehaviour {
     private bool initialized;
 
     // Set by a penalty, cleared the moment a new note's window opens. While set,
-    // further whiffs and missed notes cost nothing.
+    // further whiffs, hits and missed notes cost nothing.
     private bool penaltyLocked;
+    private int notesEnteredZone;
 
     // The dice are rolled once per normal note, the first time anyone asks about
     // its extras, and remembered - so the judge and the view always agree, and
@@ -257,7 +273,10 @@ public class BeatActionJudge : MonoBehaviour {
                 resolved = !isNote
             });
 
-            if (isNote) penaltyLocked = false;
+            if (isNote) {
+                penaltyLocked = false;
+                notesEnteredZone++;
+            }
 
             nextSlotToTrack++;
         }
@@ -278,7 +297,7 @@ public class BeatActionJudge : MonoBehaviour {
                 if (logActions) Debug.Log($"Beat {BeatOfSlot(oldest.slot)}: destroyed (expired)");
                 OnNoteDestroyed?.Invoke(BeatOfSlot(oldest.slot), DestroyReason.Expired);
 
-                if (penalizeMissedNotes) ApplyPenalty($"missed note on beat {BeatOfSlot(oldest.slot)}");
+                if (penalizeMissedNotes) ApplyPenalty($"missed note on beat {BeatOfSlot(oldest.slot)}", penaltySeconds);
             }
 
             tracked.RemoveAt(0);
@@ -311,16 +330,29 @@ public class BeatActionJudge : MonoBehaviour {
             return true;
         }
 
-        ApplyPenalty($"whiff on beat {beatPosition:0.00}");
+        ApplyPenalty($"whiff on beat {beatPosition:0.00}", penaltySeconds);
         return false;
     }
 
     /// <summary>
-    /// Takes penaltySeconds off the countdown and fires OnPenaltyApplied, then locks
+    /// Called by PlayerHealth when an enemy lands a hit. Costs hitPenaltySeconds under
+    /// the same once-per-note lock as a whiff.
+    /// </summary>
+    public void PenalizeHit() {
+        ApplyPenalty("hit by an enemy", hitPenaltySeconds);
+    }
+
+    /// <summary>
+    /// Takes the given seconds off the countdown and fires OnPenaltyApplied, then locks
     /// itself until a new note enters the heart zone (see TrackUpTo). Notes are never
     /// destroyed by a penalty - the cost is time only.
     /// </summary>
-    private void ApplyPenalty(string cause) {
+    private void ApplyPenalty(string cause, float seconds) {
+        // Once the countdown has stopped (win/lose screen) mistakes cost nothing and
+        // show nothing - the level is over.
+        ControladorContrarreloj clock = ControladorContrarreloj.Instancia;
+        if (clock != null && !clock.EstaContando) return;
+
         if (penaltyLocked) {
             if (logActions) Debug.Log($"Penalty skipped ({cause}): locked until the next note enters the zone");
             return;
@@ -328,10 +360,10 @@ public class BeatActionJudge : MonoBehaviour {
 
         penaltyLocked = true;
 
-        if (logActions) Debug.Log($"Penalty ({cause}): -{penaltySeconds}s");
+        if (logActions) Debug.Log($"Penalty ({cause}): -{seconds}s");
 
-        if (penaltySeconds > 0f && ControladorContrarreloj.Instancia != null)
-            ControladorContrarreloj.Instancia.PenalizarTiempo(penaltySeconds);
+        if (seconds > 0f && clock != null)
+            clock.PenalizarTiempo(seconds);
 
         OnPenaltyApplied?.Invoke();
     }

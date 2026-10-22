@@ -25,6 +25,8 @@ public class ControladorContrarreloj : MonoBehaviour
     [Header("Escenas")]
     [SerializeField] private string escenaDerrota = "Perder";
     [SerializeField] private string escenaVictoria = "Victoria";
+    [Tooltip("Al entrar al menu se da por terminada la partida en curso; la siguiente empieza con el tiempo completo.")]
+    [SerializeField] private string escenaMenu = "menu";
 
     [Header("Interfaz")]
     [SerializeField] private TMP_Text textoTiempo;
@@ -153,7 +155,8 @@ public class ControladorContrarreloj : MonoBehaviour
     // Resta tiempo por fallar el ritmo (lo llama BeatActionJudge) y lo muestra en el cronometro
     public void PenalizarTiempo(float restar)
     {
-        if (terminado || restar <= 0f)
+        // Con el cronometro detenido (nivel ganado o perdido) no hay tiempo que perder
+        if (!contando || terminado || restar <= 0f)
             return;
 
         // Si llega a cero, Update se encarga de Perder() en el siguiente fotograma
@@ -161,6 +164,13 @@ public class ControladorContrarreloj : MonoBehaviour
 
         ActualizarTexto();
         MostrarPenalizacion(restar);
+    }
+
+    // Detiene el cronometro sin terminar la partida (pantallas de ganar/perder del nivel).
+    // Se reanuda al cargar el siguiente nivel o al reiniciar la escena.
+    public void PausarContrarreloj()
+    {
+        contando = false;
     }
 
     public void GuardarTiempoEntreEscena() {
@@ -173,6 +183,11 @@ public class ControladorContrarreloj : MonoBehaviour
     public void ReiniciarContrarReloj()
     {
         tiempoRestante = minutos * 60f + segundos;
+
+        // Partida nueva: el tiempo guardado para reintentar un nivel tambien vuelve al inicial
+        tiempoRestanteEntreEscenas = tiempoRestante;
+        minutosEntreEscena = minutos;
+        segundosEntreEscena = segundos;
 
         terminado = false;
         contando = true;
@@ -325,12 +340,25 @@ public class ControladorContrarreloj : MonoBehaviour
         BuscarTextoTiempo();
         ActualizarTexto();
 
-        // No contar en las escenas finales
+        // No contar en las escenas finales ni en el menu: la partida en curso termina ahi
         if (escena.name == escenaVictoria ||
-            escena.name == escenaDerrota)
+            escena.name == escenaDerrota ||
+            escena.name == escenaMenu)
         {
             contando = false;
             terminado = true;
+        }
+        // Volver a jugar despues de ganar o perder: partida nueva con el tiempo completo.
+        // Sin esto el reloj seguia "terminado" y quedaban congelados el tiempo, las
+        // penalizaciones y el dano.
+        else if (terminado)
+        {
+            ReiniciarContrarReloj();
+        }
+        // En un nivel nuevo se reanuda lo que pauso la pantalla de ganar del anterior
+        else
+        {
+            contando = true;
         }
     }
 
@@ -351,13 +379,13 @@ public class ControladorContrarreloj : MonoBehaviour
 
     public void OnDestroy()
     {
-        /*
+        // Sin desuscribirse, un reloj destruido (Scenes.FinDelJuego) seguia recibiendo
+        // EscenaCargada y escribiendo en el texto del cronometro de la partida siguiente
         if (Instancia == this)
         {
             SceneManager.sceneLoaded -= EscenaCargada;
             Instancia = null;
         }
-        */
 
         Destroy(gameObject);
     }

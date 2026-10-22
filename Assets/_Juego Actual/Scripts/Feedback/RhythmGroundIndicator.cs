@@ -74,7 +74,7 @@ public class RhythmGroundIndicator : MonoBehaviour
 
     [Header("--- Retroalimentación de Fallo (Miss Feedback) ---")]
     [Tooltip("Si está activo, los anillos destellan con el color de fallo y se encogen un poco cada vez " +
-             "que el juez cobra una penalización de tiempo (presionar fuera de tiempo o dejar pasar una nota).")]
+             "que el juez cobra una penalización de tiempo (presionar fuera de tiempo o recibir un golpe).")]
     [SerializeField] private bool enableMissFeedback = true;
 
     [Tooltip("Duración en segundos del feedback de fallo.")]

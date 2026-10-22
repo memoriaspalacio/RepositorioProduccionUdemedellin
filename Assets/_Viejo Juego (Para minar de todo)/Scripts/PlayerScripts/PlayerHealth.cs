@@ -19,6 +19,17 @@ public class PlayerHealth : MonoBehaviour
     [Tooltip("Indicador de ritmo del suelo. Si es nulo se busca en la escena al arrancar.")]
     [SerializeField] private RhythmGroundIndicator groundIndicator;
 
+    [Header("Ritmo")]
+    [Tooltip("Juez de ritmo de la escena. Si es nulo se busca al arrancar. Con el, el jugador recibe " +
+             "como maximo un golpe por nota y ese golpe resta tiempo del cronometro.")]
+    [SerializeField] private BeatActionJudge beatJudge;
+
+    private bool muerto = false;
+
+    // Nota (contador del juez) en la que entro el ultimo golpe, y cuanto dano se aplico en ella
+    private int notaDelUltimoGolpe = -1;
+    private float danoEnEstaNota = 0f;
+
 
     private void Start()
     {
@@ -26,6 +37,9 @@ public class PlayerHealth : MonoBehaviour
 
         if (groundIndicator == null)
             groundIndicator = FindFirstObjectByType<RhythmGroundIndicator>();
+
+        if (beatJudge == null)
+            beatJudge = FindFirstObjectByType<BeatActionJudge>();
 
         if (lifeBar != null)
         {
@@ -35,6 +49,19 @@ public class PlayerHealth : MonoBehaviour
     }
     public void Damage(float damage, Vector3? attackerPosition = null)
     {
+        if (muerto || damage <= 0f)
+            return;
+
+        // Con el nivel terminado (pantalla de ganar o perder) ya no se recibe dano
+        if (ControladorContrarreloj.Instancia != null &&
+            !ControladorContrarreloj.Instancia.EstaContando)
+            return;
+
+        damage = DanoQueEntraEnEstaNota(damage);
+
+        if (damage <= 0f)
+            return;
+
         currentLife = currentLife - damage;
 
         if (lifeBar != null)
@@ -74,9 +101,43 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    
+    // Un golpe por nota: hasta que entra una nueva nota a la zona del corazon solo cuenta
+    // el golpe mas fuerte. Asi una quemadura que pega varias veces seguidas no se acumula, y si
+    // despues llega un ataque mas fuerte en la misma nota solo se aplica la diferencia.
+    // El primer golpe de cada nota tambien resta tiempo del cronometro.
+    private float DanoQueEntraEnEstaNota(float damage)
+    {
+        // Sin ritmo sonando no hay notas que esperar: el dano entra normal
+        if (beatJudge == null || BeatManager.Instance == null || !BeatManager.Instance.IsPlaying)
+            return damage;
+
+        int notaActual = beatJudge.NotesEnteredZone;
+
+        if (notaActual != notaDelUltimoGolpe)
+        {
+            notaDelUltimoGolpe = notaActual;
+            danoEnEstaNota = damage;
+
+            beatJudge.PenalizeHit();
+            return damage;
+        }
+
+        if (damage <= danoEnEstaNota)
+            return 0f;
+
+        float diferencia = damage - danoEnEstaNota;
+        danoEnEstaNota = damage;
+        return diferencia;
+    }
+
+
     public void Death()
     {
+        if (muerto)
+            return;
+
+        muerto = true;
+
         Debug.Log("Player ha muerto");
         if (playerMovement != null)
             playerMovement.SetDead();

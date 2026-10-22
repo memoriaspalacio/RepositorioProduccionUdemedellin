@@ -22,6 +22,7 @@ public class ScreensInGame : MonoBehaviour
     {
         screenLose.SetActive(true);
         soundMusicBeat.SetActive(false);
+        PausarContrarreloj();
     }
 
     public void ScreenLostDesactive()
@@ -32,6 +33,14 @@ public class ScreensInGame : MonoBehaviour
     public void ScreenWinActive()
     {
         screenWin.SetActive(true);
+        PausarContrarreloj();
+    }
+
+    // El nivel termino: el cronometro deja de correr y el ritmo deja de cobrar penalizaciones
+    private void PausarContrarreloj()
+    {
+        if (ControladorContrarreloj.Instancia != null)
+            ControladorContrarreloj.Instancia.PausarContrarreloj();
     }
 
     public void ScreenWinDesactive()
