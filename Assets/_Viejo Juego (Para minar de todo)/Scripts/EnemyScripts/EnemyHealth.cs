@@ -59,7 +59,9 @@ public class EnemyHealth : MonoBehaviour
         
         Debug.Log("Enemy ha muerto");
         //skeletonEnemy.SetDead();
-        contador.EnemyDied(gameObject);
+        // Las cruces del Monk tienen EnemyHealth pero no cuentan como enemigos del contador.
+        if (contador != null)
+            contador.EnemyDied(gameObject);
         if (anim != null)
             anim.SetTrigger(deathTrigger);
         
