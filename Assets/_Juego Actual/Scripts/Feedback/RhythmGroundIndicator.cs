@@ -73,12 +73,18 @@ public class RhythmGroundIndicator : MonoBehaviour
     [SerializeField] private float hitPunchScale = 1.2f;
 
     [Header("--- Retroalimentación de Fallo (Miss Feedback) ---")]
-    [Tooltip("Si está activo, muestra un breve destello rojo cuando el jugador presiona fuera de tiempo (whiff).")]
+    [Tooltip("Si está activo, los anillos destellan con el color de fallo y se encogen un poco cada vez " +
+             "que el juez cobra una penalización de tiempo (presionar fuera de tiempo o dejar pasar una nota).")]
     [SerializeField] private bool enableMissFeedback = true;
 
     [Tooltip("Duración en segundos del feedback de fallo.")]
     [Range(0.05f, 0.5f)]
     [SerializeField] private float missFeedbackDuration = 0.22f;
+
+    [Tooltip("Escala a la que se encoge el indicador al fallar (1 = no se encoge). Es lo contrario " +
+             "del rebote de acierto, para que el fallo se sienta como un golpe hacia adentro.")]
+    [Range(0.7f, 1.0f)]
+    [SerializeField] private float missShrinkScale = 0.88f;
 
     [Header("--- Retroalimentación de Daño Recibido ---")]
     [Tooltip("Duración en segundos del feedback al recibir daño.")]
@@ -231,8 +237,8 @@ public class RhythmGroundIndicator : MonoBehaviour
             beatJudge.OnBeatConsumed -= HandleBeatConsumed;
             beatJudge.OnBeatConsumed += HandleBeatConsumed;
 
-            beatJudge.OnNoteDestroyed -= HandleNoteDestroyed;
-            beatJudge.OnNoteDestroyed += HandleNoteDestroyed;
+            beatJudge.OnPenaltyApplied -= HandlePenaltyApplied;
+            beatJudge.OnPenaltyApplied += HandlePenaltyApplied;
         }
     }
 
@@ -241,7 +247,7 @@ public class RhythmGroundIndicator : MonoBehaviour
         if (beatJudge != null)
         {
             beatJudge.OnBeatConsumed -= HandleBeatConsumed;
-            beatJudge.OnNoteDestroyed -= HandleNoteDestroyed;
+            beatJudge.OnPenaltyApplied -= HandlePenaltyApplied;
         }
     }
 
@@ -580,6 +586,9 @@ public class RhythmGroundIndicator : MonoBehaviour
         if (missFeedbackTimer > 0f)
         {
             missFeedbackTimer = Mathf.MoveTowards(missFeedbackTimer, 0f, Time.deltaTime / Mathf.Max(0.01f, missFeedbackDuration));
+
+            // Encogimiento breve: se multiplica sobre el rebote de acierto en vez de pisarlo.
+            currentPunchFactor *= Mathf.Lerp(1.0f, missShrinkScale, missFeedbackTimer);
         }
 
         if (damageFeedbackTimer > 0f)
@@ -682,16 +691,20 @@ public class RhythmGroundIndicator : MonoBehaviour
         OnNoteHitSuccess?.Invoke();
     }
 
-    private void HandleNoteDestroyed(float beat, DestroyReason reason)
+    /// <summary>
+    /// El juez avisa solo cuando de verdad cobra tiempo, así que mientras la penalización
+    /// está bloqueada (machacar teclas) el indicador tampoco repite el destello.
+    /// </summary>
+    private void HandlePenaltyApplied()
     {
-        if (enableMissFeedback && reason == DestroyReason.Penalized)
+        if (enableMissFeedback)
         {
             TriggerMissFeedback();
         }
     }
 
     /// <summary>
-    /// Dispara manualmente el feedback visual de penalización o fallo (whiff).
+    /// Dispara manualmente el feedback visual de fallo (whiff o nota que se dejó pasar).
     /// </summary>
     public void TriggerMissFeedback()
     {
