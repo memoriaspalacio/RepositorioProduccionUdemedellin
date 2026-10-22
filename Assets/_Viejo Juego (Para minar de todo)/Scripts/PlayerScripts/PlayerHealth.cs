@@ -15,10 +15,17 @@ public class PlayerHealth : MonoBehaviour
     [Header("UI")]
     public Slider lifeBar;
 
+    [Header("Feedback")]
+    [Tooltip("Indicador de ritmo del suelo. Si es nulo se busca en la escena al arrancar.")]
+    [SerializeField] private RhythmGroundIndicator groundIndicator;
+
 
     private void Start()
     {
         currentLife = maxLife;
+
+        if (groundIndicator == null)
+            groundIndicator = FindFirstObjectByType<RhythmGroundIndicator>();
 
         if (lifeBar != null)
         {
@@ -49,6 +56,9 @@ public class PlayerHealth : MonoBehaviour
             hitFeedback.PlayHitFeedbackFromAttacker(attackerPosition.Value);
         else
             hitFeedback.PlayHitFeedback();
+
+        if (groundIndicator != null)
+            groundIndicator.TriggerDamageFeedback();
 
         // NUEVO: Solo reproduce el sonido si ya pasó el tiempo de espera mínimo
         if (Time.time >= siguienteTiempoSonidoDano)
