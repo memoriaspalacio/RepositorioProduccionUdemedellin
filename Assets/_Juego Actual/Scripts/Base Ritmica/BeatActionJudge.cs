@@ -7,6 +7,11 @@ using UnityEngine;
 /// style: no accuracy grading, no knowledge of input devices or action types -
 /// consumers poll their own input and call TryConsumeBeat() when they see a press.
 ///
+/// Which beats carry a note comes from a NOTE CHART when the scene has one (see
+/// NoteChart: hand-made in Herramientas/EditorCharts, any 16th note, read from
+/// Resources/Charts/&lt;scene&gt;.json or noteChartFile). Without a chart, the judge falls
+/// back to the noteInterval pattern below, unchanged.
+///
 /// NORMAL notes sit on every Nth beat (noteInterval), counting from the song's first
 /// beat. On top of those, two optional random EXTRA notes can follow each normal note:
 /// one in the middle of the interval, one half a beat later. The judge is the single
@@ -38,15 +43,27 @@ using UnityEngine;
 [DefaultExecutionOrder(-50)]
 public class BeatActionJudge : MonoBehaviour {
 
-    // Notes can sit on half beats, so internally the judge counts in half-beat
-    // "slots": slot 2 is beat 1, slot 3 is beat 1.5, slot 4 is beat 2, and so on.
-    // Everything public (events, queries) still speaks in beats.
-    private const int SlotsPerBeat = 2;
+    /// <summary>
+    /// Notes can sit on any 16th note, so internally the judge counts in quarter-beat
+    /// "slots": slot 4 is beat 1, slot 5 is beat 1.25, slot 6 is beat 1.5, and so on.
+    /// Everything public (events, queries) still speaks in beats. Views that scan for
+    /// notes step through beats in 1 / SlotsPerBeat increments.
+    /// </summary>
+    public const int SlotsPerBeat = 4;
     private const int FirstNoteSlot = SlotsPerBeat; // beat 1 - there is no beat 0 to hit
 
+    [Header("Note chart")]
+    [Tooltip("Play a hand-made note chart (made with Herramientas/EditorCharts) instead of the noteInterval " +
+             "pattern below. Off = always use the pattern.")]
+    [SerializeField] private bool useNoteChart = true;
+
+    [Tooltip("Chart to play. Empty: looks for Resources/Charts/<scene name>.json. If neither exists, " +
+             "the noteInterval pattern below is used, exactly as before.")]
+    [SerializeField] private TextAsset noteChartFile;
+
     [Header("Notes")]
-    [Tooltip("A normal note exists on every Nth beat, counting from the song's first beat " +
-             "(beats 1, 1+N, 1+2N...). 1 = every beat, 2 = every other beat. BeatTrackUI " +
+    [Tooltip("Only used when there's no note chart. A normal note exists on every Nth beat, counting from the " +
+             "song's first beat (beats 1, 1+N, 1+2N...). 1 = every beat, 2 = every other beat. BeatTrackUI " +
              "asks the judge which beats are notes, so what's drawn always matches what can be hit. " +
              "Set it before pressing Play - changing it mid-song leaves notes already in flight inconsistent.")]
     [SerializeField, Min(1)] private int noteInterval = 1;
@@ -108,8 +125,12 @@ public class BeatActionJudge : MonoBehaviour {
     /// <summary>How far after the beat a note survives, in beats. Read by views that draw the window.</summary>
     public float LateTolerance => lateTolerance;
 
-    /// <summary>Normal notes appear on every Nth beat. Read by views that draw the track.</summary>
+    /// <summary>Normal notes appear on every Nth beat. Read by views that draw the track.
+    /// Meaningless while a note chart is playing (see UsesNoteChart).</summary>
     public int NoteInterval => noteInterval;
+
+    /// <summary>True when notes come from a note chart rather than the noteInterval pattern.</summary>
+    public bool UsesNoteChart => chart != null;
 
     /// <summary>
     /// How many notes have entered the heart zone so far. Anything that should happen at
@@ -146,6 +167,37 @@ public class BeatActionJudge : MonoBehaviour {
     private readonly Dictionary<int, ExtraRoll> extraRolls = new Dictionary<int, ExtraRoll>();
     private System.Random rng;
 
+    // Null when the scene has no chart (or useNoteChart is off): the pattern is used.
+    private NoteChart chart;
+
+    private void Awake() {
+        if (!useNoteChart) return;
+
+        chart = noteChartFile != null
+            ? NoteChart.Parse(noteChartFile, SlotsPerBeat)
+            : NoteChart.LoadForScene(gameObject.scene.name, SlotsPerBeat);
+
+        if (logActions) {
+            Debug.Log(chart != null
+                ? $"BeatActionJudge: playing note chart {chart.Name} ({chart.NoteCount} notes)"
+                : "BeatActionJudge: no note chart for this scene, using the noteInterval pattern", this);
+        }
+    }
+
+    // The chart knows where its first beat sits in the song; the conductor shifts its
+    // clock to match, so every beat-driven system - not just the notes - lines up with
+    // the music.
+    private void Start() {
+        if (chart == null || BeatManager.Instance == null) return;
+
+        BeatManager.Instance.SetSongOffset(chart.OffsetSeconds);
+
+        if (chart.Bpm > 0f && !Mathf.Approximately(chart.Bpm, BeatManager.Instance.Bpm)) {
+            Debug.LogWarning($"BeatActionJudge: chart {chart.Name} was written at {chart.Bpm} BPM but the " +
+                             $"BeatManager plays at {BeatManager.Instance.Bpm} BPM - its notes will drift off the music.", this);
+        }
+    }
+
     /// <summary>Overrides how far before the beat the window opens. See earlyTolerance.</summary>
     public void SetEarlyTolerance(float value) {
         earlyTolerance = Mathf.Max(0f, value);
@@ -157,8 +209,8 @@ public class BeatActionJudge : MonoBehaviour {
     }
 
     /// <summary>
-    /// True if a note sits on this beat - a normal one, or an extra that came up.
-    /// Notes only ever sit on whole or half beats, and never before the first beat.
+    /// True if a note sits on this beat - a chart note, or a normal one or an extra that
+    /// came up. Notes only ever sit on 16th notes (quarter beats).
     /// </summary>
     public bool IsNoteBeat(float beat) {
         float scaled = beat * SlotsPerBeat;
@@ -219,12 +271,15 @@ public class BeatActionJudge : MonoBehaviour {
     }
 
     private bool IsNoteSlot(int slot) {
+        if (chart != null) return chart.HasNoteAt(slot);
+
         int interval = Mathf.Max(1, noteInterval);
 
         if (IsNormalSlot(slot, interval)) return true;
 
         // An extra half a beat after a normal note.
-        if (IsNormalSlot(slot - 1, interval)) return RollFor(slot - 1).half;
+        int halfBeatSlots = SlotsPerBeat / 2;
+        if (IsNormalSlot(slot - halfBeatSlots, interval)) return RollFor(slot - halfBeatSlots).half;
 
         // An extra in the middle of the interval. An interval of 1 has no gap for one.
         int midOffsetSlots = interval >= 2 ? Mathf.Max(1, interval / 2) * SlotsPerBeat : 0;
@@ -270,8 +325,9 @@ public class BeatActionJudge : MonoBehaviour {
     private void GrowTrackedRange(double beatPosition) {
         if (!initialized) {
             // Start at the oldest slot whose window could still be open. Normally that
-            // is the first beat; it only differs if the judge wakes up partway through a song.
-            nextSlotToTrack = Mathf.Max(FirstNoteSlot,
+            // is the first beat (or 1:1:1 for a chart, which may place notes there); it
+            // only differs if the judge wakes up partway through a song.
+            nextSlotToTrack = Mathf.Max(chart != null ? 0 : FirstNoteSlot,
                 Mathf.CeilToInt((float)((beatPosition - lateTolerance) * SlotsPerBeat)));
             initialized = true;
         }
