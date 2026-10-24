@@ -2,17 +2,21 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
-  tags: []
+  serializedVersion: 3
+  tags:
+  - Terrain
+  - Enemy
+  - Attack
+  - exit
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
-  - 
-  - 
+  - Characters
+  - Shadows
   - 
   - 
   - 
@@ -41,36 +45,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Characters
+    uniqueID: 291721327
+    locked: 0
   m_RenderingLayers:
   - Default
-  - Light Layer 1
+  - Personajes
   - Light Layer 2
   - Light Layer 3
   - Light Layer 4
   - Light Layer 5
   - Light Layer 6
   - Light Layer 7
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
