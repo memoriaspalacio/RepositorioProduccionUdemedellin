@@ -65,7 +65,8 @@ public class BeatTrackUI : MonoBehaviour {
     private readonly List<BeatBar> activeBars = new List<BeatBar>();
     private readonly Queue<BeatBar> pool = new Queue<BeatBar>();
 
-    // Notes can sit on half beats, so this steps in half beats rather than whole ones.
+    // Notes can sit on any 16th, so this steps in the judge's slots (quarter beats)
+    // rather than whole beats.
     private float nextBeatToSpawn;
     private bool trackStarted;
 
@@ -100,7 +101,7 @@ public class BeatTrackUI : MonoBehaviour {
         // On the first playing frame, fill the track so it is already populated
         // instead of ramping up over the first travelBeats beats.
         if (!trackStarted) {
-            nextBeatToSpawn = Mathf.CeilToInt(nowBeat * 2f) / 2f;
+            nextBeatToSpawn = Mathf.CeilToInt(nowBeat * BeatActionJudge.SlotsPerBeat) / (float)BeatActionJudge.SlotsPerBeat;
             trackStarted = true;
         }
 
@@ -117,7 +118,7 @@ public class BeatTrackUI : MonoBehaviour {
 
         while (nextBeatToSpawn <= furthestVisibleBeat) {
             SpawnBar(nextBeatToSpawn);
-            nextBeatToSpawn += 0.5f;
+            nextBeatToSpawn += 1f / BeatActionJudge.SlotsPerBeat;
         }
     }
 

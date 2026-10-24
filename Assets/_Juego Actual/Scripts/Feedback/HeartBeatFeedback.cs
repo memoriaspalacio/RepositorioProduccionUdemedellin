@@ -261,8 +261,9 @@ public class HeartBeatFeedback : MonoBehaviour
             return;
         }
 
-        // Las notas solo caen en beats enteros o medios
-        for (float beat = Mathf.Floor(ultimoBeat * 2f) / 2f + 0.5f; beat <= ahora; beat += 0.5f)
+        // Las notas caen en semicorcheas: se revisa cada posición del juez
+        const float paso = 1f / BeatActionJudge.SlotsPerBeat;
+        for (float beat = Mathf.Floor(ultimoBeat * BeatActionJudge.SlotsPerBeat) * paso + paso; beat <= ahora; beat += paso)
         {
             if (beatJudge.IsNoteBeat(beat))
                 pulso = 1f;
