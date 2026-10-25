@@ -375,7 +375,8 @@ public class RhythmGroundIndicator : MonoBehaviour
     {
         if (feedbackLight == null) return;
 
-        if (!enableFeedbackLight)
+        // Con luces dinámicas mínimas (menú de gráficos) solo quedan los anillos.
+        if (!enableFeedbackLight || !GestorGraficos.LucesDeEfectos)
         {
             feedbackLight.enabled = false;
             return;

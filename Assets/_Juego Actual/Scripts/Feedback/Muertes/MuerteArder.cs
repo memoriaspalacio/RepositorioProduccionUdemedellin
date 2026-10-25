@@ -114,6 +114,10 @@ public class MuerteArder : MuerteBase
 
     void CrearLuz()
     {
+        // Con luces dinamicas minimas el fuego se ve igual, solo no ilumina alrededor
+        if (!GestorGraficos.LucesDeEfectos)
+            return;
+
         GameObject objeto = new GameObject("Luz del fuego");
         objeto.transform.SetParent(transform, false);
         objeto.transform.position = centro;
