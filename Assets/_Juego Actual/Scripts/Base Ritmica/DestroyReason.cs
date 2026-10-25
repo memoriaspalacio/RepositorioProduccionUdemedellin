@@ -7,6 +7,10 @@ public enum DestroyReason {
     /// <summary>The note's window closed without ever being consumed - nobody tried.</summary>
     Expired,
 
-    /// <summary>The player whiffed on a different beat, and this upcoming note was destroyed as the penalty.</summary>
+    /// <summary>
+    /// No longer fired: penalties now cost time instead of notes (see
+    /// BeatActionJudge.OnPenaltyApplied). Kept so other branches that still
+    /// compare against it keep compiling.
+    /// </summary>
     Penalized
 }

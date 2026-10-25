@@ -66,5 +66,53 @@ Shader "Custom/MinecraftHurtOverlay"
             ENDHLSL
         }
     }
-    FallBack "Hidden/Universal Render Pipeline/FallbackError"
+
+    // SubShader para Built-in Render Pipeline. Unity usa el primero cuyos tags
+    // coincidan con el pipeline activo: en URP gana el de arriba, y en Built-in
+    // ese se descarta por su tag "RenderPipeline" y se usa este. Sin esto, en un
+    // proyecto Built-in el material cae al shader de error y pinta el personaje
+    // de un color roto en lugar del rojo de daño.
+    SubShader
+    {
+        Tags { "RenderType" = "Opaque" "Queue" = "Geometry+10" }
+        LOD 100
+
+        Pass
+        {
+            Name "UnlitFlashBuiltIn"
+
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            #include "UnityCG.cginc"
+
+            struct appdata
+            {
+                float4 vertex : POSITION;
+            };
+
+            struct v2f
+            {
+                float4 vertex : SV_POSITION;
+            };
+
+            fixed4 _Color;
+            float _Emission;
+
+            v2f vert (appdata v)
+            {
+                v2f o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                return o;
+            }
+
+            fixed4 frag (v2f i) : SV_Target
+            {
+                return fixed4(_Color.rgb * (1.0 + _Emission), 1.0);
+            }
+            ENDCG
+        }
+    }
+
+    FallBack Off
 }

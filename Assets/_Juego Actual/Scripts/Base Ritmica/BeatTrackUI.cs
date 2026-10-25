@@ -45,6 +45,11 @@ public class BeatTrackUI : MonoBehaviour {
     public float TravelBeats => travelBeats;
 
     [Header("Colors")]
+    [Tooltip("How many beats after the window opens before a note starts changing color. " +
+             "Only the color waits - the window still opens on time and input works as normal. " +
+             "If this is as long as the window itself, the color never shows.")]
+    [SerializeField, Min(0f)] private float colorDelayBeats = 0.5f;
+
     [Tooltip("Before the beat's window opens.")]
     [SerializeField] private Color idleColor = new Color(0.42f, 0.17f, 0.17f, 1f);
 
@@ -60,7 +65,8 @@ public class BeatTrackUI : MonoBehaviour {
     private readonly List<BeatBar> activeBars = new List<BeatBar>();
     private readonly Queue<BeatBar> pool = new Queue<BeatBar>();
 
-    // Notes can sit on half beats, so this steps in half beats rather than whole ones.
+    // Notes can sit on any 16th, so this steps in the judge's slots (quarter beats)
+    // rather than whole beats.
     private float nextBeatToSpawn;
     private bool trackStarted;
 
@@ -95,7 +101,7 @@ public class BeatTrackUI : MonoBehaviour {
         // On the first playing frame, fill the track so it is already populated
         // instead of ramping up over the first travelBeats beats.
         if (!trackStarted) {
-            nextBeatToSpawn = Mathf.CeilToInt(nowBeat * 2f) / 2f;
+            nextBeatToSpawn = Mathf.CeilToInt(nowBeat * BeatActionJudge.SlotsPerBeat) / (float)BeatActionJudge.SlotsPerBeat;
             trackStarted = true;
         }
 
@@ -112,7 +118,7 @@ public class BeatTrackUI : MonoBehaviour {
 
         while (nextBeatToSpawn <= furthestVisibleBeat) {
             SpawnBar(nextBeatToSpawn);
-            nextBeatToSpawn += 0.5f;
+            nextBeatToSpawn += 1f / BeatActionJudge.SlotsPerBeat;
         }
     }
 
@@ -121,8 +127,8 @@ public class BeatTrackUI : MonoBehaviour {
         // matches what can actually be hit.
         if (!beatJudge.IsNoteBeat(targetBeat)) return;
 
-        // A note already resolved (e.g. destroyed early by a penalty) has no
-        // opportunity to show, so it gets no bar at all.
+        // A note already resolved before its bar would appear has no opportunity
+        // to show, so it gets no bar at all.
         if (beatJudge.IsBeatResolved(targetBeat)) return;
 
         BeatBar bar;
@@ -171,21 +177,31 @@ public class BeatTrackUI : MonoBehaviour {
     }
 
     /// <summary>
-    /// Picks a bar's color from timing alone: neutral until its window opens, then
-    /// degrading from open to closing color across the window, or the success color
-    /// once the player has claimed it. The window is asymmetric - it opens
-    /// earlyTolerance before the beat and closes lateTolerance after it - so the
-    /// highlight has to be read from the judge rather than assumed symmetric.
+    /// Picks a bar's color from timing alone: neutral until its color starts, then
+    /// degrading from open to closing color until the window closes, or the success
+    /// color once the player has claimed it. The window is asymmetric - it opens
+    /// earlyTolerance before the beat and closes lateTolerance after it - so it has
+    /// to be read from the judge rather than assumed symmetric.
+    ///
+    /// The color starts colorDelayBeats AFTER the window opens. That delay is purely
+    /// visual: the judge still accepts input from the moment the window opens.
     /// </summary>
     private Color ResolveColor(BeatBar bar, float beatsPastTarget, float earlyTolerance, float lateTolerance) {
         if (bar.Consumed) return successColor;
 
-        if (beatsPastTarget < -earlyTolerance || beatsPastTarget > lateTolerance) return idleColor;
+        // The window opens at -earlyTolerance, but the color waits colorDelayBeats longer.
+        float colorStart = -earlyTolerance + colorDelayBeats;
 
-        // 0 as the window opens, 1 as it closes.
-        float windowProgress = (beatsPastTarget + earlyTolerance) / (earlyTolerance + lateTolerance);
+        // A delay as long as the window leaves no time to show any color.
+        if (colorStart >= lateTolerance) return idleColor;
 
-        return Color.Lerp(windowOpenColor, windowClosingColor, windowProgress);
+        if (beatsPastTarget < colorStart || beatsPastTarget > lateTolerance) return idleColor;
+
+        // 0 when the color starts, 1 as the window closes - so it still ends on the
+        // closing color exactly when the window does, instead of popping in half-blended.
+        float colorProgress = (beatsPastTarget - colorStart) / (lateTolerance - colorStart);
+
+        return Color.Lerp(windowOpenColor, windowClosingColor, colorProgress);
     }
 
     private void HandleBeatConsumed(float beat) {
@@ -198,9 +214,9 @@ public class BeatTrackUI : MonoBehaviour {
     }
 
     /// <summary>
-    /// Removes the bar for a beat the judge just destroyed - whether it expired on
-    /// its own or was sacrificed to a whiff penalty. If no bar exists yet for this
-    /// beat, SpawnBar's IsBeatResolved check will simply skip spawning it later.
+    /// Removes the bar for a beat the judge just destroyed because it expired. If no
+    /// bar exists yet for this beat, SpawnBar's IsBeatResolved check will simply skip
+    /// spawning it later.
     /// </summary>
     private void HandleNoteDestroyed(float beat, DestroyReason reason) {
         for (int i = activeBars.Count - 1; i >= 0; i--) {

@@ -207,6 +207,18 @@ namespace UdeM.Characters
             if (visualTransform == null)
             {
                 Animator anim = GetComponentInChildren<Animator>();
+
+                // Prefiere el Animator de un modelo hijo: si se usa el de la raiz, el salto moveria todo el enemigo.
+                Animator[] childAnimators = GetComponentsInChildren<Animator>();
+                for (int i = 0; i < childAnimators.Length; i++)
+                {
+                    if (childAnimators[i].transform != transform)
+                    {
+                        anim = childAnimators[i];
+                        break;
+                    }
+                }
+
                 if (anim != null)
                 {
                     visualTransform = anim.transform;

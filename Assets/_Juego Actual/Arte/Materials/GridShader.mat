@@ -20,7 +20,7 @@ Material:
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
-  m_LockedProperties: 
+  m_LockedProperties: _GridOrigin
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -116,6 +116,9 @@ Material:
     - _Surface: 0
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
+    - _ZOffsetFactor: -4
+    - _ZOffsetUnits: -4
+    - _ZTest: 4
     - _ZWrite: 1
     m_Colors:
     - _BackgroundColor: {r: 0, g: 0, b: 0, a: 1}

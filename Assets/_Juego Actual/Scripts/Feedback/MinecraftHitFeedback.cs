@@ -164,8 +164,8 @@ public class MinecraftHitFeedback : MonoBehaviour
             isPlayer = true;
         }
 
-        // 2. Obtener todos los renderers (MeshRenderer y SkinnedMeshRenderer)
-        renderers = GetComponentsInChildren<Renderer>(true);
+        // 2. Obtener los renderers del cuerpo (MeshRenderer y SkinnedMeshRenderer)
+        renderers = FilterBodyRenderers(GetComponentsInChildren<Renderer>(true));
         propertyBlock = new MaterialPropertyBlock();
 
         // 3. Cachear materiales originales para el modo MaterialSwap
@@ -206,6 +206,30 @@ public class MinecraftHitFeedback : MonoBehaviour
                     runtimeFlashMaterial.SetColor("_BaseColor", flashColor);
             }
         }
+    }
+
+    /// <summary>
+    /// Deja solo los renderers del cuerpo del personaje. Partículas, sprites, trails y
+    /// cualquier malla con material en cola transparente quedan fuera: el flash los
+    /// reemplaza por un material rojo opaco, y un quad de efecto así se ve como un
+    /// cuadrado rojo sólido tapando la pantalla.
+    /// </summary>
+    private static Renderer[] FilterBodyRenderers(Renderer[] all)
+    {
+        List<Renderer> body = new List<Renderer>(all.Length);
+
+        foreach (Renderer rend in all)
+        {
+            if (rend == null) continue;
+            if (!(rend is SkinnedMeshRenderer) && !(rend is MeshRenderer)) continue;
+
+            Material mat = rend.sharedMaterial;
+            if (mat != null && mat.renderQueue >= 3000) continue;
+
+            body.Add(rend);
+        }
+
+        return body.ToArray();
     }
 
     /// <summary>
@@ -508,6 +532,27 @@ public class MinecraftHitFeedback : MonoBehaviour
     }
 
     #endregion
+
+    /// <summary>
+    /// Corta el flash, la inclinación y el shake en curso y deja el modelo con sus materiales
+    /// y pose originales. EfectoMuerte lo usa para capturar el cuerpo sin el rojo del golpe final.
+    /// </summary>
+    public void RestaurarAspecto()
+    {
+        if (flashRoutine != null)
+        {
+            StopCoroutine(flashRoutine);
+            flashRoutine = null;
+        }
+
+        if (tiltAndShakeRoutine != null)
+        {
+            StopCoroutine(tiltAndShakeRoutine);
+            tiltAndShakeRoutine = null;
+        }
+
+        ResetVisualState();
+    }
 
     private void ResetVisualState()
     {

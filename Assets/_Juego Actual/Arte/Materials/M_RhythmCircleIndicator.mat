@@ -20,34 +20,38 @@ Material:
   stringTagMap:
     RenderType: Transparent
   disabledShaderPasses: []
-  m_LockedProperties: 
+  m_LockedProperties: _FillProgress
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _ApproachRingScale: 2
-    - _BeatPulse: 0
-    - _CoreRadius: 0.08
-    - _DstBlend: 10
-    - _FillMode: 3
+    - _BackingStrength: 0.3
+    - _ChainPulseSpeed: 9
+    - _DamageFeedback: 0
     - _FillProgress: 0
-    - _GlowIntensity: 2.84
+    - _GlowIntensity: 1.15
     - _HitFeedback: 0
     - _MissFeedback: 0
-    - _RingThickness: 0.045
-    - _Smoothness: 0.0196
-    - _SrcBlend: 5
-    - _TargetRadius: 0.7
+    - _NextNoteSoon: 0
+    - _OuterRadius: 0.6
+    - _OutlineWidth: 0.022
+    - _RingThickness: 0.09
+    - _Smoothness: 0.008
+    - _TargetRadius: 0.3
+    - _TargetThickness: 0.045
     - _WindowOpen: 0
     - _ZOffsetFactor: -4
     - _ZOffsetUnits: -8
     - _ZTest: 4
     m_Colors:
-    - _BaseColor: {r: 0.15, g: 0.65, b: 1, a: 0.45}
-    - _FillColor: {r: 0.2, g: 0.9, b: 1, a: 0.9}
-    - _HitColor: {r: 1, g: 0.98, b: 0.5, a: 1}
-    - _MissColor: {r: 1, g: 0.2, b: 0.2, a: 0.8}
-    - _ReadyColor: {r: 1, g: 0.88, b: 0.2, a: 1}
+    - _BackingColor: {r: 0.02, g: 0, b: 0.01, a: 1}
+    - _BaseColor: {r: 0.85, g: 0.82, b: 0.75, a: 1}
+    - _DamageColor: {r: 0.95, g: 0.06, b: 0.12, a: 1}
+    - _HitColor: {r: 1, g: 0.78, b: 0.25, a: 1}
+    - _MissColor: {r: 0.5, g: 0.1, b: 0.35, a: 1}
+    - _OutlineColor: {r: 0.03, g: 0.01, b: 0.04, a: 0}
+    - _ReadyColor: {r: 0.92, g: 0.12, b: 0.14, a: 1}
+    - _TargetColor: {r: 0.6, g: 0.57, b: 0.52, a: 0.9}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

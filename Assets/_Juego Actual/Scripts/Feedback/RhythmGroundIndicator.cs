@@ -2,9 +2,12 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// Indicador circular en el suelo para el personaje en juego de ritmo:
-/// sigue sus pies, se alinea con el suelo bajo ellos y se rellena en sentido
-/// horario sincronizado con el compás, con feedback de acierto/fallo.
+/// Indicador de ritmo proyectado en el suelo, bajo los pies del personaje.
+///
+/// Usa el estándar de los juegos de ritmo (osu! / NecroDancer / Beat Saber): un anillo
+/// de aproximación se contrae desde afuera hacia un anillo objetivo fijo, y cuando ambos
+/// coinciden es el momento de pulsar. El movimiento convergente se lee con visión
+/// periférica, así el jugador no necesita mirarse los pies.
 /// </summary>
 [ExecuteAlways]
 [SelectionBase]
@@ -25,9 +28,10 @@ public class RhythmGroundIndicator : MonoBehaviour
     [Tooltip("Distancia vertical desde el pivote del personaje hacia los pies.")]
     [SerializeField] private float feetOffset = 0.8f;
 
-    [Tooltip("Diámetro del círculo indicador en unidades de mundo.")]
+    [Tooltip("Diámetro total del indicador en unidades de mundo. El anillo objetivo ocupa " +
+             "cerca de un 40% de este valor; el resto es el recorrido del anillo de aproximación.")]
     [Range(0.2f, 6.0f)]
-    [SerializeField] private float circleDiameter = 2.0f;
+    [SerializeField] private float circleDiameter = 2.8f;
 
     [Tooltip("Elevación en Y sobre la superficie del suelo, para evitar Z-fighting.")]
     [Range(-1.0f, 2.0f)]
@@ -51,8 +55,14 @@ public class RhythmGroundIndicator : MonoBehaviour
     [Range(0.25f, 4.0f)]
     [SerializeField] private float fillDurationBeats = 1.0f;
 
-    [Tooltip("Si está activo, adapta la duración del llenado al intervalo de notas configurado en BeatActionJudge.")]
+    [Tooltip("Si está activo, adapta la duración del llenado al intervalo de notas configurado en BeatActionJudge. " +
+             "Con un chart de notas no hay intervalo fijo y se usa fillDurationBeats.")]
     [SerializeField] private bool adaptToNoteInterval = true;
+
+    [Tooltip("Si la nota siguiente cae a esta distancia en beats o menos, el anillo objetivo late " +
+             "para avisar que viene otra pegada detrás.")]
+    [Range(0.5f, 4.0f)]
+    [SerializeField] private float nextNoteWarnBeats = 1.0f;
 
     [Header("--- Retroalimentación de Golpe (Hit Feedback) ---")]
     [Tooltip("Duración en segundos de la onda expansiva y destello visual al acertar una nota.")]
@@ -64,12 +74,45 @@ public class RhythmGroundIndicator : MonoBehaviour
     [SerializeField] private float hitPunchScale = 1.2f;
 
     [Header("--- Retroalimentación de Fallo (Miss Feedback) ---")]
-    [Tooltip("Si está activo, muestra un breve destello rojo cuando el jugador presiona fuera de tiempo (whiff).")]
+    [Tooltip("Si está activo, los anillos destellan con el color de fallo y se encogen un poco cada vez " +
+             "que el juez cobra una penalización de tiempo (presionar fuera de tiempo o recibir un golpe).")]
     [SerializeField] private bool enableMissFeedback = true;
 
     [Tooltip("Duración en segundos del feedback de fallo.")]
     [Range(0.05f, 0.5f)]
     [SerializeField] private float missFeedbackDuration = 0.22f;
+
+    [Tooltip("Escala a la que se encoge el indicador al fallar (1 = no se encoge). Es lo contrario " +
+             "del rebote de acierto, para que el fallo se sienta como un golpe hacia adentro.")]
+    [Range(0.7f, 1.0f)]
+    [SerializeField] private float missShrinkScale = 0.88f;
+
+    [Header("--- Retroalimentación de Daño Recibido ---")]
+    [Tooltip("Duración en segundos del feedback al recibir daño.")]
+    [Range(0.1f, 1.2f)]
+    [SerializeField] private float damageFeedbackDuration = 0.55f;
+
+    [Header("--- Luz de Retroalimentación ---")]
+    [Tooltip("Enciende una luz puntual en los pies al acertar una nota o al recibir daño.")]
+    [SerializeField] private bool enableFeedbackLight = true;
+
+    [Tooltip("Color del destello de luz al acertar.")]
+    [SerializeField] private Color hitLightColor = new Color(1f, 0.78f, 0.25f);
+
+    [Tooltip("Color del destello de luz al recibir daño.")]
+    [SerializeField] private Color damageLightColor = new Color(0.95f, 0.06f, 0.12f);
+
+    [Tooltip("Intensidad máxima del destello.")]
+    [Range(0f, 30f)]
+    [SerializeField] private float feedbackLightIntensity = 9f;
+
+    [Tooltip("Alcance de la luz en unidades de mundo.")]
+    [Range(0.5f, 14f)]
+    [SerializeField] private float feedbackLightRange = 5f;
+
+    [Tooltip("Altura de la luz sobre el suelo.")]
+    [Range(0f, 3f)]
+    [SerializeField] private float feedbackLightHeight = 0.6f;
 
     [Header("--- Eventos Rítmicos ---")]
     public UnityEvent OnNoteHitSuccess;
@@ -83,17 +126,28 @@ public class RhythmGroundIndicator : MonoBehaviour
     private CharacterController cachedCharacterController;
     private Quaternion currentSlopeRotation = Quaternion.identity;
 
+    private Light feedbackLight;
+
     private float currentFillProgress = 0f;
     private float currentWindowOpen = 0f;
+    private float currentNextNoteSoon = 0f;
+
+    // Nota que el anillo persigue ahora mismo, y el beat en que empezó a perseguirla.
+    // Juntos definen cuánto dura el barrido, para que una nota que aparece de golpe
+    // muy cerca igual se vea entrar desde el borde en vez de nacer a medio camino.
+    private float trackedTargetBeat = -1f;
+    private float approachStartBeat = 0f;
     private float hitFeedbackTimer = 0f;
     private float missFeedbackTimer = 0f;
+    private float damageFeedbackTimer = 0f;
     private float currentPunchFactor = 1.0f;
 
     private static readonly int FillProgressProp = Shader.PropertyToID("_FillProgress");
     private static readonly int WindowOpenProp = Shader.PropertyToID("_WindowOpen");
     private static readonly int HitFeedbackProp = Shader.PropertyToID("_HitFeedback");
     private static readonly int MissFeedbackProp = Shader.PropertyToID("_MissFeedback");
-    private static readonly int BeatPulseProp = Shader.PropertyToID("_BeatPulse");
+    private static readonly int DamageFeedbackProp = Shader.PropertyToID("_DamageFeedback");
+    private static readonly int NextNoteSoonProp = Shader.PropertyToID("_NextNoteSoon");
 
     private void Awake()
     {
@@ -184,8 +238,8 @@ public class RhythmGroundIndicator : MonoBehaviour
             beatJudge.OnBeatConsumed -= HandleBeatConsumed;
             beatJudge.OnBeatConsumed += HandleBeatConsumed;
 
-            beatJudge.OnNoteDestroyed -= HandleNoteDestroyed;
-            beatJudge.OnNoteDestroyed += HandleNoteDestroyed;
+            beatJudge.OnPenaltyApplied -= HandlePenaltyApplied;
+            beatJudge.OnPenaltyApplied += HandlePenaltyApplied;
         }
     }
 
@@ -194,7 +248,7 @@ public class RhythmGroundIndicator : MonoBehaviour
         if (beatJudge != null)
         {
             beatJudge.OnBeatConsumed -= HandleBeatConsumed;
-            beatJudge.OnNoteDestroyed -= HandleNoteDestroyed;
+            beatJudge.OnPenaltyApplied -= HandlePenaltyApplied;
         }
     }
 
@@ -235,8 +289,7 @@ public class RhythmGroundIndicator : MonoBehaviour
 
             visualChildObj.layer = 2; // Ignore Raycast
 
-            MeshFilter mf = visualChildObj.AddComponent<MeshFilter>();
-            mf.sharedMesh = GetOrCreateHorizontalQuadMesh();
+            visualChildObj.AddComponent<MeshFilter>();
 
             visualRenderer = visualChildObj.AddComponent<MeshRenderer>();
             visualRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -249,6 +302,19 @@ public class RhythmGroundIndicator : MonoBehaviour
             visualTransform = visualRenderer.transform;
             visualChildObj = visualRenderer.gameObject;
         }
+
+        // El Quad integrado de Unity es vertical (plano XY). Si queda asignado, el
+        // indicador se dibuja de canto y se entierra en el suelo, así que siempre
+        // imponemos una malla horizontal propia: con ella, rotación identidad = plano.
+        MeshFilter meshFilter = visualChildObj.GetComponent<MeshFilter>();
+        if (meshFilter == null)
+            meshFilter = visualChildObj.AddComponent<MeshFilter>();
+
+        Mesh horizontalQuad = GetOrCreateHorizontalQuadMesh();
+        if (meshFilter.sharedMesh != horizontalQuad)
+            meshFilter.sharedMesh = horizontalQuad;
+
+        EnsureFeedbackLight();
 
         if (indicatorMaterial == null && visualRenderer.sharedMaterial == null)
         {
@@ -263,6 +329,67 @@ public class RhythmGroundIndicator : MonoBehaviour
         {
             visualRenderer.sharedMaterial = indicatorMaterial;
         }
+    }
+
+    /// <summary>
+    /// Crea la luz puntual que destella al acertar una nota o al recibir daño.
+    /// </summary>
+    private void EnsureFeedbackLight()
+    {
+        if (!enableFeedbackLight)
+        {
+            if (feedbackLight != null)
+                feedbackLight.enabled = false;
+
+            return;
+        }
+
+        Transform lightParent = visualTransform != null ? visualTransform : transform;
+
+        if (feedbackLight == null)
+        {
+            Transform existing = lightParent.Find("RhythmFeedbackLight");
+            if (existing != null)
+                feedbackLight = existing.GetComponent<Light>();
+        }
+
+        if (feedbackLight == null)
+        {
+            GameObject lightObj = new GameObject("RhythmFeedbackLight");
+            lightObj.transform.SetParent(lightParent, false);
+
+            feedbackLight = lightObj.AddComponent<Light>();
+            feedbackLight.type = LightType.Point;
+            feedbackLight.shadows = LightShadows.None;
+        }
+
+        feedbackLight.range = feedbackLightRange;
+        feedbackLight.transform.localPosition = new Vector3(0f, feedbackLightHeight, 0f);
+    }
+
+    /// <summary>
+    /// Alimenta la luz con los mismos temporizadores que recolorean los anillos, para que
+    /// el destello y el cambio de color ocurran exactamente a la vez.
+    /// </summary>
+    private void UpdateFeedbackLight()
+    {
+        if (feedbackLight == null) return;
+
+        if (!enableFeedbackLight)
+        {
+            feedbackLight.enabled = false;
+            return;
+        }
+
+        float strength = Mathf.Max(hitFeedbackTimer, damageFeedbackTimer);
+
+        feedbackLight.enabled = strength > 0.001f;
+        if (!feedbackLight.enabled) return;
+
+        feedbackLight.color = damageFeedbackTimer > hitFeedbackTimer ? damageLightColor : hitLightColor;
+
+        // Cuadrático: el destello pega fuerte y se apaga rápido en vez de desvanecerse plano.
+        feedbackLight.intensity = feedbackLightIntensity * strength * strength;
     }
 
     /// <summary>
@@ -332,11 +459,11 @@ public class RhythmGroundIndicator : MonoBehaviour
                     propertyBlock = new MaterialPropertyBlock();
 
                 visualRenderer.GetPropertyBlock(propertyBlock);
-                propertyBlock.SetFloat(FillProgressProp, 0.75f);
-                propertyBlock.SetFloat(WindowOpenProp, 1.0f);
+                propertyBlock.SetFloat(FillProgressProp, 0.6f);
+                propertyBlock.SetFloat(WindowOpenProp, 0.0f);
                 propertyBlock.SetFloat(HitFeedbackProp, 0.0f);
                 propertyBlock.SetFloat(MissFeedbackProp, 0.0f);
-                propertyBlock.SetFloat(BeatPulseProp, 0.5f);
+                propertyBlock.SetFloat(DamageFeedbackProp, 0.0f);
                 visualRenderer.SetPropertyBlock(propertyBlock);
             }
             return;
@@ -345,6 +472,7 @@ public class RhythmGroundIndicator : MonoBehaviour
         UpdateRhythmState();
         UpdateFeedbackDecay();
         ApplyShaderProperties();
+        UpdateFeedbackLight();
         UpdatePositionAndOrientation();
     }
 
@@ -376,42 +504,63 @@ public class RhythmGroundIndicator : MonoBehaviour
             float earlyTol = beatJudge.EarlyTolerance;
             float lateTol = beatJudge.LateTolerance;
 
-            float interval = adaptToNoteInterval ? Mathf.Max(0.5f, (float)beatJudge.NoteInterval) : fillDurationBeats;
+            float interval = adaptToNoteInterval && !beatJudge.UsesNoteChart
+                ? Mathf.Max(0.5f, (float)beatJudge.NoteInterval)
+                : fillDurationBeats;
 
+            // Buscamos la nota objetivo y la que viene inmediatamente después, para
+            // poder avisar cuando vengan dos pegadas. Las notas caen en semicorcheas.
+            const float paso = 1f / BeatActionJudge.SlotsPerBeat;
             float targetBeat = -1f;
-            float startScan = Mathf.Floor((nowBeat - lateTol) * 2f) / 2f;
-            float endScan = nowBeat + interval + 1f;
+            float followingBeat = -1f;
+            float startScan = Mathf.Floor((nowBeat - lateTol) * BeatActionJudge.SlotsPerBeat) * paso;
+            float endScan = nowBeat + interval + nextNoteWarnBeats + 1f;
 
-            for (float b = startScan; b <= endScan; b += 0.5f)
+            for (float b = startScan; b <= endScan; b += paso)
             {
                 if (b < (nowBeat - lateTol)) continue;
                 if (!beatJudge.IsNoteBeat(b)) continue;
                 if (beatJudge.IsBeatResolved(b)) continue;
 
-                targetBeat = b;
+                if (targetBeat < 0f)
+                {
+                    targetBeat = b;
+                    continue;
+                }
+
+                followingBeat = b;
                 break;
             }
 
             if (targetBeat >= 0f)
             {
+                // Al cambiar de nota objetivo anotamos desde dónde arranca su barrido.
+                if (!Mathf.Approximately(targetBeat, trackedTargetBeat))
+                {
+                    trackedTargetBeat = targetBeat;
+                    approachStartBeat = nowBeat;
+                }
+
+                // El barrido dura lo que haya de margen real, con un tope para que en
+                // huecos largos el anillo no se arrastre. Así dos notas seguidas son dos
+                // barridos rápidos y completos, en vez de un anillo que nace a medio camino.
+                float span = Mathf.Clamp(targetBeat - approachStartBeat, 0.2f, interval);
+                float sweepStart = targetBeat - span;
+                currentFillProgress = Mathf.Clamp01((nowBeat - sweepStart) / span);
+
                 float beatsUntilTarget = targetBeat - nowBeat;
-
-                if (beatsUntilTarget <= 0f)
-                {
-                    currentFillProgress = 1.0f;
-                }
-                else
-                {
-                    currentFillProgress = 1.0f - Mathf.Clamp01(beatsUntilTarget / interval);
-                }
-
                 bool isWindowOpen = (beatsUntilTarget <= earlyTol) && ((nowBeat - targetBeat) <= lateTol);
                 currentWindowOpen = isWindowOpen ? 1.0f : 0.0f;
+
+                bool followsClosely = followingBeat >= 0f && (followingBeat - targetBeat) <= nextNoteWarnBeats;
+                currentNextNoteSoon = followsClosely ? 1.0f : 0.0f;
             }
             else
             {
+                trackedTargetBeat = -1f;
                 currentFillProgress = 0f;
                 currentWindowOpen = 0f;
+                currentNextNoteSoon = 0f;
             }
         }
         else
@@ -441,6 +590,14 @@ public class RhythmGroundIndicator : MonoBehaviour
         if (missFeedbackTimer > 0f)
         {
             missFeedbackTimer = Mathf.MoveTowards(missFeedbackTimer, 0f, Time.deltaTime / Mathf.Max(0.01f, missFeedbackDuration));
+
+            // Encogimiento breve: se multiplica sobre el rebote de acierto en vez de pisarlo.
+            currentPunchFactor *= Mathf.Lerp(1.0f, missShrinkScale, missFeedbackTimer);
+        }
+
+        if (damageFeedbackTimer > 0f)
+        {
+            damageFeedbackTimer = Mathf.MoveTowards(damageFeedbackTimer, 0f, Time.deltaTime / Mathf.Max(0.01f, damageFeedbackDuration));
         }
     }
 
@@ -460,14 +617,8 @@ public class RhythmGroundIndicator : MonoBehaviour
         propertyBlock.SetFloat(WindowOpenProp, currentWindowOpen);
         propertyBlock.SetFloat(HitFeedbackProp, hitFeedbackTimer);
         propertyBlock.SetFloat(MissFeedbackProp, missFeedbackTimer);
-
-        float beatPulse = 0f;
-        if (beatManager != null && beatManager.IsPlaying)
-        {
-            double nowBeat = beatManager.CurrentSongTime / beatManager.SecPerBeat;
-            beatPulse = (float)(1.0 - (nowBeat % 1.0));
-        }
-        propertyBlock.SetFloat(BeatPulseProp, beatPulse);
+        propertyBlock.SetFloat(DamageFeedbackProp, damageFeedbackTimer);
+        propertyBlock.SetFloat(NextNoteSoonProp, currentNextNoteSoon);
 
         visualRenderer.SetPropertyBlock(propertyBlock);
     }
@@ -544,21 +695,33 @@ public class RhythmGroundIndicator : MonoBehaviour
         OnNoteHitSuccess?.Invoke();
     }
 
-    private void HandleNoteDestroyed(float beat, DestroyReason reason)
+    /// <summary>
+    /// El juez avisa solo cuando de verdad cobra tiempo, así que mientras la penalización
+    /// está bloqueada (machacar teclas) el indicador tampoco repite el destello.
+    /// </summary>
+    private void HandlePenaltyApplied()
     {
-        if (enableMissFeedback && reason == DestroyReason.Penalized)
+        if (enableMissFeedback)
         {
             TriggerMissFeedback();
         }
     }
 
     /// <summary>
-    /// Dispara manualmente el feedback visual de penalización o fallo (whiff).
+    /// Dispara manualmente el feedback visual de fallo (whiff o nota que se dejó pasar).
     /// </summary>
     public void TriggerMissFeedback()
     {
         missFeedbackTimer = 1.0f;
         OnNoteHitMiss?.Invoke();
+    }
+
+    /// <summary>
+    /// Dispara las ondas concéntricas de daño recibido. La llama PlayerHealth al herir al jugador.
+    /// </summary>
+    public void TriggerDamageFeedback()
+    {
+        damageFeedbackTimer = 1.0f;
     }
 
     #endregion
