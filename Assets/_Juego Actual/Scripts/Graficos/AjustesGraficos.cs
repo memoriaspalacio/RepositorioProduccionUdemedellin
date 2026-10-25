@@ -3,7 +3,9 @@ using UnityEngine;
 
 /// <summary>
 /// Niveles de calidad. Alto es el aspecto original del juego (el nivel "PC" de Quality
-/// Settings, sin tocar); los demas tienen su propio nivel y su propio asset de URP.
+/// Settings), con lo que no se ve recortado: SSAO a media resolucion, sombras hasta donde
+/// llega la camara y FPS limitados a 60. Los demas tienen su propio nivel y su
+/// propio asset de URP.
 /// </summary>
 public enum NivelGrafico
 {
@@ -14,7 +16,7 @@ public enum NivelGrafico
 }
 
 public enum EscalaResolucion { Completa, Alta, Media, Baja }
-public enum LimiteFps { Fps30, Fps60, Fps120, SinLimite }
+public enum LimiteFps { Fps30, Fps60, Fps120, Pantalla, SinLimite }
 public enum CalidadTexturas { Completas, Medias, Bajas, MuyBajas }
 public enum CalidadSombras { Altas, Medias, Bajas, Apagadas }
 public enum CalidadPostProceso { Completo, Ligero, Minimo, Apagado }
@@ -30,7 +32,7 @@ public enum CalidadLuces { Todas, Reducidas, Minimas }
 public class AjustesGraficos
 {
     /// <summary>Sube cuando cambie el significado de algun campo, para descartar lo guardado.</summary>
-    public const int VersionActual = 1;
+    public const int VersionActual = 2;
 
     public int version = VersionActual;
 
@@ -38,7 +40,7 @@ public class AjustesGraficos
     public NivelGrafico nivel = NivelGrafico.Alto;
 
     public EscalaResolucion resolucion = EscalaResolucion.Completa;
-    public LimiteFps fps = LimiteFps.SinLimite;
+    public LimiteFps fps = LimiteFps.Fps60;
     public CalidadTexturas texturas = CalidadTexturas.Completas;
     public CalidadSombras sombras = CalidadSombras.Altas;
     public CalidadPostProceso postProceso = CalidadPostProceso.Completo;
@@ -50,7 +52,7 @@ public class AjustesGraficos
     [Tooltip("Contador de FPS en pantalla. No forma parte de los niveles.")]
     public bool mostrarFps;
 
-    /// <summary>Los valores de cada nivel. Alto reproduce exactamente el estado original.</summary>
+    /// <summary>Los valores de cada nivel. Alto no recorta nada visible del aspecto original.</summary>
     public static AjustesGraficos DePreset(NivelGrafico nivel)
     {
         AjustesGraficos ajustes = new AjustesGraficos { nivel = nivel };
@@ -59,7 +61,8 @@ public class AjustesGraficos
         {
             case NivelGrafico.Alto:
                 ajustes.resolucion = EscalaResolucion.Completa;
-                ajustes.fps = LimiteFps.SinLimite;
+                // Con Pantalla un monitor de 144 Hz pide mas del doble de GPU que a 60
+                ajustes.fps = LimiteFps.Fps60;
                 ajustes.texturas = CalidadTexturas.Completas;
                 ajustes.sombras = CalidadSombras.Altas;
                 ajustes.postProceso = CalidadPostProceso.Completo;
@@ -146,7 +149,11 @@ public class AjustesGraficos
         }
     }
 
-    /// <summary>Application.targetFrameRate. Sin limite en movil es la frecuencia de la pantalla (si no, Android se queda en 30).</summary>
+    /// <summary>
+    /// Application.targetFrameRate. Sin limite la GPU dibuja todos los fotogramas que puede y
+    /// trabaja al 100 % aunque el juego sea ligero; en movil no existe (Android se quedaria en
+    /// 30) y equivale a la frecuencia de la pantalla.
+    /// </summary>
     public int FotogramasObjetivo
     {
         get
@@ -156,13 +163,17 @@ public class AjustesGraficos
                 case LimiteFps.Fps30: return 30;
                 case LimiteFps.Fps60: return 60;
                 case LimiteFps.Fps120: return 120;
-                default:
+                case LimiteFps.SinLimite:
                     if (!Application.isMobilePlatform)
                         return -1;
-                    return Mathf.Max(30, Mathf.RoundToInt((float)Screen.currentResolution.refreshRateRatio.value));
+                    return FrecuenciaPantalla;
+                default:
+                    return FrecuenciaPantalla;
             }
         }
     }
+
+    static int FrecuenciaPantalla => Mathf.Max(30, Mathf.RoundToInt((float)Screen.currentResolution.refreshRateRatio.value));
 
     /// <summary>Mipmaps que se saltan todas las texturas 3D (las de UI no tienen mipmaps y no cambian).</summary>
     public int LimiteMipmaps => (int)texturas;

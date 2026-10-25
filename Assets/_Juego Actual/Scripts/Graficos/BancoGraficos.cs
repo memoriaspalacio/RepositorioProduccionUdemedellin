@@ -14,7 +14,8 @@ using UnityEngine.SceneManagement;
 ///
 ///   Juego.exe -bancoGraficos "C:\Resultados" -screen-fullscreen 0 -screen-width 1600 -screen-height 900
 ///
-/// Sirve para comparar equipos con datos en vez de impresiones. Mide sin limite de FPS y al
+/// Sirve para comparar equipos con datos en vez de impresiones. Mide sin limite de FPS, con el
+/// juego congelado para que todas las calidades dibujen la misma escena, y al
 /// terminar devuelve los ajustes del jugador y cierra el juego.
 /// </summary>
 public class BancoGraficos : MonoBehaviour
@@ -54,8 +55,15 @@ public class BancoGraficos : MonoBehaviour
             if (!Application.CanStreamedLevelBeLoaded(escena))
                 continue;
 
+            Time.timeScale = 1f;
             SceneManager.LoadScene(escena);
             yield return new WaitForSecondsRealtime(3f);
+
+            // Con el juego congelado nadie muere y el cronometro (que corre en tiempo sin escalar
+            // y sigue entre escenas) no acaba la partida a mitad de la medicion
+            if (ControladorContrarreloj.Instancia != null)
+                ControladorContrarreloj.Instancia.PausarContrarreloj();
+            Time.timeScale = 0f;
 
             foreach (NivelGrafico nivel in Enum.GetValues(typeof(NivelGrafico)))
             {
@@ -72,6 +80,11 @@ public class BancoGraficos : MonoBehaviour
                 while (total < Medicion)
                 {
                     yield return null;
+
+                    // La primera vez que se usa una variante de shader se compila y da un tiron
+                    if (Time.unscaledDeltaTime > 0.2f)
+                        continue;
+
                     tiempos.Add(Time.unscaledDeltaTime * 1000f);
                     total += Time.unscaledDeltaTime;
                 }
@@ -88,6 +101,7 @@ public class BancoGraficos : MonoBehaviour
         Debug.Log("BancoGraficos: resultados en " + carpeta);
 
         GestorGraficos.Aplicar(delJugador);
+        Time.timeScale = 1f;
         Application.Quit();
     }
 

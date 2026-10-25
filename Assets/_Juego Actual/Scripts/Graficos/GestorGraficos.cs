@@ -20,7 +20,11 @@ using UnityEngine.SceneManagement;
 /// - Todo lo demas (resolucion, sombras, texturas, FPS, post proceso, particulas, luces) se
 ///   ajusta encima del nivel sin cambiar variantes, asi que se puede combinar libremente.
 ///
-/// Alto es el nivel "PC" con sus valores originales: con todo en Alto no se cambia nada.
+/// Alto es el nivel "PC": con todo en Alto solo se aplican sus propios valores.
+///
+/// Ojo con "FPS: Sin limite": la GPU dibuja todos los fotogramas que puede y trabaja al 100 %
+/// por ligero que sea el juego. Medido en una RTX 3050: 99 % y 63 W sin limite, 52 W a 144 FPS
+/// (Pantalla en un monitor de 144 Hz) y 22 W a 60.
 /// </summary>
 [DefaultExecutionOrder(-1000)]
 public class GestorGraficos : MonoBehaviour
@@ -315,7 +319,7 @@ public class GestorGraficos : MonoBehaviour
                     break;
                 case CalidadSombras.Medias:
                     resolucion = Mathf.Min(1024, alto.resolucionSombras);
-                    distancia = Mathf.Min(30f, alto.distanciaSombras);
+                    distancia = Mathf.Min(25f, alto.distanciaSombras);
                     cascadas = 2;
                     break;
                 case CalidadSombras.Bajas:
