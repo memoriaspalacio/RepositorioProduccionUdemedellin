@@ -7,8 +7,10 @@ public class ButtonScript : MonoBehaviour
 
     private void Start()
     {
-        // Forzosamente el objeto debe tener el componente Button en Unity
-        boton = GetComponent<Button>();
+        // Sin componente Button (p. ej. el contenedor BotonesMenu) no hay clic que sonar
+        if (!TryGetComponent(out boton))
+            return;
+
         boton.onClick.AddListener(SoundButton);
     }
 

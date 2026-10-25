@@ -35,10 +35,26 @@ public static class RhythmGroundIndicatorSetup
             return;
         }
 
-        // 2. Añadir o configurar el componente
+        // 2. Si ya hay un indicador en la escena, reutilizarlo en vez de crear otro.
+        // Dos indicadores dibujan sus anillos superpuestos y el resultado es ilegible.
         RhythmGroundIndicator indicator = target.GetComponent<RhythmGroundIndicator>();
+
         if (indicator == null)
         {
+            RhythmGroundIndicator existing = Object.FindFirstObjectByType<RhythmGroundIndicator>();
+
+            if (existing != null)
+            {
+                EditorUtility.DisplayDialog("Indicador Rítmico",
+                    $"Ya existe un indicador en la escena, sobre '{existing.gameObject.name}'.\n\n" +
+                    "Se seleccionará ese en vez de añadir uno nuevo: dos indicadores superponen " +
+                    "sus anillos y el medidor se vuelve ilegible.",
+                    "Entendido");
+
+                Selection.activeGameObject = existing.gameObject;
+                return;
+            }
+
             indicator = Undo.AddComponent<RhythmGroundIndicator>(target);
         }
 

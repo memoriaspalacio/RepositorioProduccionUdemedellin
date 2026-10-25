@@ -65,7 +65,8 @@ public class BeatTrackUI : MonoBehaviour {
     private readonly List<BeatBar> activeBars = new List<BeatBar>();
     private readonly Queue<BeatBar> pool = new Queue<BeatBar>();
 
-    // Notes can sit on half beats, so this steps in half beats rather than whole ones.
+    // Notes can sit on any 16th, so this steps in the judge's slots (quarter beats)
+    // rather than whole beats.
     private float nextBeatToSpawn;
     private bool trackStarted;
 
@@ -100,7 +101,7 @@ public class BeatTrackUI : MonoBehaviour {
         // On the first playing frame, fill the track so it is already populated
         // instead of ramping up over the first travelBeats beats.
         if (!trackStarted) {
-            nextBeatToSpawn = Mathf.CeilToInt(nowBeat * 2f) / 2f;
+            nextBeatToSpawn = Mathf.CeilToInt(nowBeat * BeatActionJudge.SlotsPerBeat) / (float)BeatActionJudge.SlotsPerBeat;
             trackStarted = true;
         }
 
@@ -117,7 +118,7 @@ public class BeatTrackUI : MonoBehaviour {
 
         while (nextBeatToSpawn <= furthestVisibleBeat) {
             SpawnBar(nextBeatToSpawn);
-            nextBeatToSpawn += 0.5f;
+            nextBeatToSpawn += 1f / BeatActionJudge.SlotsPerBeat;
         }
     }
 
@@ -126,8 +127,8 @@ public class BeatTrackUI : MonoBehaviour {
         // matches what can actually be hit.
         if (!beatJudge.IsNoteBeat(targetBeat)) return;
 
-        // A note already resolved (e.g. destroyed early by a penalty) has no
-        // opportunity to show, so it gets no bar at all.
+        // A note already resolved before its bar would appear has no opportunity
+        // to show, so it gets no bar at all.
         if (beatJudge.IsBeatResolved(targetBeat)) return;
 
         BeatBar bar;
@@ -213,9 +214,9 @@ public class BeatTrackUI : MonoBehaviour {
     }
 
     /// <summary>
-    /// Removes the bar for a beat the judge just destroyed - whether it expired on
-    /// its own or was sacrificed to a whiff penalty. If no bar exists yet for this
-    /// beat, SpawnBar's IsBeatResolved check will simply skip spawning it later.
+    /// Removes the bar for a beat the judge just destroyed because it expired. If no
+    /// bar exists yet for this beat, SpawnBar's IsBeatResolved check will simply skip
+    /// spawning it later.
     /// </summary>
     private void HandleNoteDestroyed(float beat, DestroyReason reason) {
         for (int i = activeBars.Count - 1; i >= 0; i--) {

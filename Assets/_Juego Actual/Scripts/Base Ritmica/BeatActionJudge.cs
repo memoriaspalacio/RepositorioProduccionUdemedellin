@@ -7,6 +7,11 @@ using UnityEngine;
 /// style: no accuracy grading, no knowledge of input devices or action types -
 /// consumers poll their own input and call TryConsumeBeat() when they see a press.
 ///
+/// Which beats carry a note comes from a NOTE CHART when the scene has one (see
+/// NoteChart: hand-made in Herramientas/EditorCharts, any 16th note, read from
+/// Resources/Charts/&lt;scene&gt;.json or noteChartFile). Without a chart, the judge falls
+/// back to the noteInterval pattern below, unchanged.
+///
 /// NORMAL notes sit on every Nth beat (noteInterval), counting from the song's first
 /// beat. On top of those, two optional random EXTRA notes can follow each normal note:
 /// one in the middle of the interval, one half a beat later. The judge is the single
@@ -21,8 +26,15 @@ using UnityEngine;
 /// Because tolerances are independent and can add up to more than a full beat, more
 /// than one note's window can be open at the same time. A successful press always
 /// consumes the OLDEST open note - the one closest to being destroyed - never a
-/// newer one. A press with nothing open is a whiff: it destroys the next
-/// penaltyNoteCount upcoming notes that haven't opened yet, oldest first.
+/// newer one.
+///
+/// Mistakes cost time, not notes: a whiff (a press with nothing open) takes
+/// penaltySeconds off ControladorContrarreloj, an enemy hit (PenalizeHit, called by
+/// PlayerHealth) takes hitPenaltySeconds - and so can a note that slips past
+/// unclaimed, if penalizeMissedNotes is on. After a penalty the judge locks itself
+/// until a NEW note's window opens (the note enters the heart zone), so whatever
+/// caused it, the player loses time at most once per note. Nothing costs time while
+/// the countdown is stopped (level won or lost).
 ///
 /// Runs after the zones (which set tolerances) and before everything else, so
 /// tolerances are fresh and the tracked range is current by the time a consumer
@@ -31,15 +43,27 @@ using UnityEngine;
 [DefaultExecutionOrder(-50)]
 public class BeatActionJudge : MonoBehaviour {
 
-    // Notes can sit on half beats, so internally the judge counts in half-beat
-    // "slots": slot 2 is beat 1, slot 3 is beat 1.5, slot 4 is beat 2, and so on.
-    // Everything public (events, queries) still speaks in beats.
-    private const int SlotsPerBeat = 2;
+    /// <summary>
+    /// Notes can sit on any 16th note, so internally the judge counts in quarter-beat
+    /// "slots": slot 4 is beat 1, slot 5 is beat 1.25, slot 6 is beat 1.5, and so on.
+    /// Everything public (events, queries) still speaks in beats. Views that scan for
+    /// notes step through beats in 1 / SlotsPerBeat increments.
+    /// </summary>
+    public const int SlotsPerBeat = 4;
     private const int FirstNoteSlot = SlotsPerBeat; // beat 1 - there is no beat 0 to hit
 
+    [Header("Note chart")]
+    [Tooltip("Play a hand-made note chart (made with Herramientas/EditorCharts) instead of the noteInterval " +
+             "pattern below. Off = always use the pattern.")]
+    [SerializeField] private bool useNoteChart = true;
+
+    [Tooltip("Chart to play. Empty: looks for Resources/Charts/<scene name>.json. If neither exists, " +
+             "the noteInterval pattern below is used, exactly as before.")]
+    [SerializeField] private TextAsset noteChartFile;
+
     [Header("Notes")]
-    [Tooltip("A normal note exists on every Nth beat, counting from the song's first beat " +
-             "(beats 1, 1+N, 1+2N...). 1 = every beat, 2 = every other beat. BeatTrackUI " +
+    [Tooltip("Only used when there's no note chart. A normal note exists on every Nth beat, counting from the " +
+             "song's first beat (beats 1, 1+N, 1+2N...). 1 = every beat, 2 = every other beat. BeatTrackUI " +
              "asks the judge which beats are notes, so what's drawn always matches what can be hit. " +
              "Set it before pressing Play - changing it mid-song leaves notes already in flight inconsistent.")]
     [SerializeField, Min(1)] private int noteInterval = 1;
@@ -65,9 +89,17 @@ public class BeatActionJudge : MonoBehaviour {
     [SerializeField, Range(0.05f, 2f)] private float lateTolerance = 0.25f;
 
     [Header("Penalty")]
-    [Tooltip("How many upcoming notes are destroyed when the player whiffs (presses with nothing open).")]
-    [SerializeField, Min(0)] private int penaltyNoteCount = 2;
-    [SerializeField, Min(0)] private float penaltySeconds = 5f; 
+    [Tooltip("Seconds taken off the countdown (ControladorContrarreloj) on a whiff or a missed note.")]
+    [SerializeField, Min(0)] private float penaltySeconds = 5f;
+
+    [Tooltip("Seconds taken off the countdown when an enemy hits the player (PlayerHealth calls PenalizeHit). " +
+             "Shares the lock with whiffs: at most one time penalty per note, whatever caused it.")]
+    [SerializeField, Min(0)] private float hitPenaltySeconds = 5f;
+
+    [Tooltip("If on, a note that slips past the heart without being claimed also costs penaltySeconds. " +
+             "Off by default: only an actual press that misses (a whiff) costs time, so standing still " +
+             "or taking a hit doesn't drain the clock note after note.")]
+    [SerializeField] private bool penalizeMissedNotes = false;
 
     [Header("Debug")]
     [SerializeField] private bool logActions = true;
@@ -76,11 +108,16 @@ public class BeatActionJudge : MonoBehaviour {
     public event Action<float> OnBeatConsumed;
 
     /// <summary>
-    /// Fired when a note is destroyed without being consumed - either its window
-    /// closed on its own (Expired), or it was sacrificed to a whiff penalty
-    /// (Penalized). Carries the note's beat (e.g. 3 or 3.5) and which happened.
+    /// Fired when a note is destroyed without being consumed - its window closed
+    /// on its own (Expired). Carries the note's beat (e.g. 3 or 3.5) and the reason.
     /// </summary>
     public event Action<float, DestroyReason> OnNoteDestroyed;
+
+    /// <summary>
+    /// Fired when a whiff or a missed note actually costs time - not when a penalty
+    /// is skipped because the judge is still locked. Views use it for miss feedback.
+    /// </summary>
+    public event Action OnPenaltyApplied;
 
     /// <summary>How far before the beat the window opens, in beats. Read by views that draw the window.</summary>
     public float EarlyTolerance => earlyTolerance;
@@ -88,8 +125,19 @@ public class BeatActionJudge : MonoBehaviour {
     /// <summary>How far after the beat a note survives, in beats. Read by views that draw the window.</summary>
     public float LateTolerance => lateTolerance;
 
-    /// <summary>Normal notes appear on every Nth beat. Read by views that draw the track.</summary>
+    /// <summary>Normal notes appear on every Nth beat. Read by views that draw the track.
+    /// Meaningless while a note chart is playing (see UsesNoteChart).</summary>
     public int NoteInterval => noteInterval;
+
+    /// <summary>True when notes come from a note chart rather than the noteInterval pattern.</summary>
+    public bool UsesNoteChart => chart != null;
+
+    /// <summary>
+    /// How many notes have entered the heart zone so far. Anything that should happen at
+    /// most once per note (PlayerHealth taking a hit, for instance) can remember this
+    /// value and wait for it to change.
+    /// </summary>
+    public int NotesEnteredZone => notesEnteredZone;
 
     private struct TrackedNote {
         public int slot;
@@ -108,11 +156,47 @@ public class BeatActionJudge : MonoBehaviour {
     private int nextSlotToTrack;
     private bool initialized;
 
+    // Set by a penalty, cleared the moment a new note's window opens. While set,
+    // further whiffs, hits and missed notes cost nothing.
+    private bool penaltyLocked;
+    private int notesEnteredZone;
+
     // The dice are rolled once per normal note, the first time anyone asks about
     // its extras, and remembered - so the judge and the view always agree, and
     // changing a chance mid-song only affects notes not yet rolled.
     private readonly Dictionary<int, ExtraRoll> extraRolls = new Dictionary<int, ExtraRoll>();
     private System.Random rng;
+
+    // Null when the scene has no chart (or useNoteChart is off): the pattern is used.
+    private NoteChart chart;
+
+    private void Awake() {
+        if (!useNoteChart) return;
+
+        chart = noteChartFile != null
+            ? NoteChart.Parse(noteChartFile, SlotsPerBeat)
+            : NoteChart.LoadForScene(gameObject.scene.name, SlotsPerBeat);
+
+        if (logActions) {
+            Debug.Log(chart != null
+                ? $"BeatActionJudge: playing note chart {chart.Name} ({chart.NoteCount} notes)"
+                : "BeatActionJudge: no note chart for this scene, using the noteInterval pattern", this);
+        }
+    }
+
+    // The chart knows where its first beat sits in the song; the conductor shifts its
+    // clock to match, so every beat-driven system - not just the notes - lines up with
+    // the music.
+    private void Start() {
+        if (chart == null || BeatManager.Instance == null) return;
+
+        BeatManager.Instance.SetSongOffset(chart.OffsetSeconds);
+
+        if (chart.Bpm > 0f && !Mathf.Approximately(chart.Bpm, BeatManager.Instance.Bpm)) {
+            Debug.LogWarning($"BeatActionJudge: chart {chart.Name} was written at {chart.Bpm} BPM but the " +
+                             $"BeatManager plays at {BeatManager.Instance.Bpm} BPM - its notes will drift off the music.", this);
+        }
+    }
 
     /// <summary>Overrides how far before the beat the window opens. See earlyTolerance.</summary>
     public void SetEarlyTolerance(float value) {
@@ -125,8 +209,8 @@ public class BeatActionJudge : MonoBehaviour {
     }
 
     /// <summary>
-    /// True if a note sits on this beat - a normal one, or an extra that came up.
-    /// Notes only ever sit on whole or half beats, and never before the first beat.
+    /// True if a note sits on this beat - a chart note, or a normal one or an extra that
+    /// came up. Notes only ever sit on 16th notes (quarter beats).
     /// </summary>
     public bool IsNoteBeat(float beat) {
         float scaled = beat * SlotsPerBeat;
@@ -139,12 +223,33 @@ public class BeatActionJudge : MonoBehaviour {
 
     /// <summary>
     /// True if the note on this beat has already been consumed or destroyed. Views use
-    /// this to avoid spawning a note that's already been decided - e.g. by a penalty
-    /// that landed before the note would otherwise have appeared.
+    /// this to avoid spawning or chasing a note that's already been decided.
     /// </summary>
     public bool IsBeatResolved(float beat) {
         int index;
         return TryGetIndex(Mathf.RoundToInt(beat * SlotsPerBeat), out index) && tracked[index].resolved;
+    }
+
+    /// <summary>
+    /// True while at least one unclaimed note's window is open - the moment a press would
+    /// count as a hit. Read by views that light up while it's time to act.
+    /// </summary>
+    public bool IsWindowOpen {
+        get {
+            if (!initialized) return false;
+            if (BeatManager.Instance == null || !BeatManager.Instance.IsPlaying) return false;
+
+            double beatPosition = BeatManager.Instance.CurrentSongTime / BeatManager.Instance.SecPerBeat;
+
+            for (int i = 0; i < tracked.Count; i++) {
+                if (tracked[i].resolved) continue;
+
+                double offset = beatPosition - BeatOfSlot(tracked[i].slot);
+                if (offset >= -earlyTolerance && offset <= lateTolerance) return true;
+            }
+
+            return false;
+        }
     }
 
     private static float BeatOfSlot(int slot) {
@@ -166,12 +271,15 @@ public class BeatActionJudge : MonoBehaviour {
     }
 
     private bool IsNoteSlot(int slot) {
+        if (chart != null) return chart.HasNoteAt(slot);
+
         int interval = Mathf.Max(1, noteInterval);
 
         if (IsNormalSlot(slot, interval)) return true;
 
         // An extra half a beat after a normal note.
-        if (IsNormalSlot(slot - 1, interval)) return RollFor(slot - 1).half;
+        int halfBeatSlots = SlotsPerBeat / 2;
+        if (IsNormalSlot(slot - halfBeatSlots, interval)) return RollFor(slot - halfBeatSlots).half;
 
         // An extra in the middle of the interval. An interval of 1 has no gap for one.
         int midOffsetSlots = interval >= 2 ? Mathf.Max(1, interval / 2) * SlotsPerBeat : 0;
@@ -202,8 +310,11 @@ public class BeatActionJudge : MonoBehaviour {
 
         double beatPosition = BeatManager.Instance.CurrentSongTime / BeatManager.Instance.SecPerBeat;
 
-        GrowTrackedRange(beatPosition);
+        // Expire before growing: if a note slips past on the same frame the next one
+        // enters the zone, the miss locks the penalty first and the new note then
+        // unlocks it - so missing that next note too still counts.
         ExpireResolvedRange(beatPosition);
+        GrowTrackedRange(beatPosition);
     }
 
     /// <summary>
@@ -214,8 +325,9 @@ public class BeatActionJudge : MonoBehaviour {
     private void GrowTrackedRange(double beatPosition) {
         if (!initialized) {
             // Start at the oldest slot whose window could still be open. Normally that
-            // is the first beat; it only differs if the judge wakes up partway through a song.
-            nextSlotToTrack = Mathf.Max(FirstNoteSlot,
+            // is the first beat (or 1:1:1 for a chart, which may place notes there); it
+            // only differs if the judge wakes up partway through a song.
+            nextSlotToTrack = Mathf.Max(chart != null ? 0 : FirstNoteSlot,
                 Mathf.CeilToInt((float)((beatPosition - lateTolerance) * SlotsPerBeat)));
             initialized = true;
         }
@@ -223,15 +335,26 @@ public class BeatActionJudge : MonoBehaviour {
         TrackUpTo(Mathf.FloorToInt((float)((beatPosition + earlyTolerance) * SlotsPerBeat)));
     }
 
-    /// <summary>Adds every slot up to and including this one that isn't tracked yet.</summary>
+    /// <summary>
+    /// Adds every slot up to and including this one that isn't tracked yet. Slots are
+    /// only ever added as their window opens, so a new note here is a note entering
+    /// the heart zone - which is what lifts the penalty lock.
+    /// </summary>
     private void TrackUpTo(int slot) {
         while (nextSlotToTrack <= slot) {
+            bool isNote = IsNoteSlot(nextSlotToTrack);
+
             tracked.Add(new TrackedNote {
                 slot = nextSlotToTrack,
                 // A slot that isn't a note starts out "resolved", so every scan below
-                // (consume, expire, penalty) skips it without any special cases.
-                resolved = !IsNoteSlot(nextSlotToTrack)
+                // (consume, expire) skips it without any special cases.
+                resolved = !isNote
             });
+
+            if (isNote) {
+                penaltyLocked = false;
+                notesEnteredZone++;
+            }
 
             nextSlotToTrack++;
         }
@@ -239,7 +362,8 @@ public class BeatActionJudge : MonoBehaviour {
 
     /// <summary>
     /// Removes slots from the front of the range once their window has fully
-    /// closed, firing OnNoteDestroyed(Expired) for any note that was never claimed.
+    /// closed, firing OnNoteDestroyed(Expired) for any note that was never claimed
+    /// and, if penalizeMissedNotes is on, penalizing the miss.
     /// </summary>
     private void ExpireResolvedRange(double beatPosition) {
         while (tracked.Count > 0) {
@@ -250,6 +374,8 @@ public class BeatActionJudge : MonoBehaviour {
             if (!oldest.resolved) {
                 if (logActions) Debug.Log($"Beat {BeatOfSlot(oldest.slot)}: destroyed (expired)");
                 OnNoteDestroyed?.Invoke(BeatOfSlot(oldest.slot), DestroyReason.Expired);
+
+                if (penalizeMissedNotes) ApplyPenalty($"missed note on beat {BeatOfSlot(oldest.slot)}", penaltySeconds);
             }
 
             tracked.RemoveAt(0);
@@ -259,7 +385,7 @@ public class BeatActionJudge : MonoBehaviour {
     /// <summary>
     /// Called by a consumer when it sees its own input. Claims the OLDEST currently
     /// open, unresolved note and returns true. If nothing is open, this is a whiff:
-    /// it destroys the next penaltyNoteCount not-yet-open notes and returns false.
+    /// it costs penaltySeconds (unless the penalty is locked) and returns false.
     /// </summary>
     public bool TryConsumeBeat() {
         if (!initialized) return false;
@@ -282,38 +408,41 @@ public class BeatActionJudge : MonoBehaviour {
             return true;
         }
 
-        ApplyPenalty(beatPosition);
+        ApplyPenalty($"whiff on beat {beatPosition:0.00}", penaltySeconds);
         return false;
     }
 
     /// <summary>
-    /// Destroys the next penaltyNoteCount notes that haven't opened yet, oldest
-    /// first. Slots that aren't notes, and notes an earlier penalty already took,
-    /// are skipped rather than counted.
+    /// Called by PlayerHealth when an enemy lands a hit. Costs hitPenaltySeconds under
+    /// the same once-per-note lock as a whiff.
     /// </summary>
-    private void ApplyPenalty(double beatPosition) {
-        if (penaltyNoteCount <= 0 && penaltySeconds <= 0) return;
+    public void PenalizeHit() {
+        ApplyPenalty("hit by an enemy", hitPenaltySeconds);
+    }
 
-        int candidate = Mathf.FloorToInt((float)((beatPosition + earlyTolerance) * SlotsPerBeat)) + 1;
-        int destroyed = 0;
+    /// <summary>
+    /// Takes the given seconds off the countdown and fires OnPenaltyApplied, then locks
+    /// itself until a new note enters the heart zone (see TrackUpTo). Notes are never
+    /// destroyed by a penalty - the cost is time only.
+    /// </summary>
+    private void ApplyPenalty(string cause, float seconds) {
+        // Once the countdown has stopped (win/lose screen) mistakes cost nothing and
+        // show nothing - the level is over.
+        ControladorContrarreloj clock = ControladorContrarreloj.Instancia;
+        if (clock != null && !clock.EstaContando) return;
 
-        ControladorContrarreloj.Instancia.PenalizarTiempo(penaltySeconds);
-
-        while (destroyed < penaltyNoteCount) {
-            TrackUpTo(candidate);
-
-            int index;
-            if (TryGetIndex(candidate, out index) && !tracked[index].resolved) {
-                TrackedNote tn = tracked[index];
-                tn.resolved = true;
-                tracked[index] = tn;
-
-                if (logActions) Debug.Log($"Beat {BeatOfSlot(candidate)}: destroyed (penalty)");
-                OnNoteDestroyed?.Invoke(BeatOfSlot(candidate), DestroyReason.Penalized);
-                destroyed++;
-            }
-
-            candidate++;
+        if (penaltyLocked) {
+            if (logActions) Debug.Log($"Penalty skipped ({cause}): locked until the next note enters the zone");
+            return;
         }
+
+        penaltyLocked = true;
+
+        if (logActions) Debug.Log($"Penalty ({cause}): -{seconds}s");
+
+        if (seconds > 0f && clock != null)
+            clock.PenalizarTiempo(seconds);
+
+        OnPenaltyApplied?.Invoke();
     }
 }

@@ -1,8 +1,8 @@
 
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEngine.Rendering.DebugUI;
 
 public class ControladorContrarreloj : MonoBehaviour
 {
@@ -25,13 +25,51 @@ public class ControladorContrarreloj : MonoBehaviour
     [Header("Escenas")]
     [SerializeField] private string escenaDerrota = "Perder";
     [SerializeField] private string escenaVictoria = "Victoria";
+    [Tooltip("Al entrar al menu se da por terminada la partida en curso; la siguiente empieza con el tiempo completo.")]
+    [SerializeField] private string escenaMenu = "menu";
 
     [Header("Interfaz")]
     [SerializeField] private TMP_Text textoTiempo;
 
+    [Header("Penalizacion (fallar el ritmo)")]
+    [Tooltip("Color al que destella el cronometro, y color del texto flotante, al perder tiempo.")]
+    [SerializeField] private Color colorPenalizacion = new Color(1f, 0.22f, 0.18f, 1f);
+
+    [Tooltip("Segundos que dura el destello, el golpe de escala y el temblor del cronometro.")]
+    [Min(0.05f)]
+    [SerializeField] private float duracionPenalizacion = 0.6f;
+
+    [Tooltip("Cuanto crece el cronometro en el golpe (1 = nada).")]
+    [Range(1f, 2f)]
+    [SerializeField] private float escalaGolpePenalizacion = 1.3f;
+
+    [Tooltip("Amplitud del temblor del cronometro, en pixeles de UI.")]
+    [Range(0f, 30f)]
+    [SerializeField] private float temblorPenalizacion = 6f;
+
+    [Tooltip("Muestra un texto flotante con los segundos perdidos (p. ej. \"-5\") junto al cronometro.")]
+    [SerializeField] private bool mostrarTextoPenalizacion = true;
+
+    [Tooltip("Donde aparece el texto flotante, relativo al cronometro (pixeles de UI).")]
+    [SerializeField] private Vector2 desplazamientoTextoPenalizacion = new Vector2(0f, -40f);
+
+    [Tooltip("Cuanto se desliza el texto flotante mientras se desvanece (pixeles de UI).")]
+    [SerializeField] private Vector2 recorridoTextoPenalizacion = new Vector2(0f, -30f);
+
+    [Tooltip("Segundos que tarda el texto flotante en desvanecerse.")]
+    [Min(0.1f)]
+    [SerializeField] private float duracionTextoPenalizacion = 1.2f;
+
     private float tiempoRestante, tiempoRestanteEntreEscenas;
     private bool contando = false;
     private bool terminado = false;
+
+    // Estado del cronometro antes del destello, para devolverlo intacto al terminar
+    private Coroutine animacionPenalizacion;
+    private TMP_Text textoAnimado;
+    private Color colorBaseTexto;
+    private Vector3 escalaBaseTexto;
+    private Vector2 posicionBaseTexto;
 
     public float TiempoRestante => tiempoRestante;
     public bool EstaContando => contando;
@@ -114,8 +152,25 @@ public class ControladorContrarreloj : MonoBehaviour
         SceneManager.LoadScene(escenaDerrota);
     }
 
-    public void PenalizarTiempo(float restar) {
-        tiempoRestante = tiempoRestante - restar;
+    // Resta tiempo por fallar el ritmo (lo llama BeatActionJudge) y lo muestra en el cronometro
+    public void PenalizarTiempo(float restar)
+    {
+        // Con el cronometro detenido (nivel ganado o perdido) no hay tiempo que perder
+        if (!contando || terminado || restar <= 0f)
+            return;
+
+        // Si llega a cero, Update se encarga de Perder() en el siguiente fotograma
+        tiempoRestante = Mathf.Max(0f, tiempoRestante - restar);
+
+        ActualizarTexto();
+        MostrarPenalizacion(restar);
+    }
+
+    // Detiene el cronometro sin terminar la partida (pantallas de ganar/perder del nivel).
+    // Se reanuda al cargar el siguiente nivel o al reiniciar la escena.
+    public void PausarContrarreloj()
+    {
+        contando = false;
     }
 
     public void GuardarTiempoEntreEscena() {
@@ -128,6 +183,11 @@ public class ControladorContrarreloj : MonoBehaviour
     public void ReiniciarContrarReloj()
     {
         tiempoRestante = minutos * 60f + segundos;
+
+        // Partida nueva: el tiempo guardado para reintentar un nivel tambien vuelve al inicial
+        tiempoRestanteEntreEscenas = tiempoRestante;
+        minutosEntreEscena = minutos;
+        segundosEntreEscena = segundos;
 
         terminado = false;
         contando = true;
@@ -173,17 +233,132 @@ public class ControladorContrarreloj : MonoBehaviour
             $"{minutosActuales:00}:{segundosActuales:00}";
     }
 
+    // Destello rojo, golpe de escala y temblor del cronometro, mas un texto flotante "-X"
+    void MostrarPenalizacion(float segundosPerdidos)
+    {
+        // Si llega otra penalizacion a mitad del destello, se parte del estado original
+        RestaurarTextoAnimado();
+
+        if (textoTiempo == null)
+            return;
+
+        if (mostrarTextoPenalizacion)
+            StartCoroutine(AnimarTextoFlotante(textoTiempo, segundosPerdidos));
+
+        textoAnimado = textoTiempo;
+        colorBaseTexto = textoAnimado.color;
+        escalaBaseTexto = textoAnimado.rectTransform.localScale;
+        posicionBaseTexto = textoAnimado.rectTransform.anchoredPosition;
+
+        animacionPenalizacion = StartCoroutine(AnimarCronometroPenalizado());
+    }
+
+    IEnumerator AnimarCronometroPenalizado()
+    {
+        RectTransform rect = textoAnimado.rectTransform;
+        float tiempo = 0f;
+
+        while (tiempo < duracionPenalizacion)
+        {
+            // La escena cambio y el texto ya no existe
+            if (textoAnimado == null)
+                break;
+
+            tiempo += Time.unscaledDeltaTime;
+
+            // 1 al recibir la penalizacion, 0 al terminar
+            float fuerza = 1f - Mathf.Clamp01(tiempo / duracionPenalizacion);
+
+            // El rojo se sostiene un poco antes de apagarse; el golpe y el temblor caen rapido
+            textoAnimado.color = Color.Lerp(colorBaseTexto, colorPenalizacion, Mathf.Sqrt(fuerza));
+            rect.localScale = escalaBaseTexto * (1f + (escalaGolpePenalizacion - 1f) * fuerza * fuerza);
+            rect.anchoredPosition = posicionBaseTexto + Random.insideUnitCircle * (temblorPenalizacion * fuerza);
+
+            yield return null;
+        }
+
+        animacionPenalizacion = null;
+        RestaurarTextoAnimado();
+    }
+
+    void RestaurarTextoAnimado()
+    {
+        if (animacionPenalizacion != null)
+        {
+            StopCoroutine(animacionPenalizacion);
+            animacionPenalizacion = null;
+        }
+
+        if (textoAnimado != null)
+        {
+            textoAnimado.color = colorBaseTexto;
+            textoAnimado.rectTransform.localScale = escalaBaseTexto;
+            textoAnimado.rectTransform.anchoredPosition = posicionBaseTexto;
+        }
+
+        textoAnimado = null;
+    }
+
+    // Copia del cronometro con los segundos perdidos, que se desliza y se desvanece
+    IEnumerator AnimarTextoFlotante(TMP_Text origen, float segundosPerdidos)
+    {
+        TMP_Text flotante = Instantiate(origen, origen.transform.parent);
+        flotante.name = "PenalizacionContrarreloj"; // para que BuscarTextoTiempo no la confunda
+        flotante.text = $"-{segundosPerdidos:0.#}";
+        flotante.raycastTarget = false;
+
+        RectTransform rect = flotante.rectTransform;
+        Vector2 inicio = origen.rectTransform.anchoredPosition + desplazamientoTextoPenalizacion;
+        float tiempo = 0f;
+
+        while (tiempo < duracionTextoPenalizacion)
+        {
+            // La escena cambio y la copia ya no existe
+            if (flotante == null)
+                yield break;
+
+            tiempo += Time.unscaledDeltaTime;
+            float progreso = Mathf.Clamp01(tiempo / duracionTextoPenalizacion);
+
+            // Arranca rapido y frena; se mantiene visible y se apaga al final
+            float deslizamiento = 1f - (1f - progreso) * (1f - progreso);
+            rect.anchoredPosition = inicio + recorridoTextoPenalizacion * deslizamiento;
+
+            Color color = colorPenalizacion;
+            color.a *= 1f - progreso * progreso;
+            flotante.color = color;
+
+            yield return null;
+        }
+
+        if (flotante != null)
+            Destroy(flotante.gameObject);
+    }
+
     void EscenaCargada(Scene escena, LoadSceneMode modo)
     {
         BuscarTextoTiempo();
         ActualizarTexto();
 
-        // No contar en las escenas finales
+        // No contar en las escenas finales ni en el menu: la partida en curso termina ahi
         if (escena.name == escenaVictoria ||
-            escena.name == escenaDerrota)
+            escena.name == escenaDerrota ||
+            escena.name == escenaMenu)
         {
             contando = false;
             terminado = true;
+        }
+        // Volver a jugar despues de ganar o perder: partida nueva con el tiempo completo.
+        // Sin esto el reloj seguia "terminado" y quedaban congelados el tiempo, las
+        // penalizaciones y el dano.
+        else if (terminado)
+        {
+            ReiniciarContrarReloj();
+        }
+        // En un nivel nuevo se reanuda lo que pauso la pantalla de ganar del anterior
+        else
+        {
+            contando = true;
         }
     }
 
@@ -204,13 +379,13 @@ public class ControladorContrarreloj : MonoBehaviour
 
     public void OnDestroy()
     {
-        /*
+        // Sin desuscribirse, un reloj destruido (Scenes.FinDelJuego) seguia recibiendo
+        // EscenaCargada y escribiendo en el texto del cronometro de la partida siguiente
         if (Instancia == this)
         {
             SceneManager.sceneLoaded -= EscenaCargada;
             Instancia = null;
         }
-        */
 
         Destroy(gameObject);
     }

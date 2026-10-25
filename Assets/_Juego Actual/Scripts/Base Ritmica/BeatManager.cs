@@ -49,13 +49,32 @@ public class BeatManager : MonoBehaviour {
     /// number that could drift out of sync with this one.</summary>
     public int BeatsPerMeasure => beatsPerMeasure;
 
+    /// <summary>The song's tempo as set here, before the speed multiplier.</summary>
+    public float Bpm => bpm;
+
     /// <summary>
-    /// Continuous time in seconds since the song started, driven off AudioSettings.dspTime
+    /// Continuous time in seconds since the song's first beat, driven off AudioSettings.dspTime
     /// so it won't drift the way Update()-accumulated time can. Everything that needs to
     /// judge "how close was this to the beat" should read from this instead of tracking
-    /// its own clock.
+    /// its own clock. Holds at 0 during the song's lead-in, if it has one (SetSongOffset).
     /// </summary>
-    public double CurrentSongTime => IsPlaying ? AudioSettings.dspTime - songStartDspTime : 0.0;
+    public double CurrentSongTime => IsPlaying
+        ? System.Math.Max(0.0, AudioSettings.dspTime - songStartDspTime - songOffsetSeconds / speedMultiplier)
+        : 0.0;
+
+    /// <summary>
+    /// Where beat 0 sits inside the audio file, in seconds of audio. A note chart sets this
+    /// from its offsetMs (measured in the chart editor) so the beat grid lines up with a song
+    /// that has some lead-in before its first beat. 0 - the default - is the old behaviour.
+    /// </summary>
+    public void SetSongOffset(double seconds) {
+        seconds = System.Math.Max(0.0, seconds);
+
+        // Beat events run on their own schedule; move it along with the clock. If Start
+        // hasn't run yet it sets the schedule itself, offset included.
+        nextHalfBeatTime += (seconds - songOffsetSeconds) / speedMultiplier;
+        songOffsetSeconds = seconds;
+    }
 
     // Internal timing variables
     private double nextBeatTime;
@@ -64,6 +83,7 @@ public class BeatManager : MonoBehaviour {
     private int lastHalfBeatTriggered = -1;
     private int verseLengthInMeasures = 2; // How many measures before a "verse" event
     private double songStartDspTime; // dspTime when the song actually started, used for CurrentSongTime
+    private double songOffsetSeconds; // where beat 0 sits inside the audio file, see SetSongOffset
 
     private IEnumerator Start() {
         if (musicSource == null) {
@@ -73,7 +93,7 @@ public class BeatManager : MonoBehaviour {
             // Initialize timing
             songStartDspTime = AudioSettings.dspTime;
             nextBeatTime = AudioSettings.dspTime;
-            nextHalfBeatTime = AudioSettings.dspTime;
+            nextHalfBeatTime = AudioSettings.dspTime + songOffsetSeconds / speedMultiplier;
 
             // Apply speed multiplier to audio
             musicSource.pitch = speedMultiplier;
@@ -167,7 +187,7 @@ public class BeatManager : MonoBehaviour {
         CurrentMeasure = 0;
         songStartDspTime = AudioSettings.dspTime;
         nextBeatTime = AudioSettings.dspTime + SecPerBeat;
-        nextHalfBeatTime = AudioSettings.dspTime + (SecPerBeat / 2.0);
+        nextHalfBeatTime = AudioSettings.dspTime + songOffsetSeconds / speedMultiplier + (SecPerBeat / 2.0);
 
         musicSource.Play();
 
