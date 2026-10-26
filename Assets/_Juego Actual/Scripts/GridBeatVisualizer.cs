@@ -22,10 +22,15 @@ public class GridBeatVisualizer : MonoBehaviour
     [Tooltip("Usa esto para mover libremente las líneas (desfase X y Z) si apagas la auto-alineación.")]
     public Vector2 manualGridOffset = Vector2.zero;
 
+    [Header("Revelado")]
+    [Tooltip("Centro de la zona donde se ve el grid (el radio es _RadioRevelado en el material; 0 = se ve todo). Si esta vacio se usa el objeto con tag Player.")]
+    public Transform focoRevelado;
+
     private Material gridMaterial;
     private Vector2 autoGridOrigin;
     private static readonly int GridSizeProp = Shader.PropertyToID("_GridSize");
     private static readonly int BeatPulseProp = Shader.PropertyToID("_BeatPulse");
+    private static readonly int CentroReveladoProp = Shader.PropertyToID("_CentroRevelado");
 
     private void Start()
     {
@@ -56,6 +61,13 @@ public class GridBeatVisualizer : MonoBehaviour
             }
         }
 
+        if (focoRevelado == null)
+        {
+            GameObject jugador = GameObject.FindGameObjectWithTag("Player");
+            if (jugador != null)
+                focoRevelado = jugador.transform;
+        }
+
         // Curva rítmica por defecto: Golpe de luz fuerte y se apaga rápido
         if (pulseCurve == null || pulseCurve.keys.Length == 0)
         {
@@ -78,6 +90,9 @@ public class GridBeatVisualizer : MonoBehaviour
         {
             gridMaterial.SetVector("_GridOrigin", new Vector4(manualGridOffset.x, manualGridOffset.y, 0, 0));
         }
+
+        if (focoRevelado != null)
+            gridMaterial.SetVector(CentroReveladoProp, focoRevelado.position);
 
         // 2. Pulso Rítmico
         if (BeatManager.Instance == null || !BeatManager.Instance.IsPlaying) 
