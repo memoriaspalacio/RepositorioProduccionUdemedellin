@@ -30,8 +30,8 @@ using UnityEngine;
 ///
 /// Mistakes cost time, not notes: a whiff (a press with nothing open) takes
 /// penaltySeconds off ControladorContrarreloj, an enemy hit (PenalizeHit, called by
-/// PlayerHealth) takes hitPenaltySeconds - and so can a note that slips past
-/// unclaimed, if penalizeMissedNotes is on. After a penalty the judge locks itself
+/// PlayerHealth) takes hitPenaltySeconds, and a note that slips past unclaimed takes
+/// missedNotePenaltySeconds - letting notes go is not free. After a penalty the judge locks itself
 /// until a NEW note's window opens (the note enters the heart zone), so whatever
 /// caused it, the player loses time at most once per note. Nothing costs time while
 /// the countdown is stopped (level won or lost).
@@ -89,17 +89,23 @@ public class BeatActionJudge : MonoBehaviour {
     [SerializeField, Range(0.05f, 2f)] private float lateTolerance = 0.25f;
 
     [Header("Penalty")]
-    [Tooltip("Seconds taken off the countdown (ControladorContrarreloj) on a whiff or a missed note.")]
+    [Tooltip("Seconds taken off the countdown (ControladorContrarreloj) on a whiff - a press with no note open.")]
     [SerializeField, Min(0)] private float penaltySeconds = 5f;
 
     [Tooltip("Seconds taken off the countdown when an enemy hits the player (PlayerHealth calls PenalizeHit). " +
              "Shares the lock with whiffs: at most one time penalty per note, whatever caused it.")]
     [SerializeField, Min(0)] private float hitPenaltySeconds = 5f;
 
-    [Tooltip("If on, a note that slips past the heart without being claimed also costs penaltySeconds. " +
-             "Off by default: only an actual press that misses (a whiff) costs time, so standing still " +
-             "or taking a hit doesn't drain the clock note after note.")]
-    [SerializeField] private bool penalizeMissedNotes = false;
+    [Tooltip("Seconds taken off the countdown when a note slips past the heart without being claimed. " +
+             "Lower than a whiff on purpose: standing still drains the clock note after note, so even a small " +
+             "amount adds up fast. Shares the lock: at most one time penalty per note. 0 = letting notes go is free.")]
+    [SerializeField, Min(0)] private float missedNotePenaltySeconds = 1f;
+
+    [Header("Chart start")]
+    [Tooltip("Extra beats the song waits, on top of the note's trip from the spawn point to the heart, before a " +
+             "chart's first note is due - so the very first notes travel the whole track instead of popping in. " +
+             "Only used with a note chart.")]
+    [SerializeField, Min(0)] private float chartLeadInBeats = 1f;
 
     [Header("Debug")]
     [SerializeField] private bool logActions = true;
@@ -192,6 +198,12 @@ public class BeatActionJudge : MonoBehaviour {
 
         BeatManager.Instance.SetSongOffset(chart.OffsetSeconds);
 
+        // A note needs travelBeats to cross the track; if the chart starts sooner than that,
+        // hold the song back so its first notes are seen coming from the spawn point.
+        BeatTrackUI track = FindFirstObjectByType<BeatTrackUI>();
+        float travelBeats = track != null ? track.TravelBeats : 4f;
+        BeatManager.Instance.RequestPreRoll(travelBeats + chartLeadInBeats - chart.FirstSlot / (float)SlotsPerBeat);
+
         if (chart.Bpm > 0f && !Mathf.Approximately(chart.Bpm, BeatManager.Instance.Bpm)) {
             Debug.LogWarning($"BeatActionJudge: chart {chart.Name} was written at {chart.Bpm} BPM but the " +
                              $"BeatManager plays at {BeatManager.Instance.Bpm} BPM - its notes will drift off the music.", this);
@@ -271,7 +283,7 @@ public class BeatActionJudge : MonoBehaviour {
     }
 
     private bool IsNoteSlot(int slot) {
-        if (chart != null) return chart.HasNoteAt(slot);
+        if (chart != null) return chart.HasNoteAt(SlotInSong(slot));
 
         int interval = Mathf.Max(1, noteInterval);
 
@@ -288,6 +300,12 @@ public class BeatActionJudge : MonoBehaviour {
         }
 
         return false;
+    }
+
+    // A looping song starts over every LoopLengthBeats, and so does its chart.
+    private static int SlotInSong(int slot) {
+        int loopSlots = BeatManager.Instance != null ? BeatManager.Instance.LoopLengthBeats * SlotsPerBeat : 0;
+        return loopSlots > 0 && slot >= loopSlots ? slot % loopSlots : slot;
     }
 
     private ExtraRoll RollFor(int normalSlot) {
@@ -363,7 +381,7 @@ public class BeatActionJudge : MonoBehaviour {
     /// <summary>
     /// Removes slots from the front of the range once their window has fully
     /// closed, firing OnNoteDestroyed(Expired) for any note that was never claimed
-    /// and, if penalizeMissedNotes is on, penalizing the miss.
+    /// and charging missedNotePenaltySeconds for it.
     /// </summary>
     private void ExpireResolvedRange(double beatPosition) {
         while (tracked.Count > 0) {
@@ -375,7 +393,8 @@ public class BeatActionJudge : MonoBehaviour {
                 if (logActions) Debug.Log($"Beat {BeatOfSlot(oldest.slot)}: destroyed (expired)");
                 OnNoteDestroyed?.Invoke(BeatOfSlot(oldest.slot), DestroyReason.Expired);
 
-                if (penalizeMissedNotes) ApplyPenalty($"missed note on beat {BeatOfSlot(oldest.slot)}", penaltySeconds);
+                if (missedNotePenaltySeconds > 0f)
+                    ApplyPenalty($"missed note on beat {BeatOfSlot(oldest.slot)}", missedNotePenaltySeconds);
             }
 
             tracked.RemoveAt(0);
