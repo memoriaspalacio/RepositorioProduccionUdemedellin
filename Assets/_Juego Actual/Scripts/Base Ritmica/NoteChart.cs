@@ -43,6 +43,9 @@ public class NoteChart {
 
     public int NoteCount => slots.Count;
 
+    /// <summary>Judge slot of the chart's first note.</summary>
+    public int FirstSlot { get; private set; }
+
     private readonly HashSet<int> slots = new HashSet<int>();
 
     private NoteChart() { }
@@ -92,13 +95,16 @@ public class NoteChart {
 
         int slotsPerTick = slotsPerBeat / data.ticksPerBeat;
         int skipped = 0;
+        chart.FirstSlot = int.MaxValue;
 
         foreach (string entry in data.notes) {
             int tick;
-            if (TryParseTick(entry, data.beatsPerMeasure, data.ticksPerBeat, out tick))
+            if (TryParseTick(entry, data.beatsPerMeasure, data.ticksPerBeat, out tick)) {
                 chart.slots.Add(tick * slotsPerTick);
-            else
+                chart.FirstSlot = Math.Min(chart.FirstSlot, tick * slotsPerTick);
+            } else {
                 skipped++;
+            }
         }
 
         if (skipped > 0) {

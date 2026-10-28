@@ -107,7 +107,9 @@ public class EfectoMuerte : MonoBehaviour
         Transform contenedor = new GameObject("Cuerpo").transform;
         contenedor.SetParent(objeto.transform, false);
 
-        int muestras = Mathf.RoundToInt(MuestrasDe(final) * cantidad);
+        // La calidad de particulas del menu de graficos escala todo el efecto
+        float multiplicador = cantidad * GestorGraficos.MultiplicadorEfectos;
+        int muestras = Mathf.RoundToInt(MuestrasDe(final) * multiplicador);
         CuerpoMuerte cuerpo = CuerpoMuerte.Capturar(gameObject, raizVisual, contenedor, muestras);
         if (cuerpo == null)
         {
@@ -132,7 +134,7 @@ public class EfectoMuerte : MonoBehaviour
                 break;
         }
 
-        muerte.Iniciar(cuerpo, DireccionGolpe(cuerpo.Limites.center, origenGolpe), cantidad, velocidad);
+        muerte.Iniciar(cuerpo, DireccionGolpe(cuerpo.Limites.center, origenGolpe), multiplicador, velocidad);
         cuerpo.OcultarOriginal();
     }
 
