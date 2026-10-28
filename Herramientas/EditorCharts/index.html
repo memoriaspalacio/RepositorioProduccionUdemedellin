@@ -384,7 +384,7 @@ dialog footer { display: flex; gap: 8px; justify-content: flex-end; }
         <label class="num" title="Cuántos beats DESPUÉS del golpe sigue viva la nota (BeatDestroyZone)">Ventana tardía (beats) <input id="simLate" type="number" step="0.05" min="0" max="3"></label>
         <label class="num" title="Beats que tarda una nota del punto de aparición al corazón (travelBeats)">Viaje de la nota (beats) <input id="simTravel" type="number" step="1" min="1" max="8"></label>
         <label class="num" title="Segundos que resta del contrarreloj un golpe al aire">Penalización (s) <input id="simPenalty" type="number" step="0.5" min="0"></label>
-        <label class="chk"><input type="checkbox" id="simMissed"> Penalizar notas que pasan sin tocar</label>
+        <label class="num" title="Segundos que resta cada nota que pasa el corazón sin tocarla (missedNotePenaltySeconds). 0 = gratis">Penalización por nota perdida (s) <input id="simMissPenalty" type="number" step="0.5" min="0"></label>
         <label class="chk"><input type="checkbox" id="simAuto"> Autojugar (solo mirar el chart)</label>
         <label class="chk"><input type="checkbox" id="simGuide"> Palmas de guía en cada nota</label>
         <label class="chk"><input type="checkbox" id="simComp" checked> Compensar mi latencia</label>
@@ -504,6 +504,9 @@ const PRESETS = {
   crisantia:  { nombre: 'Crisantia',  cancion: 'ZonaPastoral.mp3', bpm: 120, offsetMs: 10,  early: 1.3153, late: 0, travel: 4 },
 };
 const PENALTY_DEFAULT = 5;
+const MISS_PENALTY_DEFAULT = 1;
+// Beats de margen que el juego añade antes de la primera nota de un chart (chartLeadInBeats)
+const CHART_LEAD_IN_BEATS = 1;
 const AUDIO_DIR = '../../Assets/_Juego%20Actual/Arte/Audios/';
 const SUB = { q: '#ff5a4f', e: '#4fa3ff', s: '#ffd23f' };
 const SUB_DARK = { q: '#a3302a', e: '#2a62a8', s: '#a8851c' };
@@ -1340,7 +1343,7 @@ function simSettings() {
     late: Math.max(0, +$('#simLate').value || 0),
     travel: Math.max(1, +$('#simTravel').value || 4),
     penalty: Math.max(0, +$('#simPenalty').value || 0),
-    penalizeMissed: $('#simMissed').checked,
+    missPenalty: Math.max(0, +$('#simMissPenalty').value || 0),
   };
 }
 
@@ -1351,7 +1354,7 @@ function loadSimDefaults() {
   $('#simLate').value = saved ? saved.late : p.late;
   $('#simTravel').value = saved ? saved.travel : p.travel;
   $('#simPenalty').value = saved ? saved.penalty : PENALTY_DEFAULT;
-  $('#simMissed').checked = saved ? saved.penalizeMissed : false;
+  $('#simMissPenalty').value = saved && typeof saved.missPenalty === 'number' ? saved.missPenalty : MISS_PENALTY_DEFAULT;
   updateSimInfo();
 }
 
@@ -1365,7 +1368,7 @@ function updateSimInfo() {
   const p = PRESETS[st.scene], S = simSettings();
   const ms = b => Math.round(b * spb() * 1000);
   $('#simInfo').innerHTML = `En la escena <b>${p.nombre}</b>: ventana temprana ${p.early} beats, tardía ${p.late}, viaje ${p.travel} beats, ` +
-    `penalización ${PENALTY_DEFAULT} s. Ahora: aciertas desde ${ms(S.early)} ms antes del golpe hasta ${ms(S.late)} ms después.`;
+    `golpe al aire −${PENALTY_DEFAULT} s, nota perdida −${MISS_PENALTY_DEFAULT} s. Ahora: aciertas desde ${ms(S.early)} ms antes del golpe hasta ${ms(S.late)} ms después.`;
 }
 
 function simStart() {
@@ -1373,10 +1376,12 @@ function simStart() {
   if (!st.notes.length) return toast('El chart no tiene notas todavía');
   if (tp.playing) pause();
   const S = simSettings();
-  const from = $('#simCursor').checked ? Math.max(0, tp.pausePos - TPM * tickSec()) : 0;
+  // Desde el principio, como el juego: la canción espera a que la primera nota cruce la pista entera
+  const preRoll = tickTime(st.notes[0]) - (S.travel + CHART_LEAD_IN_BEATS) * spb();
+  const from = $('#simCursor').checked ? Math.max(0, tp.pausePos - TPM * tickSec()) : Math.min(0, preRoll);
   Object.assign(sim, {
     running: true, ended: false, auto: $('#simAuto').checked, guide: $('#simGuide').checked,
-    fromStart: from === 0, notes: st.notes.slice(), open: [], state: new Map(), locked: false,
+    fromStart: from <= 0, notes: st.notes.slice(), open: [], state: new Map(), locked: false,
     hits: 0, misses: 0, whiffs: 0, penalty: 0, streak: 0, best: 0, missedList: [],
     fxHit: 0, fxMiss: 0, pulse: 0, lastBeat: NaN, rings: [], hash: hashChart(), startPos: from,
   });
@@ -1437,7 +1442,7 @@ function simFrame(pos) {
       sim.missedList.push(n.t);
       sim.state.set(n.t, 'miss');
       sim.fxMiss = Math.max(sim.fxMiss, 0.6);
-      if (S.penalizeMissed) simPenalty(S);
+      if (S.missPenalty > 0) simPenalty(S, S.missPenalty);
     }
   }
   // 2) Entran las notas cuya ventana se abre; cada una levanta el bloqueo
@@ -1481,10 +1486,10 @@ function simPressAt(b, S) {
 }
 
 // ApplyPenalty: una sola penalización por nota; se bloquea hasta que entra la siguiente.
-function simPenalty(S) {
+function simPenalty(S, seconds) {
   if (sim.locked) return;
   sim.locked = true;
-  sim.penalty += S.penalty;
+  sim.penalty += seconds == null ? S.penalty : seconds;
   sim.fxMiss = 1;
   playMiss();
 }
@@ -1543,7 +1548,7 @@ function validate() {
   const travelTicks = S.travel * TPB;
   const early = n.filter(t => t < travelTicks);
   if (early.length) {
-    out.push({ lvl: 'warnl', tick: early[0], msg: `${early.length} nota(s) en el primer compás: aparecen ya a mitad de pista, sin sus ${S.travel} beats de viaje, y casi no dan tiempo a reaccionar.` });
+    out.push({ lvl: 'info', tick: early[0], msg: `El chart empieza antes de ${S.travel} beats: el juego retrasa la canción para que estas ${early.length} primeras notas crucen la pista entera.` });
   }
   if (st.duration) {
     const after = n.filter(t => tickTime(t) > st.duration);
@@ -2990,7 +2995,7 @@ function wire() {
   $('#tapPad').addEventListener('pointerdown', e => { e.preventDefault(); if (rec.active) recTap(e.timeStamp); else recStart(); });
   $('#recBtn').onclick = () => (rec.active ? recStop() : recStart());
 
-  for (const id of ['#simEarly', '#simLate', '#simTravel', '#simPenalty', '#simMissed']) $(id).onchange = saveSimSettings;
+  for (const id of ['#simEarly', '#simLate', '#simTravel', '#simPenalty', '#simMissPenalty']) $(id).onchange = saveSimSettings;
   $('#simStartBtn').onclick = simStart;
   $('#simReset').onclick = () => { store.set('sim:' + st.scene, null); loadSimDefaults(); scheduleValidate(); };
   $('#rAgain').onclick = simStart;
