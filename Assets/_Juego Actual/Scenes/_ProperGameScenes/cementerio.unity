@@ -10730,7 +10730,7 @@ Transform:
   m_GameObject: {fileID: 940587866}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.66568077, z: 0}
+  m_LocalPosition: {x: 0, y: -0.6656811, z: 0}
   m_LocalScale: {x: 2.8, y: 1, z: 2.8}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11356,10 +11356,8 @@ MonoBehaviour:
   barParent: {fileID: 1092442724}
   travelBeats: 4
   mirrorTrack: 1
-  colorDelayBeats: 0.5
   idleColor: {r: 0.79622644, g: 0.7616732, b: 0.7616732, a: 1}
-  windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
-  windowClosingColor: {r: 0.6, g: 0.2, b: 0.15, a: 1}
+  colorBlendBeats: 0.15
   successColor: {r: 0.95, g: 0.3, b: 0.25, a: 1}
 --- !u!1001 &1059130815
 PrefabInstance:
@@ -12421,6 +12419,10 @@ MonoBehaviour:
   beatsPerMeasure: 4
   speedMultiplier: 1
   outputLatencyMs: -1
+  decoderPaddingMs: 47
+  fadeFromBlack: 1
+  blackHoldSeconds: 0.4
+  fadeSeconds: 1.2
   showDebugLogs: 0
   visualMetronome: 0
   OnBeat:
@@ -12493,10 +12495,12 @@ MonoBehaviour:
   halfBeatNoteChance: 0.046875
   earlyTolerance: 0.05
   lateTolerance: 0.05
+  perfectWindowSeconds: 0.109871626
+  goodWindowSeconds: 0.22974329
   penaltySeconds: 5
   hitPenaltySeconds: 5
-  missedNoteGraceSeconds: 3
   missedNotePenaltySeconds: 1
+  missedNoteGraceSeconds: 3
   chartLeadInBeats: 1
   logActions: 0
 --- !u!114 &1150939307
