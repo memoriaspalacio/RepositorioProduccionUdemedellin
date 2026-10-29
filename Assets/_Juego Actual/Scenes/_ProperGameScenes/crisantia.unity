@@ -10764,6 +10764,10 @@ PrefabInstance:
       propertyPath: beatJudge
       value: 
       objectReference: {fileID: 1140715656}
+    - target: {fileID: 5264282115128844298, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
+      propertyPath: startHightOffset
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 5389053593820512191, guid: 253dcbbbeb6cee945aca5d4d2d58821a, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -21460,7 +21464,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
   useNoteChart: 1
-  noteChartFile: {fileID: 0}
+  noteChartFile: {fileID: 4900000, guid: 81c285ccb6f27074db7e359cf2aa8b14, type: 3}
   noteInterval: 2
   midBeatNoteChance: 0.09375
   halfBeatNoteChance: 0.046875

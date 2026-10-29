@@ -6074,7 +6074,7 @@ Transform:
   m_GameObject: {fileID: 144525861}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.77, y: 0, z: 2.94}
+  m_LocalPosition: {x: -1.07, y: 0, z: 2.89}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8153,6 +8153,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 305105208}
   m_CullTransparentMesh: 1
+--- !u!1 &305176344
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 305176345}
+  m_Layer: 0
+  m_Name: Patrol Point 7
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &305176345
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305176344}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.75, y: 0, z: -26.88}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830178399}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &314405963
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8830,8 +8861,13 @@ MonoBehaviour:
   _gridStepInterval: 0.5
   patrolPoints:
   - {fileID: 144525862}
-  - {fileID: 689248517}
+  - {fileID: 1091493363}
+  - {fileID: 1664850703}
   - {fileID: 1437059696}
+  - {fileID: 689248517}
+  - {fileID: 2066458089}
+  - {fileID: 1739337739}
+  - {fileID: 305176345}
   - {fileID: 1760784773}
   patrolPointWaitTime: 2
   minimumCellsBeforePause: 2
@@ -8851,11 +8887,11 @@ MonoBehaviour:
   animator: {fileID: 0}
   attackTrigger: onAttack
   idleTrigger: onIdle
-  preparationTime: 4.5
-  expansionInterval: 1.5
+  preparationTime: 2
+  expansionInterval: 1
   attackCooldown: 1
   attackRange: 2
-  burnDamage: 0.5
+  burnDamage: 1.5
   burnInterval: 0.25
   finalAttackDamage: 5
   playerHealth: {fileID: 1792752532}
@@ -9427,7 +9463,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -4.74
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.y
@@ -9435,7 +9471,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6.7
+      value: -0.79
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalRotation.w
@@ -10034,10 +10070,15 @@ MonoBehaviour:
   _prioritizeLongestAxis: 1
   _gridStepInterval: 0.5
   patrolPoints:
+  - {fileID: 1739337739}
   - {fileID: 689248517}
-  - {fileID: 144525862}
   - {fileID: 1437059696}
+  - {fileID: 2066458089}
+  - {fileID: 1664850703}
+  - {fileID: 1091493363}
+  - {fileID: 305176345}
   - {fileID: 1760784773}
+  - {fileID: 144525862}
   patrolPointWaitTime: 2
   minimumCellsBeforePause: 2
   maximumCellsBeforePause: 5
@@ -10056,11 +10097,11 @@ MonoBehaviour:
   animator: {fileID: 755863152}
   attackTrigger: onAttack
   idleTrigger: onIdle
-  preparationTime: 4.5
-  expansionInterval: 1.5
+  preparationTime: 2
+  expansionInterval: 1
   attackCooldown: 1
   attackRange: 2
-  burnDamage: 0.5
+  burnDamage: 1.5
   burnInterval: 0.25
   finalAttackDamage: 5
   playerHealth: {fileID: 1792752532}
@@ -12294,7 +12335,7 @@ Transform:
   m_GameObject: {fileID: 689248516}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -4.16}
+  m_LocalPosition: {x: -8.85, y: 0, z: 5.13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13376,7 +13417,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.26
+      value: -6.04
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.y
@@ -13384,7 +13425,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -19.11
+      value: -17.94
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalRotation.w
@@ -13983,10 +14024,15 @@ MonoBehaviour:
   _prioritizeLongestAxis: 1
   _gridStepInterval: 0.5
   patrolPoints:
-  - {fileID: 689248517}
-  - {fileID: 1437059696}
-  - {fileID: 144525862}
+  - {fileID: 1091493363}
   - {fileID: 1760784773}
+  - {fileID: 305176345}
+  - {fileID: 1739337739}
+  - {fileID: 1437059696}
+  - {fileID: 2066458089}
+  - {fileID: 689248517}
+  - {fileID: 144525862}
+  - {fileID: 1664850703}
   patrolPointWaitTime: 2
   minimumCellsBeforePause: 2
   maximumCellsBeforePause: 5
@@ -14005,11 +14051,11 @@ MonoBehaviour:
   animator: {fileID: 0}
   attackTrigger: onAttack
   idleTrigger: onIdle
-  preparationTime: 4.5
-  expansionInterval: 1.5
+  preparationTime: 2
+  expansionInterval: 1
   attackCooldown: 1
   attackRange: 2
-  burnDamage: 0.5
+  burnDamage: 1.5
   burnInterval: 0.25
   finalAttackDamage: 5
   playerHealth: {fileID: 1792752532}
@@ -14108,6 +14154,11 @@ Transform:
   - {fileID: 144525862}
   - {fileID: 1437059696}
   - {fileID: 1760784773}
+  - {fileID: 1091493363}
+  - {fileID: 1739337739}
+  - {fileID: 305176345}
+  - {fileID: 1664850703}
+  - {fileID: 2066458089}
   m_Father: {fileID: 1731232081}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &847637359
@@ -15876,7 +15927,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.29
+      value: 5.36
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.y
@@ -15884,7 +15935,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -12.37
+      value: -8.55
       objectReference: {fileID: 0}
     - target: {fileID: 709574151703634992, guid: efcf1356578450e40b29d4c3b2b0f725, type: 3}
       propertyPath: m_LocalRotation.w
@@ -16483,10 +16534,15 @@ MonoBehaviour:
   _prioritizeLongestAxis: 1
   _gridStepInterval: 0.5
   patrolPoints:
-  - {fileID: 1437059696}
-  - {fileID: 144525862}
+  - {fileID: 1664850703}
+  - {fileID: 1739337739}
   - {fileID: 1760784773}
+  - {fileID: 1437059696}
+  - {fileID: 305176345}
+  - {fileID: 1091493363}
+  - {fileID: 144525862}
   - {fileID: 689248517}
+  - {fileID: 2066458089}
   patrolPointWaitTime: 2
   minimumCellsBeforePause: 2
   maximumCellsBeforePause: 5
@@ -16505,11 +16561,11 @@ MonoBehaviour:
   animator: {fileID: 1470777755}
   attackTrigger: onAttack
   idleTrigger: onIdle
-  preparationTime: 4.5
-  expansionInterval: 1.5
+  preparationTime: 2
+  expansionInterval: 1
   attackCooldown: 1
   attackRange: 2
-  burnDamage: 0.5
+  burnDamage: 1.5
   burnInterval: 0.25
   finalAttackDamage: 5
   playerHealth: {fileID: 1792752532}
@@ -17387,6 +17443,37 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &1091493362
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1091493363}
+  m_Layer: 0
+  m_Name: Patrol Point 5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1091493363
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091493362}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.83, y: 0, z: -10.95}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830178399}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1115188530
 GameObject:
   m_ObjectHideFlags: 0
@@ -17872,6 +17959,7 @@ MonoBehaviour:
   bpm: 120
   beatsPerMeasure: 4
   speedMultiplier: 1
+  outputLatencyMs: -1
   showDebugLogs: 0
   visualMetronome: 0
   OnBeat:
@@ -17938,7 +18026,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
   useNoteChart: 1
-  noteChartFile: {fileID: 0}
+  noteChartFile: {fileID: 4900000, guid: 968b4ad396f86db4bb632d9208871e43, type: 3}
   noteInterval: 2
   midBeatNoteChance: 0.09375
   halfBeatNoteChance: 0.046875
@@ -17946,7 +18034,8 @@ MonoBehaviour:
   lateTolerance: 0.25
   penaltySeconds: 5
   hitPenaltySeconds: 5
-  penalizeMissedNotes: 0
+  missedNotePenaltySeconds: 1
+  chartLeadInBeats: 1
   logActions: 1
 --- !u!1 &1156747903
 GameObject:
@@ -21146,10 +21235,15 @@ MonoBehaviour:
   _prioritizeLongestAxis: 1
   _gridStepInterval: 0.5
   patrolPoints:
-  - {fileID: 1437059696}
   - {fileID: 144525862}
-  - {fileID: 1760784773}
   - {fileID: 689248517}
+  - {fileID: 1739337739}
+  - {fileID: 1437059696}
+  - {fileID: 1760784773}
+  - {fileID: 2066458089}
+  - {fileID: 1664850703}
+  - {fileID: 1091493363}
+  - {fileID: 305176345}
   patrolPointWaitTime: 2
   minimumCellsBeforePause: 2
   maximumCellsBeforePause: 5
@@ -21168,11 +21262,11 @@ MonoBehaviour:
   animator: {fileID: 1434187465}
   attackTrigger: onAttack
   idleTrigger: onIdle
-  preparationTime: 4.5
-  expansionInterval: 1.5
+  preparationTime: 2
+  expansionInterval: 1
   attackCooldown: 1
   attackRange: 2
-  burnDamage: 0.5
+  burnDamage: 1.5
   burnInterval: 0.25
   finalAttackDamage: 5
   playerHealth: {fileID: 1792752532}
@@ -21630,7 +21724,7 @@ Transform:
   m_GameObject: {fileID: 1437059695}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.35, y: 0, z: 3.65}
+  m_LocalPosition: {x: 9, y: 0, z: 5.56}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -23218,6 +23312,37 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!1 &1664850702
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1664850703}
+  m_Layer: 0
+  m_Name: Patrol Point 8
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1664850703
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664850702}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.18, y: 0, z: -26.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830178399}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1666961978
 GameObject:
   m_ObjectHideFlags: 0
@@ -23344,12 +23469,43 @@ Transform:
   - {fileID: 1792752527}
   - {fileID: 361842209}
   - {fileID: 1409329989}
-  - {fileID: 981127845}
   - {fileID: 827361321}
   - {fileID: 318958395}
+  - {fileID: 981127845}
   - {fileID: 3466751310647142877}
   - {fileID: 830178399}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1739337738
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1739337739}
+  m_Layer: 0
+  m_Name: Patrol Point 6
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1739337739
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739337738}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 8.67, y: 0, z: -10.95}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830178399}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1754160900
 GameObject:
@@ -23593,7 +23749,7 @@ Transform:
   m_GameObject: {fileID: 1760784772}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -22.8}
+  m_LocalPosition: {x: -7.14, y: 0, z: -10.88}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -31528,6 +31684,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2061693130}
   m_Mesh: {fileID: 4300000, guid: be0756c7adf15504abdd0b52b7c024b0, type: 2}
+--- !u!1 &2066458088
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2066458089}
+  m_Layer: 0
+  m_Name: Patrol Point 9
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2066458089
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066458088}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.26, y: 0, z: -26.81}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830178399}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2073864916
 PrefabInstance:
   m_ObjectHideFlags: 0
