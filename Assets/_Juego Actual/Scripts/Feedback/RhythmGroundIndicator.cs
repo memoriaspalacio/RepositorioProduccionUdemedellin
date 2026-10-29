@@ -55,7 +55,8 @@ public class RhythmGroundIndicator : MonoBehaviour
     [Range(0.25f, 4.0f)]
     [SerializeField] private float fillDurationBeats = 1.0f;
 
-    [Tooltip("Si está activo, adapta la duración del llenado al intervalo de notas configurado en BeatActionJudge.")]
+    [Tooltip("Si está activo, adapta la duración del llenado al intervalo de notas configurado en BeatActionJudge. " +
+             "Con un chart de notas no hay intervalo fijo y se usa fillDurationBeats.")]
     [SerializeField] private bool adaptToNoteInterval = true;
 
     [Tooltip("Si la nota siguiente cae a esta distancia en beats o menos, el anillo objetivo late " +
@@ -503,16 +504,19 @@ public class RhythmGroundIndicator : MonoBehaviour
             float earlyTol = beatJudge.EarlyTolerance;
             float lateTol = beatJudge.LateTolerance;
 
-            float interval = adaptToNoteInterval ? Mathf.Max(0.5f, (float)beatJudge.NoteInterval) : fillDurationBeats;
+            float interval = adaptToNoteInterval && !beatJudge.UsesNoteChart
+                ? Mathf.Max(0.5f, (float)beatJudge.NoteInterval)
+                : fillDurationBeats;
 
             // Buscamos la nota objetivo y la que viene inmediatamente después, para
-            // poder avisar cuando vengan dos pegadas.
+            // poder avisar cuando vengan dos pegadas. Las notas caen en semicorcheas.
+            const float paso = 1f / BeatActionJudge.SlotsPerBeat;
             float targetBeat = -1f;
             float followingBeat = -1f;
-            float startScan = Mathf.Floor((nowBeat - lateTol) * 2f) / 2f;
+            float startScan = Mathf.Floor((nowBeat - lateTol) * BeatActionJudge.SlotsPerBeat) * paso;
             float endScan = nowBeat + interval + nextNoteWarnBeats + 1f;
 
-            for (float b = startScan; b <= endScan; b += 0.5f)
+            for (float b = startScan; b <= endScan; b += paso)
             {
                 if (b < (nowBeat - lateTol)) continue;
                 if (!beatJudge.IsNoteBeat(b)) continue;
