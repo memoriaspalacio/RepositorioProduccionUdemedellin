@@ -405,7 +405,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Game Over
+  m_text: Fin del juego
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e1e90eb08c9cd247880d14d131e209f, type: 2}
   m_sharedMaterial: {fileID: 937279964821634305, guid: 2e1e90eb08c9cd247880d14d131e209f, type: 2}
@@ -1214,7 +1214,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Haz derrotado al clan enemigo, el caliz es tuyo
+  m_text: Has derrotado al clan enemigo, el caliz es tuyo
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}
   m_sharedMaterial: {fileID: -898937273595191794, guid: dba854f04b7d98b4f8fc5709b8766694, type: 2}

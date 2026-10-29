@@ -21,7 +21,7 @@ using UnityEngine.UI;
 public class RecompensasRitmo : MonoBehaviour
 {
     [Header("Racha de PERFECT")]
-    [Tooltip("PERFECT seguidos que hacen falta para recuperar vida. Cada vez que la racha llega a un multiplo, vuelve a dar.")]
+    [Tooltip("PERFECTOS seguidos que hacen falta para recuperar vida. Cada vez que la racha llega a un multiplo, vuelve a dar.")]
     [SerializeField, Min(1)] private int perfectsParaVida = 8;
 
     [Tooltip("Vida que devuelve la racha, en fraccion de la vida maxima (0.1 = 10 %).")]
@@ -132,7 +132,7 @@ public class RecompensasRitmo : MonoBehaviour
         RectTransform barra = BarraDeVida();
         if (barra != null)
         {
-            string texto = curada > 0f ? $"¡{racha} PERFECT!  +VIDA" : $"¡{racha} PERFECT!";
+            string texto = curada > 0f ? $"¡{racha} PERFECTOS!  +VIDA" : $"¡{racha} PERFECTOS!";
             TextoFlotante.Crear(barra, texto, new Vector2(0f, -55f), new Vector2(0f, 40f),
                 RachaArriba, RachaAbajo, 26f, 1.3f, false);
         }

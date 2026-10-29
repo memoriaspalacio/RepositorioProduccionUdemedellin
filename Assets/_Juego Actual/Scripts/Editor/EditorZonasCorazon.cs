@@ -145,8 +145,8 @@ public class EditorZonasCorazon : Editor
         SerializedProperty good = juez.FindProperty("goodWindowSeconds");
 
         EditorGUI.BeginChangeCheck();
-        float perfectMs = EditorGUILayout.Slider("PERFECT (± ms)", perfect.floatValue * 1000f, 0f, 300f);
-        float goodMs = EditorGUILayout.Slider("GOOD (± ms)", good.floatValue * 1000f, 0f, 500f);
+        float perfectMs = EditorGUILayout.Slider("PERFECTO (± ms)", perfect.floatValue * 1000f, 0f, 300f);
+        float goodMs = EditorGUILayout.Slider("BIEN (± ms)", good.floatValue * 1000f, 0f, 500f);
         if (EditorGUI.EndChangeCheck())
         {
             FijarVentanas(c, perfectMs / 1000f, goodMs / 1000f);
@@ -205,7 +205,7 @@ public class EditorZonasCorazon : Editor
                 FijarBorde(c, c.cajaFin, Mathf.Max(nuevo, 1f), true);
         }
 
-        float nuevoGood = Mathf.Abs(Borde(c, -good, 0.45f, ColoresCalificacion.Good, $"GOOD\n±{c.juez.GoodWindowSeconds * 1000f:0} ms"));
+        float nuevoGood = Mathf.Abs(Borde(c, -good, 0.45f, ColoresCalificacion.Good, $"BIEN\n±{c.juez.GoodWindowSeconds * 1000f:0} ms"));
         float nuevoGoodTarde = Mathf.Abs(Borde(c, good, 0.45f, ColoresCalificacion.Good, null));
         if (!Mathf.Approximately(nuevoGood, good) || !Mathf.Approximately(nuevoGoodTarde, good))
         {
@@ -213,7 +213,7 @@ public class EditorZonasCorazon : Editor
             FijarVentanas(c, Mathf.Min(c.juez.PerfectWindowSeconds, valor / ups), valor / ups);
         }
 
-        float nuevoPerfect = Mathf.Abs(Borde(c, -perfect, 0.2f, ColoresCalificacion.Perfect, $"PERFECT\n±{c.juez.PerfectWindowSeconds * 1000f:0} ms"));
+        float nuevoPerfect = Mathf.Abs(Borde(c, -perfect, 0.2f, ColoresCalificacion.Perfect, $"PERFECTO\n±{c.juez.PerfectWindowSeconds * 1000f:0} ms"));
         float nuevoPerfectTarde = Mathf.Abs(Borde(c, perfect, 0.2f, ColoresCalificacion.Perfect, null));
         if (!Mathf.Approximately(nuevoPerfect, perfect) || !Mathf.Approximately(nuevoPerfectTarde, perfect))
         {

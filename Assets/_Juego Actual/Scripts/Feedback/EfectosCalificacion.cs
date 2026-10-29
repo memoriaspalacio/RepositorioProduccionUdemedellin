@@ -248,10 +248,10 @@ public class EfectosCalificacion : MonoBehaviour
         Color arriba, abajo;
         switch (tipo)
         {
-            case JudgementResult.Perfect: t.tmp.text = "PERFECT!"; arriba = perfectArriba; abajo = perfectAbajo; break;
-            case JudgementResult.Good: t.tmp.text = "GOOD!"; arriba = goodArriba; abajo = goodAbajo; break;
-            case JudgementResult.Bad: t.tmp.text = "BAD"; arriba = badArriba; abajo = badAbajo; break;
-            default: t.tmp.text = "MISS"; arriba = missArriba; abajo = missAbajo; break;
+            case JudgementResult.Perfect: t.tmp.text = "¡PERFECTO!"; arriba = perfectArriba; abajo = perfectAbajo; break;
+            case JudgementResult.Good: t.tmp.text = "¡BIEN!"; arriba = goodArriba; abajo = goodAbajo; break;
+            case JudgementResult.Bad: t.tmp.text = "REGULAR"; arriba = badArriba; abajo = badAbajo; break;
+            default: t.tmp.text = "FALLO"; arriba = missArriba; abajo = missAbajo; break;
         }
 
         t.tmp.colorGradient = new VertexGradient(arriba, arriba, abajo, abajo);
