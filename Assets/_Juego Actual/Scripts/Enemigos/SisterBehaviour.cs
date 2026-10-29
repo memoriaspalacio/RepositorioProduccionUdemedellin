@@ -318,8 +318,8 @@ namespace UdeM.Characters
                  i < activeIndicators.Count;
                  i++)
             {
-                if (activeIndicators[i] != null)
-                    Destroy(activeIndicators[i]);
+                // Las celdas de fuego se desvanecen; cualquier otro prefab se quita sin mas
+                CeldaFuego.Apagar(activeIndicators[i]);
             }
 
             activeIndicators.Clear();

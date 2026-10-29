@@ -3,6 +3,10 @@ using UnityEngine;
 
 // Plano de suelo alineado al MeshGrid: cubre el suelo modelado, le pasa al shader el origen y tamano
 // de las celdas (para que las juntas caigan sobre el grid) y la luz horneada capturada del suelo original.
+//
+// En juego el plano tambien es el suelo fisico: el MeshGrid coloca las celdas (jugador, enemigos, el fuego
+// de las monjas) y el medidor de ritmo se apoya con rayos contra el suelo, y si solo encontraran el collider
+// del suelo modelado seguirian sus relieves y juntas aunque ya no se vean.
 [ExecuteAlways]
 [DisallowMultipleComponent]
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
@@ -20,8 +24,10 @@ public class SueloGrid : MonoBehaviour
 
     [Tooltip("Grid al que se alinea el suelo. Si esta vacio se busca en la escena.")]
     public MeshGrid meshGrid;
-    [Tooltip("Deja de dibujar el suelo modelado. Sigue existiendo para colisiones, navmesh y el MeshGrid.")]
+    [Tooltip("Deja de dibujar el suelo modelado. En el editor sigue existiendo para colisiones, navmesh y el MeshGrid; en juego su collider se apaga (ver colisionPlana).")]
     public bool ocultarSueloOriginal = true;
+    [Tooltip("En juego pone un collider plano a la altura del plano, para que el grid y los rayos al suelo den con lo que se ve. Con el suelo modelado oculto ademas apaga su collider; si se ve, se queda para las partes mas altas (escalones, altar).")]
+    public bool colisionPlana = true;
     [Tooltip("CaraDeLasPiezas: la cara de arriba de losas y ladrillos, sin contar juntas ni partes sueltas mas altas. TopeDelSuelo: lo mas alto del suelo modelado. Manual: la altura de abajo.")]
     public ModoAltura modoAltura = ModoAltura.CaraDeLasPiezas;
     [Tooltip("En Manual es la altura del plano; en los otros modos se suma a la altura calculada.")]
@@ -30,11 +36,17 @@ public class SueloGrid : MonoBehaviour
     public Texture2D luzHorneada;
     [HideInInspector] public Rect rectLuz;
 
+    const float GrosorColision = 0.2f;
+
     Renderer sueloOriginal;
+    GameObject colision;
+    readonly List<Collider> collidersApagados = new List<Collider>();
 
     void OnEnable()
     {
         Ajustar();
+        if (Application.isPlaying)
+            PonerColisionPlana();
     }
 
     void OnValidate()
@@ -46,6 +58,53 @@ public class SueloGrid : MonoBehaviour
     {
         if (sueloOriginal != null)
             sueloOriginal.forceRenderingOff = false;
+        QuitarColisionPlana();
+    }
+
+    void PonerColisionPlana()
+    {
+        Renderer original = SueloOriginal();
+        if (!colisionPlana || colision != null || original == null)
+            return;
+
+        // En la capa del suelo modelado, que es la que el MeshGrid y el medidor ya buscan
+        colision = new GameObject("Colision suelo plano") { hideFlags = HideFlags.DontSave };
+        colision.layer = original.gameObject.layer;
+        colision.transform.SetParent(transform, false);
+
+        // El Quad es de 1x1 en su XY y, girado boca arriba, su +Z local apunta hacia abajo: la caja
+        // tiene la cara de arriba justo en el plano y crece hacia el suelo
+        BoxCollider caja = colision.AddComponent<BoxCollider>();
+        caja.size = new Vector3(1f, 1f, GrosorColision);
+        caja.center = new Vector3(0f, 0f, GrosorColision * 0.5f);
+
+        if (ocultarSueloOriginal)
+        {
+            foreach (Collider collider in original.GetComponents<Collider>())
+            {
+                if (collider.enabled && !collider.isTrigger)
+                {
+                    collider.enabled = false;
+                    collidersApagados.Add(collider);
+                }
+            }
+        }
+
+        Physics.SyncTransforms();
+    }
+
+    void QuitarColisionPlana()
+    {
+        foreach (Collider collider in collidersApagados)
+        {
+            if (collider != null)
+                collider.enabled = true;
+        }
+        collidersApagados.Clear();
+
+        if (colision != null)
+            Destroy(colision);
+        colision = null;
     }
 
     public Renderer SueloOriginal()

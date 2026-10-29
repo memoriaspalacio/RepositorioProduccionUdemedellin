@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: M_FuegoMonja_Brasas
+  m_Shader: {fileID: 4800000, guid: 4f1a7c2e9b3d4a5e8c6f0b1d2e3a4c5f, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _MODO_SUELO
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _Modo: 0
+    - _Intensidad: 1.2
+    - _Escala: 1.4
+    - _Velocidad: 1.1
+    - _Distorsion: 0.4
+    - _Parpadeo: 0.25
+    - _Chamuscado: 0.5
+    - _Chispas: 0.5
+    - _Borde: 0.15
+    - _Celda: 0.833
+    - _DuracionEncendido: 0.35
+    - _DuracionApagado: 0.3
+    m_Colors:
+    - _ColorBrasa: {r: 0.55, g: 0.06, b: 0.02, a: 1}
+    - _ColorFuego: {r: 2.4, g: 0.75, b: 0.12, a: 1}
+    - _ColorNucleo: {r: 3.6, g: 2.7, b: 1.3, a: 1}
+  m_BuildTextureStreamingData: []
+  m_AllowLocking: 1
