@@ -20959,10 +20959,8 @@ MonoBehaviour:
   barParent: {fileID: 1092442724}
   travelBeats: 4
   mirrorTrack: 1
-  colorDelayBeats: 0.5
   idleColor: {r: 0.79622644, g: 0.7616732, b: 0.7616732, a: 1}
-  windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
-  windowClosingColor: {r: 0.6, g: 0.2, b: 0.15, a: 1}
+  colorBlendBeats: 0.15
   successColor: {r: 0.95, g: 0.3, b: 0.25, a: 1}
 --- !u!1 &1047826281
 GameObject:
@@ -21398,6 +21396,11 @@ MonoBehaviour:
   bpm: 120
   beatsPerMeasure: 4
   speedMultiplier: 1
+  outputLatencyMs: -1
+  decoderPaddingMs: 47
+  fadeFromBlack: 1
+  blackHoldSeconds: 0.4
+  fadeSeconds: 1.2
   showDebugLogs: 0
   visualMetronome: 0
   OnBeat:
@@ -21470,10 +21473,13 @@ MonoBehaviour:
   halfBeatNoteChance: 0.046875
   earlyTolerance: 0.5
   lateTolerance: 0.25
+  perfectWindowSeconds: 0.12626465
+  goodWindowSeconds: 0.21645257
   penaltySeconds: 5
   hitPenaltySeconds: 5
+  missedNotePenaltySeconds: 1
   missedNoteGraceSeconds: 1.5
-  penalizeMissedNotes: 0
+  chartLeadInBeats: 1
   logActions: 1
 --- !u!1 &1158727593
 GameObject:
@@ -21923,6 +21929,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SueloGrid
   meshGrid: {fileID: 7300513124780109419}
   ocultarSueloOriginal: 1
+  colisionPlana: 1
   modoAltura: 0
   altura: 0.005
   luzHorneada: {fileID: 2800000, guid: aac0d2967f59565489517e3841865626, type: 3}

@@ -5689,6 +5689,7 @@ GameObject:
   m_Component:
   - component: {fileID: 859251378}
   - component: {fileID: 859251379}
+  - component: {fileID: 859251380}
   m_Layer: 0
   m_Name: RhythmFeedbackLight
   m_TagString: Untagged
@@ -5776,6 +5777,35 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!114 &859251380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859251377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalLightData
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_CustomShadowLayers: 0
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
+  m_RenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ShadowRenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_Version: 4
+  m_LightLayerMask: 1
+  m_ShadowLayerMask: 1
+  m_RenderingLayers: 1
+  m_ShadowRenderingLayers: 1
 --- !u!1 &897795150
 GameObject:
   m_ObjectHideFlags: 0
@@ -11966,10 +11996,8 @@ MonoBehaviour:
   barParent: {fileID: 2018902622}
   travelBeats: 4
   mirrorTrack: 1
-  colorDelayBeats: 0.5
   idleColor: {r: 0.95, g: 0.93, b: 0.93, a: 1}
-  windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
-  windowClosingColor: {r: 0.6, g: 0.2, b: 0.15, a: 1}
+  colorBlendBeats: 0.15
   successColor: {r: 0.95, g: 0.3, b: 0.25, a: 1}
 --- !u!1 &1041076652
 GameObject:
@@ -17165,6 +17193,11 @@ MonoBehaviour:
   bpm: 120
   beatsPerMeasure: 4
   speedMultiplier: 1
+  outputLatencyMs: -1
+  decoderPaddingMs: 47
+  fadeFromBlack: 1
+  blackHoldSeconds: 0.4
+  fadeSeconds: 1.2
   showDebugLogs: 0
   visualMetronome: 0
   OnBeat:
@@ -17237,10 +17270,13 @@ MonoBehaviour:
   halfBeatNoteChance: 0.0468
   earlyTolerance: 0.5
   lateTolerance: 0.25
+  perfectWindowSeconds: 0.1255981
+  goodWindowSeconds: 0.22639693
   penaltySeconds: 5
   hitPenaltySeconds: 5
+  missedNotePenaltySeconds: 1
   missedNoteGraceSeconds: 2
-  penalizeMissedNotes: 0
+  chartLeadInBeats: 1
   logActions: 1
 --- !u!1 &1158727593
 GameObject:
@@ -22390,6 +22426,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SueloGrid
   meshGrid: {fileID: 7821426081726811204}
   ocultarSueloOriginal: 1
+  colisionPlana: 1
   modoAltura: 0
   altura: 0.005
   luzHorneada: {fileID: 2800000, guid: 9a3d49e8b0ee56e4caa8f9a6bd686fa2, type: 3}
