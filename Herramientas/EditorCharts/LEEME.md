@@ -30,10 +30,14 @@ copiarlo a mano).
      arrastrar pinta/borra. Las celdas naranjas son golpes fuertes de la canción. Clic derecho
      en el número del compás: escuchar en bucle, copiar, pegar, repetir en el siguiente.
    - Colores: rojo = en el beat, azul = corchea, amarillo = semicorchea.
-6. **Simular** (tecla 3): se juega el chart con las mismas reglas que `BeatActionJudge`
-   (la nota viaja 4 beats, zona verde = ventana de acierto, golpe al aire = penalización con
-   bloqueo hasta la siguiente nota). Al final lista las notas perdidas para corregirlas.
-   Jugarla entera desde el principio la marca como **simulada ✓**.
+6. **Simular** (tecla 3): se juega el chart con las mismas reglas que `BeatActionJudge`:
+   - la nota viaja 4 beats y la zona verde es la ventana de acierto;
+   - un golpe al aire cuesta 5 s y una nota que pasa sin tocarla, 1 s;
+   - tras una penalización no se vuelve a cobrar hasta que entra la siguiente nota.
+
+   Como en el juego, la canción espera a que las primeras notas crucen la pista entera. Al
+   final lista las notas perdidas para corregirlas. Jugarla entera desde el principio la
+   marca como **simulada ✓**.
 7. **Desplegar al juego**: la primera vez elige la carpeta
    `Assets/_Juego Actual/Resources/Charts`. Escribe `<escena>.json` y Unity lo recarga al
    volver a su ventana. «Abrir del juego» lee lo que el juego tiene ahora.
@@ -61,3 +65,20 @@ compartirlo.
 - `offsetMs` es dónde cae el compás 1:1:1 dentro del mp3. Valores medidos sobre los golpes de
   cada canción: Cementerio 115 ms, Iglesia 140 ms, Crisantia 10 ms, Mazmorra 0 ms.
 - Si una escena no tiene su `.json`, el juego usa el patrón de intervalos de siempre.
+
+## Cómo lo reproduce el juego
+
+- El nivel empieza en negro y se aclara (`fadeFromBlack`, `blackHoldSeconds` y `fadeSeconds`
+  en `BeatManager`). Mientras tanto no se puede jugar y el cronómetro está en pausa. Nada
+  cuesta tiempo hasta que la primera nota llega a la zona del corazón.
+- Unity decodifica los MP3 con 47 ms de silencio extra al principio que el navegador
+  recorta. `BeatManager` lo descuenta con `decoderPaddingMs` (47 por defecto); pon 0 si una
+  canción no es MP3. El `offsetMs` del chart se sigue midiendo aquí, en el navegador.
+- La música no arranca hasta que la canción terminó de cargarse, y el reloj del ritmo se
+  mide desde el instante exacto en que suena. Si el chart empieza en los primeros beats, la
+  canción espera lo justo para que esas notas lleguen desde el punto de aparición.
+- Si la canción está en bucle, cada vuelta empieza en un beat entero y el chart se repite.
+- Cada nota que pasa el corazón sin tocarla resta `missedNotePenaltySeconds` (1 s por
+  defecto, en el inspector de `BeatActionJudge`).
+- Si las notas se ven adelantadas o atrasadas respecto a lo que suena, ajusta
+  `outputLatencyMs` en `BeatManager` (-1 = calcularla sola).
