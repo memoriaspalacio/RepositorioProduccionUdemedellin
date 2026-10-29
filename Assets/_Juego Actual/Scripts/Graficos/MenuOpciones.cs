@@ -10,13 +10,13 @@ using UnityEngine.UI;
 /// Menu de opciones generico: dibuja por codigo cualquier lista de OpcionMenu (titulo,
 /// filas con flechas, ayuda de la fila senalada y botones abajo). No necesita prefab ni
 /// estar en la escena. Funciona con raton, tactil, teclado y mando: arriba y abajo eligen
-/// fila, izquierda y derecha cambian el valor y Escape (o B) lo cierra.
+/// fila, izquierda y derecha cambian el valor y Escape (o B) lo cierra. El arte y los colores
+/// salen de EstiloMenu.
 /// </summary>
 public class MenuOpciones : MonoBehaviour
 {
-    const float AnchoMaximo = 1180f;
-    const float AltoMaximo = 980f;
-    const float AltoFila = 66f;
+    const float AltoMaximo = 1000f;
+    const float AltoFila = 56f;
 
     class Fila
     {
@@ -41,7 +41,10 @@ public class MenuOpciones : MonoBehaviour
 
     readonly List<Fila> filas = new List<Fila>();
     Func<string> estado;
+    EstiloMenu estilo;
+    Fila senalada;
     RectTransform panel;
+    RectTransform interior;
     RectTransform vista;
     RectTransform contenido;
     TextMeshProUGUI textoEstado;
@@ -79,25 +82,24 @@ public class MenuOpciones : MonoBehaviour
     void Construir(string titulo, List<OpcionMenu> opciones, (string texto, Action accion)[] botones)
     {
         eventSystemPropio = ConstructorUI.AsegurarEventSystem(transform);
+        estilo = EstiloMenu.Actual;
 
-        // Fondo oscuro que ademas bloquea los clics a lo que hay detras
-        Image fondo = ConstructorUI.CrearImagen("Fondo", transform, new Color(0f, 0f, 0f, 0.6f));
+        // Fondo translucido: deja ver el juego (y como cambia) pero bloquea los clics detras
+        Image fondo = ConstructorUI.CrearImagen("Fondo", transform, estilo.fondo);
         ConstructorUI.Llenar(fondo.rectTransform);
 
-        Image imagenPanel = ConstructorUI.CrearImagen("Panel", transform, ConstructorUI.ColorPanel);
-        Outline borde = imagenPanel.gameObject.AddComponent<Outline>();
-        borde.effectColor = ConstructorUI.ColorBorde;
-        borde.effectDistance = new Vector2(2f, -2f);
-        panel = imagenPanel.rectTransform;
+        panel = ConstructorUI.CrearRect("Panel", transform);
         AjustarTamano();
+        CrearMarco();
 
-        TextMeshProUGUI textoTitulo = ConstructorUI.CrearTexto("Titulo", panel, titulo, 58f, ConstructorUI.ColorTitulo, TextAlignmentOptions.Center);
-        Franja(textoTitulo.rectTransform, 18f, 76f, true);
+        TextMeshProUGUI textoTitulo = ConstructorUI.CrearTexto("Titulo", interior, titulo, 60f, estilo.titulo, TextAlignmentOptions.Center);
+        textoTitulo.font = estilo.FuenteTitulo(titulo);
+        Franja(textoTitulo.rectTransform, 0f, 68f, true);
 
-        textoEstado = ConstructorUI.CrearTexto("Estado", panel, string.Empty, 24f, ConstructorUI.ColorTenue, TextAlignmentOptions.Center);
-        Franja(textoEstado.rectTransform, 94f, 34f, true);
+        textoEstado = ConstructorUI.CrearTexto("Estado", interior, string.Empty, 22f, estilo.tenue, TextAlignmentOptions.Center);
+        Franja(textoEstado.rectTransform, 68f, 30f, true);
 
-        CrearLista(140f, 196f);
+        CrearLista(108f, 132f);
         for (int i = 0; i < opciones.Count; i++)
         {
             if (opciones[i].EsSeccion)
@@ -106,30 +108,69 @@ public class MenuOpciones : MonoBehaviour
                 CrearFila(contenido, opciones[i]);
         }
 
-        textoAyuda = ConstructorUI.CrearTexto("Ayuda", panel, string.Empty, 26f, ConstructorUI.ColorTenue, TextAlignmentOptions.TopLeft);
+        textoAyuda = ConstructorUI.CrearTexto("Ayuda", interior, string.Empty, 22f, estilo.tenue, TextAlignmentOptions.Top);
         textoAyuda.textWrappingMode = TextWrappingModes.Normal;
         textoAyuda.overflowMode = TextOverflowModes.Truncate;
-        Franja(textoAyuda.rectTransform, 110f, 82f, false);
+        textoAyuda.fontStyle = FontStyles.Italic;
+        Franja(textoAyuda.rectTransform, 66f, 60f, false);
 
         CrearBotones(botones);
         Refrescar();
 
         if (filas.Count > 0)
         {
-            MostrarAyuda(filas[0].opcion);
+            Senalar(filas[0]);
             if (EventSystem.current != null)
                 EventSystem.current.SetSelectedGameObject(filas[0].derecha.gameObject);
         }
     }
 
+    /// <summary>
+    /// El marco ornamentado (o un panel liso si el estilo no tiene). El panel mide lo que la
+    /// parte visible del marco, asi que la imagen se sale por los lados lo que ocupan sus margenes
+    /// transparentes. El contenido va en el interior, apartado de los adornos.
+    /// </summary>
+    void CrearMarco()
+    {
+        Vector4 margen;
+        if (estilo.marco != null)
+        {
+            Image marco = ConstructorUI.CrearImagen("Marco", panel, Color.white);
+            marco.sprite = estilo.marco;
+
+            Rect visible = estilo.marcoVisible;
+            RectTransform rect = marco.rectTransform;
+            rect.anchorMin = new Vector2(-visible.x / visible.width, -visible.y / visible.height);
+            rect.anchorMax = new Vector2((1f - visible.x) / visible.width, (1f - visible.y) / visible.height);
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+            margen = estilo.margenInterior;
+        }
+        else
+        {
+            Image liso = ConstructorUI.CrearImagen("Panel liso", panel, estilo.panelSinMarco);
+            ConstructorUI.Llenar(liso.rectTransform);
+            Outline borde = liso.gameObject.AddComponent<Outline>();
+            borde.effectColor = estilo.titulo;
+            borde.effectDistance = new Vector2(3f, -3f);
+            margen = new Vector4(0.04f, 0.04f, 0.04f, 0.04f);
+        }
+
+        interior = ConstructorUI.CrearRect("Interior", panel);
+        interior.anchorMin = new Vector2(margen.x, margen.w);
+        interior.anchorMax = new Vector2(1f - margen.y, 1f - margen.z);
+        interior.offsetMin = Vector2.zero;
+        interior.offsetMax = Vector2.zero;
+    }
+
     /// <summary>Lista con desplazamiento (y su barra) entre el encabezado y el pie del panel.</summary>
     void CrearLista(float arriba, float abajo)
     {
-        RectTransform area = ConstructorUI.CrearRect("Lista", panel);
+        RectTransform area = ConstructorUI.CrearRect("Lista", interior);
         area.anchorMin = Vector2.zero;
         area.anchorMax = Vector2.one;
-        area.offsetMin = new Vector2(36f, abajo);
-        area.offsetMax = new Vector2(-36f, -arriba);
+        area.offsetMin = new Vector2(0f, abajo);
+        area.offsetMax = new Vector2(0f, -arriba);
 
         // La vista recorta las filas; la barra queda fuera de ella, a la derecha
         Image fondoVista = ConstructorUI.CrearImagen("Vista", area, new Color(0f, 0f, 0f, 0.001f));
@@ -138,17 +179,21 @@ public class MenuOpciones : MonoBehaviour
         vista.offsetMax = new Vector2(-22f, 0f);
         vista.gameObject.AddComponent<RectMask2D>();
 
-        Image fondoBarra = ConstructorUI.CrearImagen("Barra", area, new Color(1f, 1f, 1f, 0.06f));
+        Image fondoBarra = ConstructorUI.CrearImagen("Barra", area, new Color(estilo.titulo.r, estilo.titulo.g, estilo.titulo.b, 0.12f));
+        fondoBarra.sprite = SpritesProcedurales.Capsula;
+        fondoBarra.type = Image.Type.Sliced;
         RectTransform rectBarra = fondoBarra.rectTransform;
         rectBarra.anchorMin = new Vector2(1f, 0f);
         rectBarra.anchorMax = new Vector2(1f, 1f);
         rectBarra.pivot = new Vector2(1f, 0.5f);
-        rectBarra.sizeDelta = new Vector2(10f, 0f);
+        rectBarra.sizeDelta = new Vector2(8f, 0f);
         rectBarra.anchoredPosition = Vector2.zero;
 
         RectTransform zonaManija = ConstructorUI.CrearRect("Zona", rectBarra);
         ConstructorUI.Llenar(zonaManija);
-        Image manija = ConstructorUI.CrearImagen("Manija", zonaManija, ConstructorUI.ColorBorde);
+        Image manija = ConstructorUI.CrearImagen("Manija", zonaManija, new Color(estilo.titulo.r, estilo.titulo.g, estilo.titulo.b, 0.75f));
+        manija.sprite = SpritesProcedurales.Capsula;
+        manija.type = Image.Type.Sliced;
         ConstructorUI.Llenar(manija.rectTransform);
 
         Scrollbar barra = fondoBarra.gameObject.AddComponent<Scrollbar>();
@@ -187,46 +232,61 @@ public class MenuOpciones : MonoBehaviour
 
     void CrearSeccion(RectTransform contenido, OpcionMenu opcion)
     {
-        TextMeshProUGUI texto = ConstructorUI.CrearTexto("Seccion " + opcion.nombre, contenido, opcion.nombre.ToUpperInvariant(), 24f, ConstructorUI.ColorTitulo, TextAlignmentOptions.BottomLeft);
+        RectTransform seccion = ConstructorUI.CrearRect("Seccion " + opcion.nombre, contenido);
+        ConstructorUI.Medidas(seccion, -1f, 46f);
+
+        TextMeshProUGUI texto = ConstructorUI.CrearTexto("Texto", seccion, opcion.nombre.ToUpperInvariant(), 22f, estilo.titulo, TextAlignmentOptions.BottomLeft);
         texto.characterSpacing = 6f;
-        texto.margin = new Vector4(8f, 0f, 0f, 4f);
-        ConstructorUI.Medidas(texto, -1f, 48f);
+        texto.margin = new Vector4(8f, 0f, 0f, 6f);
+        ConstructorUI.Llenar(texto.rectTransform);
+
+        // Filete bajo el titulo, que se desvanece hacia la derecha
+        Image filete = ConstructorUI.CrearImagen("Filete", seccion, new Color(estilo.titulo.r, estilo.titulo.g, estilo.titulo.b, 0.45f));
+        filete.sprite = SpritesProcedurales.DegradadoSalida;
+        RectTransform rectFilete = filete.rectTransform;
+        rectFilete.anchorMin = Vector2.zero;
+        rectFilete.anchorMax = new Vector2(1f, 0f);
+        rectFilete.pivot = new Vector2(0.5f, 0f);
+        rectFilete.sizeDelta = new Vector2(0f, 2f);
+        rectFilete.anchoredPosition = Vector2.zero;
     }
 
     void CrearFila(RectTransform contenido, OpcionMenu opcion)
     {
         Fila fila = new Fila { opcion = opcion };
 
-        fila.fondo = ConstructorUI.CrearImagen("Fila " + opcion.nombre, contenido, ConstructorUI.ColorFila);
+        // La pincelada solo se ve en la fila senalada
+        fila.fondo = ConstructorUI.CrearImagen("Fila " + opcion.nombre, contenido, Color.clear);
+        fila.fondo.sprite = estilo.pincelada;
         ConstructorUI.Medidas(fila.fondo, -1f, AltoFila);
 
         HorizontalLayoutGroup linea = fila.fondo.gameObject.AddComponent<HorizontalLayoutGroup>();
-        linea.padding = new RectOffset(20, 10, 6, 6);
-        linea.spacing = 10f;
+        linea.padding = new RectOffset(24, 14, 2, 2);
+        linea.spacing = 6f;
         linea.childAlignment = TextAnchor.MiddleLeft;
         linea.childControlWidth = true;
         linea.childControlHeight = true;
         linea.childForceExpandWidth = false;
         linea.childForceExpandHeight = false;
 
-        fila.nombre = ConstructorUI.CrearTexto("Nombre", fila.fondo.transform, opcion.nombre, 32f, ConstructorUI.ColorTexto);
-        ConstructorUI.Medidas(fila.nombre, -1f, AltoFila - 12f, 1f);
+        fila.nombre = ConstructorUI.CrearTexto("Nombre", fila.fondo.transform, opcion.nombre, 30f, estilo.texto);
+        ConstructorUI.Medidas(fila.nombre, -1f, AltoFila - 4f, 1f);
 
-        fila.izquierda = ConstructorUI.CrearBoton("Anterior", fila.fondo.transform, "<", 34f, () => Cambiar(fila, -1));
-        ConstructorUI.Medidas(fila.izquierda, 62f, 52f);
+        fila.izquierda = ConstructorUI.CrearBotonTexto("Anterior", fila.fondo.transform, "<", 38f, estilo.valor, () => Cambiar(fila, -1));
+        ConstructorUI.Medidas(fila.izquierda, 52f, AltoFila - 6f);
         // Las flechas no se navegan: con teclado o mando se elige la fila y se cambia con izquierda/derecha
         fila.izquierda.navigation = new Navigation { mode = Navigation.Mode.None };
 
-        fila.valor = ConstructorUI.CrearTexto("Valor", fila.fondo.transform, string.Empty, 30f, ConstructorUI.ColorTitulo, TextAlignmentOptions.Center);
-        ConstructorUI.Medidas(fila.valor, 330f, AltoFila - 12f);
+        fila.valor = ConstructorUI.CrearTexto("Valor", fila.fondo.transform, string.Empty, 28f, estilo.valor, TextAlignmentOptions.Center);
+        ConstructorUI.Medidas(fila.valor, 300f, AltoFila - 4f);
 
-        fila.derecha = ConstructorUI.CrearBoton("Siguiente", fila.fondo.transform, ">", 34f, () => Cambiar(fila, 1));
-        ConstructorUI.Medidas(fila.derecha, 62f, 52f);
+        fila.derecha = ConstructorUI.CrearBotonTexto("Siguiente", fila.fondo.transform, ">", 38f, estilo.valor, () => Cambiar(fila, 1));
+        ConstructorUI.Medidas(fila.derecha, 52f, AltoFila - 6f);
         fila.derecha.navigation = new Navigation { mode = Navigation.Mode.Vertical };
 
         Action<bool> senalar = porSeleccion =>
         {
-            MostrarAyuda(opcion);
+            Senalar(fila);
 
             // Con teclado o mando la lista sigue a la fila elegida; con el raton no salta
             if (porSeleccion)
@@ -241,8 +301,8 @@ public class MenuOpciones : MonoBehaviour
 
     void CrearBotones((string texto, Action accion)[] botones)
     {
-        RectTransform pie = ConstructorUI.CrearRect("Botones", panel);
-        Franja(pie, 26f, 68f, false);
+        RectTransform pie = ConstructorUI.CrearRect("Botones", interior);
+        Franja(pie, 0f, 60f, false);
 
         HorizontalLayoutGroup linea = pie.gameObject.AddComponent<HorizontalLayoutGroup>();
         linea.spacing = 24f;
@@ -255,30 +315,33 @@ public class MenuOpciones : MonoBehaviour
         for (int i = 0; i < botones.Length; i++)
         {
             Action accion = botones[i].accion;
-            Button boton = ConstructorUI.CrearBoton(botones[i].texto, pie, botones[i].texto, 30f, () =>
+            Button boton = ConstructorUI.CrearBotonPincelada(botones[i].texto, pie, botones[i].texto, 28f, () =>
             {
                 accion?.Invoke();
                 Refrescar();
             });
-            ConstructorUI.Medidas(boton, 330f, 62f);
+            ConstructorUI.Medidas(boton, 330f, 58f);
         }
 
-        Button cerrar = ConstructorUI.CrearBoton("Cerrar", pie, "Cerrar", 30f, Cerrar);
-        ConstructorUI.Medidas(cerrar, 260f, 62f);
+        Button cerrar = ConstructorUI.CrearBotonPincelada("Cerrar", pie, "Cerrar", 28f, Cerrar);
+        ConstructorUI.Medidas(cerrar, 240f, 58f);
     }
 
-    /// <summary>Ancla un rect a todo el ancho del panel, pegado arriba o abajo.</summary>
+    /// <summary>Ancla un rect a todo el ancho del interior, pegado arriba o abajo.</summary>
     static void Franja(RectTransform rect, float distanciaBorde, float alto, bool arriba)
     {
         float y = arriba ? 1f : 0f;
         rect.anchorMin = new Vector2(0f, y);
         rect.anchorMax = new Vector2(1f, y);
         rect.pivot = new Vector2(0.5f, y);
-        rect.sizeDelta = new Vector2(-72f, alto);
+        rect.sizeDelta = new Vector2(0f, alto);
         rect.anchoredPosition = new Vector2(0f, arriba ? -distanciaBorde : distanciaBorde);
     }
 
-    /// <summary>El panel ocupa lo que quepa de la pantalla, hasta su tamano maximo (moviles en vertical incluidos).</summary>
+    /// <summary>
+    /// El panel ocupa lo que quepa de la pantalla, hasta su tamano maximo, con la proporcion
+    /// del marco para que no se deforme (moviles en vertical incluidos).
+    /// </summary>
     void AjustarTamano()
     {
         pantalla = new Vector2Int(Screen.width, Screen.height);
@@ -287,10 +350,19 @@ public class MenuOpciones : MonoBehaviour
         float escala = Mathf.Sqrt((Screen.width / 1920f) * (Screen.height / 1080f));
         Vector2 lienzo = new Vector2(Screen.width, Screen.height) / Mathf.Max(0.0001f, escala);
 
+        float aspecto = EstiloMenu.Actual.AspectoMarco;
+        float alto = Mathf.Min(AltoMaximo, lienzo.y - 20f);
+        float ancho = alto * aspecto;
+        if (ancho > lienzo.x - 20f)
+        {
+            ancho = lienzo.x - 20f;
+            alto = ancho / aspecto;
+        }
+
         panel.anchorMin = new Vector2(0.5f, 0.5f);
         panel.anchorMax = new Vector2(0.5f, 0.5f);
         panel.anchoredPosition = Vector2.zero;
-        panel.sizeDelta = new Vector2(Mathf.Min(AnchoMaximo, lienzo.x - 40f), Mathf.Min(AltoMaximo, lienzo.y - 30f));
+        panel.sizeDelta = new Vector2(ancho, alto);
     }
 
     #endregion
@@ -362,6 +434,17 @@ public class MenuOpciones : MonoBehaviour
 
         // Un cambio puede mover otras filas (la calidad general las cambia todas)
         Refrescar();
+        Senalar(fila);
+    }
+
+    /// <summary>Resalta la fila con la pincelada y muestra su ayuda.</summary>
+    void Senalar(Fila fila)
+    {
+        if (senalada != null && senalada != fila)
+            senalada.fondo.color = Color.clear;
+
+        senalada = fila;
+        fila.fondo.color = estilo.resaltado;
         MostrarAyuda(fila.opcion);
     }
 
@@ -394,8 +477,8 @@ public class MenuOpciones : MonoBehaviour
             bool disponible = fila.opcion.Disponible;
 
             fila.valor.text = fila.opcion.Texto;
-            fila.valor.color = disponible ? ConstructorUI.ColorTitulo : ConstructorUI.ColorTenue;
-            fila.nombre.color = disponible ? ConstructorUI.ColorTexto : ConstructorUI.ColorTenue;
+            fila.valor.color = disponible ? estilo.valor : estilo.tenue;
+            fila.nombre.color = disponible ? estilo.texto : estilo.tenue;
             fila.izquierda.interactable = disponible;
             fila.derecha.interactable = disponible;
         }

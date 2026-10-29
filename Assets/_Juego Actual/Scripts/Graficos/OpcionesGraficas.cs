@@ -10,6 +10,12 @@ public static class OpcionesGraficas
 {
     static readonly string[] Niveles = { "Alto", "Medio", "Bajo", "Muy bajo" };
 
+    /// <summary>Nombre corto de la calidad en uso, para botones: "Alto" o "Personalizado".</summary>
+    public static string NombreCalidad(AjustesGraficos ajustes)
+    {
+        return ajustes.CoincideConPreset() ? Niveles[(int)ajustes.nivel] : "Personalizado";
+    }
+
     public static List<OpcionMenu> Crear()
     {
         OpcionMenu calidad = OpcionMenu.DeEnum("Calidad general",
