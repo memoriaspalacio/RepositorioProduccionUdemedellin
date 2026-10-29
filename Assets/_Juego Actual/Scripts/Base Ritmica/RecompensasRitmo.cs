@@ -29,7 +29,7 @@ public class RecompensasRitmo : MonoBehaviour
 
     [Header("Enemigo derrotado")]
     [Tooltip("Segundos que suma al cronometro cada enemigo derrotado.")]
-    [SerializeField, Min(0f)] private float tiempoPorEnemigo = 3f;
+    [SerializeField, Min(0f)] private float tiempoPorEnemigo = 15f;
 
     [Tooltip("Vida que devuelve cada enemigo derrotado, en fraccion de la vida maxima.")]
     [SerializeField, Range(0f, 1f)] private float vidaPorEnemigo = 0.15f;
