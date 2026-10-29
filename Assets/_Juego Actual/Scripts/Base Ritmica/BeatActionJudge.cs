@@ -40,6 +40,11 @@ using UnityEngine;
 /// caused it, the player loses time at most once per note. Nothing costs time while
 /// the countdown is stopped (level won or lost).
 ///
+/// Missed notes come in runs (the player stops, or loses the rhythm), so on top of that a
+/// missed note that costs time opens a grace period (missedNoteGraceSeconds) in which the
+/// following missed notes still show as MISS but take no more time. Each level sets its own
+/// grace, shorter as the game goes on, so later levels forgive less.
+///
 /// Runs after the zones (which set tolerances) and before everything else, so
 /// tolerances are fresh and the tracked range is current by the time a consumer
 /// calls TryConsumeBeat().
@@ -112,6 +117,11 @@ public class BeatActionJudge : MonoBehaviour {
              "Lower than a whiff on purpose: standing still drains the clock note after note, so even a small " +
              "amount adds up fast. Shares the lock: at most one time penalty per note. 0 = letting notes go is free.")]
     [SerializeField, Min(0)] private float missedNotePenaltySeconds = 1f;
+
+    [Tooltip("After a missed note costs time, how many seconds the next missed notes are free (they still show " +
+             "as MISS). Stops one lost run of notes from draining the clock note after note. Lower it in later " +
+             "levels to make them harder. Only missed notes: whiffs and enemy hits are not affected. 0 = no grace.")]
+    [SerializeField, Min(0)] private float missedNoteGraceSeconds = 2f;
 
     [Header("Chart start")]
     [Tooltip("Extra beats the song waits, on top of the note's trip from the spawn point to the heart, before a " +
@@ -186,6 +196,9 @@ public class BeatActionJudge : MonoBehaviour {
     // further whiffs, hits and missed notes cost nothing.
     private bool penaltyLocked;
     private int notesEnteredZone;
+
+    // Until when (unscaled time, like the countdown) missed notes cost nothing.
+    private float missedNoteGraceUntil = float.NegativeInfinity;
 
     // The dice are rolled once per normal note, the first time anyone asks about
     // its extras, and remembered - so the judge and the view always agree, and
@@ -417,7 +430,7 @@ public class BeatActionJudge : MonoBehaviour {
                 if (LevelRunning) OnBeatGraded?.Invoke(BeatOfSlot(oldest.slot), JudgementResult.Miss);
 
                 if (missedNotePenaltySeconds > 0f)
-                    ApplyPenalty($"missed note on beat {BeatOfSlot(oldest.slot)}", missedNotePenaltySeconds);
+                    PenalizeMissedNote(BeatOfSlot(oldest.slot));
             }
 
             tracked.RemoveAt(0);
@@ -514,24 +527,41 @@ public class BeatActionJudge : MonoBehaviour {
         ApplyPenalty("hit by an enemy", hitPenaltySeconds);
     }
 
+    /// <summary>Seconds of missed-note grace left (0 when a missed note would cost time).</summary>
+    public float MissedNoteGraceRemaining => Mathf.Max(0f, missedNoteGraceUntil - Time.unscaledTime);
+
+    /// <summary>
+    /// Charges missedNotePenaltySeconds unless a previous missed note opened a grace period
+    /// that is still running. Only a missed note that actually costs time opens a new one.
+    /// </summary>
+    private void PenalizeMissedNote(float beat) {
+        if (Time.unscaledTime < missedNoteGraceUntil) {
+            if (logActions) Debug.Log($"Penalty skipped (missed note on beat {beat}): grace, {MissedNoteGraceRemaining:0.0}s left");
+            return;
+        }
+
+        if (ApplyPenalty($"missed note on beat {beat}", missedNotePenaltySeconds))
+            missedNoteGraceUntil = Time.unscaledTime + missedNoteGraceSeconds;
+    }
+
     /// <summary>
     /// Takes the given seconds off the countdown and fires OnPenaltyApplied, then locks
     /// itself until a new note enters the heart zone (see TrackUpTo). Notes are never
-    /// destroyed by a penalty - the cost is time only.
+    /// destroyed by a penalty - the cost is time only. Returns true if it cost time.
     /// </summary>
-    private void ApplyPenalty(string cause, float seconds) {
+    private bool ApplyPenalty(string cause, float seconds) {
         // Once the countdown has stopped (win/lose screen) mistakes cost nothing and
         // show nothing - the level is over.
         ControladorContrarreloj clock = ControladorContrarreloj.Instancia;
-        if (clock != null && !clock.EstaContando) return;
+        if (clock != null && !clock.EstaContando) return false;
 
         // Before the first note reaches the heart zone the level hasn't really started
         // (the fade-in, the pre-roll while the first notes travel): nothing to miss yet.
-        if (notesEnteredZone == 0) return;
+        if (notesEnteredZone == 0) return false;
 
         if (penaltyLocked) {
             if (logActions) Debug.Log($"Penalty skipped ({cause}): locked until the next note enters the zone");
-            return;
+            return false;
         }
 
         penaltyLocked = true;
@@ -542,5 +572,6 @@ public class BeatActionJudge : MonoBehaviour {
             clock.PenalizarTiempo(seconds);
 
         OnPenaltyApplied?.Invoke();
+        return true;
     }
 }

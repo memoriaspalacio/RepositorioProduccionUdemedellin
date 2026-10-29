@@ -17239,6 +17239,7 @@ MonoBehaviour:
   lateTolerance: 0.25
   penaltySeconds: 5
   hitPenaltySeconds: 5
+  missedNoteGraceSeconds: 2
   penalizeMissedNotes: 0
   logActions: 1
 --- !u!1 &1158727593

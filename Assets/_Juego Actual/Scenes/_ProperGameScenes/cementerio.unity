@@ -12495,6 +12495,7 @@ MonoBehaviour:
   lateTolerance: 0.05
   penaltySeconds: 5
   hitPenaltySeconds: 5
+  missedNoteGraceSeconds: 3
   missedNotePenaltySeconds: 1
   chartLeadInBeats: 1
   logActions: 0

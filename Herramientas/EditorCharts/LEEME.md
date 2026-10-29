@@ -86,7 +86,10 @@ compartirlo.
   canción espera lo justo para que esas notas lleguen desde el punto de aparición.
 - Si la canción está en bucle, cada vuelta empieza en un beat entero y el chart se repite.
 - Cada nota que pasa el corazón sin tocarla resta `missedNotePenaltySeconds` (1 s por
-  defecto, en el inspector de `BeatActionJudge`).
+  defecto, en el inspector de `BeatActionJudge`). Después hay unos segundos de gracia
+  (`missedNoteGraceSeconds`) en los que las siguientes notas perdidas salen como MISS pero no
+  restan, para que una racha perdida no vacíe el reloj. La gracia baja nivel a nivel:
+  3 s en el cementerio, 2,5 en la iglesia, 2 en la mazmorra y 1,5 en Crisantia.
 - La ventana de acierto empieza en la caja BeatWindowZone y termina 0.15 beats después del
   corazón (caja BeatDestroyZone): pulsar justo en el beat, o un pelo tarde, también cuenta.
 - Cada acierto se califica por la distancia al beat exacto: **PERFECT** a 50 ms o menos,

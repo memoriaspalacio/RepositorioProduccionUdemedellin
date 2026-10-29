@@ -385,6 +385,7 @@ dialog footer { display: flex; gap: 8px; justify-content: flex-end; }
         <label class="num" title="Beats que tarda una nota del punto de aparición al corazón (travelBeats)">Viaje de la nota (beats) <input id="simTravel" type="number" step="1" min="1" max="8"></label>
         <label class="num" title="Segundos que resta del contrarreloj un golpe al aire">Penalización (s) <input id="simPenalty" type="number" step="0.5" min="0"></label>
         <label class="num" title="Segundos que resta cada nota que pasa el corazón sin tocarla (missedNotePenaltySeconds). 0 = gratis">Penalización por nota perdida (s) <input id="simMissPenalty" type="number" step="0.5" min="0"></label>
+        <label class="num" title="Tras una nota perdida que cuesta tiempo, segundos en que las siguientes perdidas no restan (missedNoteGraceSeconds). Baja nivel a nivel">Gracia tras nota perdida (s) <input id="simMissGrace" type="number" step="0.5" min="0"></label>
         <label class="chk"><input type="checkbox" id="simAuto"> Autojugar (solo mirar el chart)</label>
         <label class="chk"><input type="checkbox" id="simGuide"> Palmas de guía en cada nota</label>
         <label class="chk"><input type="checkbox" id="simComp" checked> Compensar mi latencia</label>
@@ -498,10 +499,10 @@ const TPM = TPB * BPMEAS;
 // las cajas BeatWindowZone / BeatDestroyZone del prefab Gametime UI). offsetMs es
 // dónde cae el primer beat dentro del mp3, medido sobre los golpes de cada canción.
 const PRESETS = {
-  cementerio: { nombre: 'Cementerio', cancion: 'Cementerio.mp3',   bpm: 124, offsetMs: 115, early: 1.315,  late: 0.1495, travel: 4 },
-  iglesia:    { nombre: 'Iglesia',    cancion: 'Iglesia.mp3',      bpm: 120, offsetMs: 140, early: 1.0804, late: 0.1495, travel: 4 },
-  mazmorra:   { nombre: 'Mazmorra',   cancion: 'Mazmorra.mp3',     bpm: 120, offsetMs: 0,   early: 0.8095, late: 0.1495, travel: 4 },
-  crisantia:  { nombre: 'Crisantia',  cancion: 'ZonaPastoral.mp3', bpm: 120, offsetMs: 10,  early: 1.315,  late: 0.1495, travel: 4 },
+  cementerio: { nombre: 'Cementerio', cancion: 'Cementerio.mp3',   bpm: 124, offsetMs: 115, early: 1.315,  late: 0.1495, travel: 4, gracia: 3 },
+  iglesia:    { nombre: 'Iglesia',    cancion: 'Iglesia.mp3',      bpm: 120, offsetMs: 140, early: 1.0804, late: 0.1495, travel: 4, gracia: 2.5 },
+  mazmorra:   { nombre: 'Mazmorra',   cancion: 'Mazmorra.mp3',     bpm: 120, offsetMs: 0,   early: 0.8095, late: 0.1495, travel: 4, gracia: 2 },
+  crisantia:  { nombre: 'Crisantia',  cancion: 'ZonaPastoral.mp3', bpm: 120, offsetMs: 10,  early: 1.315,  late: 0.1495, travel: 4, gracia: 1.5 },
 };
 const PENALTY_DEFAULT = 5;
 const MISS_PENALTY_DEFAULT = 1;
@@ -1345,6 +1346,7 @@ function simSettings() {
     travel: Math.max(1, +$('#simTravel').value || 4),
     penalty: Math.max(0, +$('#simPenalty').value || 0),
     missPenalty: Math.max(0, +$('#simMissPenalty').value || 0),
+    missGrace: Math.max(0, +$('#simMissGrace').value || 0),
   };
 }
 
@@ -1356,6 +1358,7 @@ function loadSimDefaults() {
   $('#simTravel').value = saved ? saved.travel : p.travel;
   $('#simPenalty').value = saved ? saved.penalty : PENALTY_DEFAULT;
   $('#simMissPenalty').value = saved && typeof saved.missPenalty === 'number' ? saved.missPenalty : MISS_PENALTY_DEFAULT;
+  $('#simMissGrace').value = saved && typeof saved.missGrace === 'number' ? saved.missGrace : p.gracia;
   updateSimInfo();
 }
 
@@ -1369,7 +1372,7 @@ function updateSimInfo() {
   const p = PRESETS[st.scene], S = simSettings();
   const ms = b => Math.round(b * spb() * 1000);
   $('#simInfo').innerHTML = `En la escena <b>${p.nombre}</b>: ventana temprana ${p.early} beats, tardía ${p.late}, viaje ${p.travel} beats, ` +
-    `golpe al aire −${PENALTY_DEFAULT} s, nota perdida −${MISS_PENALTY_DEFAULT} s. Ahora: aciertas desde ${ms(S.early)} ms antes del golpe hasta ${ms(S.late)} ms después.`;
+    `golpe al aire −${PENALTY_DEFAULT} s, nota perdida −${MISS_PENALTY_DEFAULT} s (luego ${p.gracia} s de gracia). Ahora: aciertas desde ${ms(S.early)} ms antes del golpe hasta ${ms(S.late)} ms después.`;
 }
 
 function simStart() {
@@ -1382,7 +1385,7 @@ function simStart() {
   const from = $('#simCursor').checked ? Math.max(0, tp.pausePos - TPM * tickSec()) : Math.min(0, preRoll);
   Object.assign(sim, {
     running: true, ended: false, auto: $('#simAuto').checked, guide: $('#simGuide').checked,
-    fromStart: from <= 0, notes: st.notes.slice(), open: [], state: new Map(), locked: false,
+    fromStart: from <= 0, notes: st.notes.slice(), open: [], state: new Map(), locked: false, graceUntil: -Infinity,
     hits: 0, misses: 0, whiffs: 0, penalty: 0, streak: 0, best: 0, missedList: [],
     fxHit: 0, fxMiss: 0, pulse: 0, lastBeat: NaN, rings: [], hash: hashChart(), startPos: from,
   });
@@ -1443,7 +1446,7 @@ function simFrame(pos) {
       sim.missedList.push(n.t);
       sim.state.set(n.t, 'miss');
       sim.fxMiss = Math.max(sim.fxMiss, 0.6);
-      if (S.missPenalty > 0) simPenalty(S, S.missPenalty);
+      if (S.missPenalty > 0) simMissedNote(S, pos);
     }
   }
   // 2) Entran las notas cuya ventana se abre; cada una levanta el bloqueo
@@ -1486,13 +1489,21 @@ function simPressAt(b, S) {
   return false;
 }
 
+// PenalizeMissedNote: una nota perdida que cuesta tiempo abre la gracia; durante ella las
+// siguientes perdidas salen como MISS pero no restan.
+function simMissedNote(S, pos) {
+  if (pos < sim.graceUntil) return;
+  if (simPenalty(S, S.missPenalty)) sim.graceUntil = pos + S.missGrace;
+}
+
 // ApplyPenalty: una sola penalización por nota; se bloquea hasta que entra la siguiente.
 function simPenalty(S, seconds) {
-  if (sim.locked) return;
+  if (sim.locked) return false;
   sim.locked = true;
   sim.penalty += seconds == null ? S.penalty : seconds;
   sim.fxMiss = 1;
   playMiss();
+  return true;
 }
 
 function showSimResults(aborted, full) {
