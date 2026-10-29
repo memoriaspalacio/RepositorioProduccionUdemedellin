@@ -40,9 +40,11 @@ public class ControladorContrarreloj : MonoBehaviour
 
     /// <summary>
     /// Cada vez que el tiempo sube o baja por algo del juego (no por el paso del tiempo): positivo al
-    /// ganar segundos, negativo al perderlos. CronometroVivo lo usa para sus efectos.
+    /// ganar segundos, negativo al perderlos. El bool dice si hay que mostrar el texto "+X"/"-X"
+    /// (false cuando quien lo da ya lo mostro, como el "+3" que vuela desde un enemigo).
+    /// CronometroVivo lo usa para sus efectos.
     /// </summary>
-    public static event Action<float> AlCambiarTiempo;
+    public static event Action<float, bool> AlCambiarTiempo;
 
     public float TiempoRestante => tiempoRestante;
     public bool EstaContando => contando;
@@ -137,11 +139,12 @@ public class ControladorContrarreloj : MonoBehaviour
         tiempoRestante = Mathf.Max(0f, tiempoRestante - restar);
 
         ActualizarTexto();
-        AlCambiarTiempo?.Invoke(tiempoRestante - antes);
+        AlCambiarTiempo?.Invoke(tiempoRestante - antes, true);
     }
 
-    // Suma tiempo como recompensa (enemigos derrotados, ver RecompensasRitmo) y lo muestra en el cronometro
-    public void AgregarTiempo(float sumar)
+    // Suma tiempo como recompensa (enemigos derrotados, ver RecompensasRitmo) y lo muestra en el cronometro.
+    // Con mostrarTexto en false el cronometro reacciona sin su propio "+X".
+    public void AgregarTiempo(float sumar, bool mostrarTexto = true)
     {
         if (!contando || terminado || sumar <= 0f)
             return;
@@ -149,7 +152,7 @@ public class ControladorContrarreloj : MonoBehaviour
         tiempoRestante += sumar;
 
         ActualizarTexto();
-        AlCambiarTiempo?.Invoke(sumar);
+        AlCambiarTiempo?.Invoke(sumar, mostrarTexto);
     }
 
     // Detiene el cronometro sin terminar la partida (pantallas de ganar/perder del nivel).

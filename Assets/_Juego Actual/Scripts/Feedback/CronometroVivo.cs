@@ -54,7 +54,10 @@ public class CronometroVivo : MonoBehaviour
     [SerializeField, Min(0f)] private float duracionRodar = 0.45f;
 
     [Header("Textos flotantes")]
+    [Tooltip("Tamano del \"-X\" al perder tiempo.")]
     [SerializeField] private float tamanoFlotante = 46f;
+    [Tooltip("Tamano del \"+X\" al ganar tiempo: discreto, ganar no debe tapar el juego.")]
+    [SerializeField] private float tamanoGanancia = 28f;
     [SerializeField] private Vector2 desplazamientoFlotante = new Vector2(20f, -45f);
 
     [Header("Vineta de pantalla")]
@@ -127,7 +130,7 @@ public class CronometroVivo : MonoBehaviour
             Destroy(vineta.canvas.gameObject);
     }
 
-    void AlCambiarTiempo(float diferencia)
+    void AlCambiarTiempo(float diferencia, bool conTexto)
     {
         ControladorContrarreloj reloj = ControladorContrarreloj.Instancia;
         if (reloj == null)
@@ -140,8 +143,9 @@ public class CronometroVivo : MonoBehaviour
         if (diferencia > 0f)
         {
             edadGanar = 0f;
-            TextoFlotante.Crear(rect, $"+{diferencia:0.#}", desplazamientoFlotante, new Vector2(0f, 70f),
-                ganarArriba, ganarAbajo, tamanoFlotante, 1.1f, false, texto.font);
+            if (conTexto)
+                TextoFlotante.Crear(rect, $"+{diferencia:0.#}", desplazamientoFlotante, new Vector2(0f, 45f),
+                    ganarArriba, ganarAbajo, tamanoGanancia, 0.9f, false, texto.font);
         }
         else
         {
