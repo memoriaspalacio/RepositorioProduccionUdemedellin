@@ -68,6 +68,12 @@ compartirlo.
 
 ## Cómo lo reproduce el juego
 
+- El nivel empieza en negro y se aclara (`fadeFromBlack`, `blackHoldSeconds` y `fadeSeconds`
+  en `BeatManager`). Mientras tanto no se puede jugar y el cronómetro está en pausa. Nada
+  cuesta tiempo hasta que la primera nota llega a la zona del corazón.
+- Unity decodifica los MP3 con 47 ms de silencio extra al principio que el navegador
+  recorta. `BeatManager` lo descuenta con `decoderPaddingMs` (47 por defecto); pon 0 si una
+  canción no es MP3. El `offsetMs` del chart se sigue midiendo aquí, en el navegador.
 - La música no arranca hasta que la canción terminó de cargarse, y el reloj del ritmo se
   mide desde el instante exacto en que suena. Si el chart empieza en los primeros beats, la
   canción espera lo justo para que esas notas lleguen desde el punto de aparición.

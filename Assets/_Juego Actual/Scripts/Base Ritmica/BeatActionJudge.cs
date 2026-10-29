@@ -450,6 +450,10 @@ public class BeatActionJudge : MonoBehaviour {
         ControladorContrarreloj clock = ControladorContrarreloj.Instancia;
         if (clock != null && !clock.EstaContando) return;
 
+        // Before the first note reaches the heart zone the level hasn't really started
+        // (the fade-in, the pre-roll while the first notes travel): nothing to miss yet.
+        if (notesEnteredZone == 0) return;
+
         if (penaltyLocked) {
             if (logActions) Debug.Log($"Penalty skipped ({cause}): locked until the next note enters the zone");
             return;

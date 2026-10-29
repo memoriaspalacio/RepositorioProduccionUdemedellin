@@ -29,6 +29,10 @@ public class BeatManager : MonoBehaviour {
         }
         Instance = this;
         //DontDestroyOnLoad(gameObject);
+
+        // Black from the very first frame, so the level never pops in (and the hitch of
+        // loading the song happens out of sight).
+        if (fadeFromBlack) startFade = FundidoInicio.Crear();
     }
     #endregion
 
@@ -46,6 +50,23 @@ public class BeatManager : MonoBehaviour {
              "the DSP buffer size. If presses that sound on time keep counting as late, raise it; if notes look " +
              "late against the music, lower it.")]
     [SerializeField, Min(-1f)] private float outputLatencyMs = -1f;
+
+    [Tooltip("Silence, in ms, that Unity's MP3 decoder leaves at the start of the song and browsers strip " +
+             "(the encoder delay). Charts and their offsetMs are measured in the browser chart editor, so the " +
+             "clock is pushed back by this much to match what Unity actually plays. Measured at 47 ms on the four " +
+             "level songs; set it to 0 for a song that isn't an MP3.")]
+    [SerializeField, Min(0f)] private float decoderPaddingMs = 47f;
+
+    [Header("Level Start")]
+    [Tooltip("Start the level on a black screen that fades in before the song begins. During the black screen " +
+             "and the fade nothing can be played and the countdown (ControladorContrarreloj) is paused.")]
+    [SerializeField] private bool fadeFromBlack = true;
+
+    [Tooltip("Seconds the screen stays black once the song has loaded, before the fade starts.")]
+    [SerializeField, Min(0f)] private float blackHoldSeconds = 0.4f;
+
+    [Tooltip("Seconds the fade from black takes. The song starts when it ends.")]
+    [SerializeField, Min(0f)] private float fadeSeconds = 1.2f;
 
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = true;
@@ -88,7 +109,7 @@ public class BeatManager : MonoBehaviour {
     /// and the song's own lead-in before its first beat (SetSongOffset).
     /// </summary>
     public double CurrentSongTime => IsPlaying
-        ? AudioSettings.dspTime - songStartDspTime - songOffsetSeconds / speedMultiplier - outputLatencySeconds
+        ? AudioSettings.dspTime - songStartDspTime - LeadInSeconds - outputLatencySeconds
         : 0.0;
 
     /// <summary>
@@ -121,6 +142,10 @@ public class BeatManager : MonoBehaviour {
     private int verseLengthInMeasures = 2; // How many measures before a "verse" event
     private double songStartDspTime; // dspTime the song's first sample plays at, used for CurrentSongTime
     private double songOffsetSeconds; // where beat 0 sits inside the audio file, see SetSongOffset
+
+    // Real seconds from the song's first sample to beat 0: the chart's offset plus the
+    // decoder's leading silence.
+    private double LeadInSeconds => (songOffsetSeconds + decoderPaddingMs / 1000.0) / speedMultiplier;
     private double outputLatencySeconds; // see outputLatencyMs
 
     private const double MinScheduleAhead = 0.1; // the audio thread needs the start time a little in advance
@@ -140,11 +165,16 @@ public class BeatManager : MonoBehaviour {
 
     private double LoopSeconds => loopBeats * (double)SecPerBeat;
 
+    private FundidoInicio startFade;
+
     private IEnumerator Start() {
         if (musicSource == null) {
             Debug.LogError("BeatManager: No AudioSource assigned! Please assign your music source.");
+            if (startFade != null) Destroy(startFade.gameObject);
             yield break;
         }
+
+        if (startFade != null) PauseCountdown();
 
         // Apply speed multiplier to audio
         musicSource.pitch = speedMultiplier;
@@ -160,6 +190,7 @@ public class BeatManager : MonoBehaviour {
             float waited = 0f;
             while (clip.loadState != AudioDataLoadState.Loaded && clip.loadState != AudioDataLoadState.Failed && waited < 15f) {
                 waited += Time.unscaledDeltaTime;
+                if (startFade != null) PauseCountdown();
                 yield return null;
             }
 
@@ -171,11 +202,34 @@ public class BeatManager : MonoBehaviour {
         // and the heavy first frame of the scene is behind us.
         yield return null;
 
+        // The margin before the level: hold the black screen, then fade it in. Every frame,
+        // since the countdown's own Start() may run after ours and switch it back on.
+        if (startFade != null) {
+            for (float t = 0f; t < blackHoldSeconds; t += Time.unscaledDeltaTime) {
+                PauseCountdown();
+                yield return null;
+            }
+
+            IEnumerator fade = startFade.Desvanecer(fadeSeconds);
+            while (fade.MoveNext()) {
+                PauseCountdown();
+                yield return fade.Current;
+            }
+        }
+
         if (showDebugLogs) {
             Debug.Log($"BeatManager initialized | BPM: {bpm} | Speed: {speedMultiplier}x | Sec/Beat: {SecPerBeat:F3}");
         }
 
         StartMusic();
+
+        if (startFade != null && ControladorContrarreloj.Instancia != null)
+            ControladorContrarreloj.Instancia.IniciarContrarreloj();
+    }
+
+    private static void PauseCountdown() {
+        if (ControladorContrarreloj.Instancia != null)
+            ControladorContrarreloj.Instancia.PausarContrarreloj();
     }
 
     bool myFix = true;
@@ -282,7 +336,7 @@ public class BeatManager : MonoBehaviour {
 
         // Beat 0 lands preRollBeats after now at the earliest; the song's own lead-in before
         // its first beat (the offset) counts towards that wait.
-        double offsetSeconds = songOffsetSeconds / speedMultiplier;
+        double offsetSeconds = LeadInSeconds;
         double wait = System.Math.Max(MinScheduleAhead, preRollBeats * SecPerBeat - offsetSeconds);
 
         songStartDspTime = AudioSettings.dspTime + wait;
