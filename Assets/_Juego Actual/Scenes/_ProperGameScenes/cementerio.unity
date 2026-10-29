@@ -9664,7 +9664,7 @@ PrefabInstance:
       objectReference: {fileID: 1032602251}
     - target: {fileID: 6102761456098161839, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 93.35863
+      value: -210
       objectReference: {fileID: 0}
     - target: {fileID: 8075253062828422866, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_fontAsset
@@ -9708,11 +9708,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 305.15002
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 155
+      value: -140
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9749,7 +9749,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ControladorContrarreloj
   minutos: 5
-  segundos: 5
+  segundos: 0
   minutosEntreEscena: 0
   segundosEntreEscena: 0
   escenaDerrota: Perder
@@ -10646,37 +10646,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8244709572362194178, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
   m_PrefabInstance: {fileID: 661014466}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &915093858
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 915093859}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &915093859
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 915093858}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.14743, y: 1.29974, z: -1.01559}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &940587866
 GameObject:
   m_ObjectHideFlags: 0
@@ -10761,7 +10730,7 @@ Transform:
   m_GameObject: {fileID: 940587866}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.6656811, z: 0}
+  m_LocalPosition: {x: 0, y: -0.66568077, z: 0}
   m_LocalScale: {x: 2.8, y: 1, z: 2.8}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11386,6 +11355,7 @@ MonoBehaviour:
   barPrefab: {fileID: 1763768325479063683, guid: ee83b12492d592d499d90b08e2d2a06c, type: 3}
   barParent: {fileID: 1092442724}
   travelBeats: 4
+  mirrorTrack: 1
   colorDelayBeats: 0.5
   idleColor: {r: 0.79622644, g: 0.7616732, b: 0.7616732, a: 1}
   windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
@@ -12517,7 +12487,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
   useNoteChart: 1
-  noteChartFile: {fileID: 4900000, guid: 405372c2a02ad584fbf724ea1b7693f3, type: 3}
+  noteChartFile: {fileID: 0}
   noteInterval: 2
   midBeatNoteChance: 0.09375
   halfBeatNoteChance: 0.046875
@@ -12525,8 +12495,7 @@ MonoBehaviour:
   lateTolerance: 0.05
   penaltySeconds: 5
   hitPenaltySeconds: 5
-  missedNotePenaltySeconds: 1
-  chartLeadInBeats: 1
+  penalizeMissedNotes: 0
   logActions: 0
 --- !u!114 &1150939307
 MonoBehaviour:
@@ -32226,7 +32195,6 @@ SceneRoots:
   - {fileID: 1983170458}
   - {fileID: 1115188533}
   - {fileID: 1731232081}
-  - {fileID: 915093859}
   - {fileID: 2068982885502489996}
   - {fileID: 667535904}
   - {fileID: 1098686260}

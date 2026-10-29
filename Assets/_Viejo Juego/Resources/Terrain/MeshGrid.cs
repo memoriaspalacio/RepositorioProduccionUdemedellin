@@ -132,13 +132,10 @@ public class MeshGrid : MonoBehaviour
             z
         );
 
-        if (Physics.Raycast(
+        if (TryRaycastGround(
                 rayOrigin,
-                Vector3.down,
-                out RaycastHit hit,
                 raycastHeight * 2f + bounds.size.y,
-                groundLayer,
-                QueryTriggerInteraction.Ignore))
+                out RaycastHit hit))
         {
             return hit.point +
                    Vector3.up * playerHeightOffset;
@@ -149,6 +146,47 @@ public class MeshGrid : MonoBehaviour
             bounds.max.y + playerHeightOffset,
             z
         );
+    }
+
+    private static readonly RaycastHit[] groundHits = new RaycastHit[16];
+
+    // Busca el suelo bajo un punto, ignorando a los personajes: el rayo baja desde muy alto
+    // y con groundLayer en "Everything" chocaba con la capsula del propio jugador o de un
+    // enemigo, y la celda quedaba a la altura de su cabeza (o bajo tierra al restarle).
+    // Los personajes son los colliders con CharacterController o con Rigidbody; el suelo
+    // es estatico.
+    private bool TryRaycastGround(
+        Vector3 origin,
+        float distance,
+        out RaycastHit ground)
+    {
+        int count = Physics.RaycastNonAlloc(
+            origin,
+            Vector3.down,
+            groundHits,
+            distance,
+            groundLayer,
+            QueryTriggerInteraction.Ignore
+        );
+
+        ground = default;
+        bool found = false;
+
+        for (int i = 0; i < count; i++)
+        {
+            RaycastHit hit = groundHits[i];
+
+            if (hit.collider is CharacterController || hit.rigidbody != null)
+                continue;
+
+            if (!found || hit.distance < ground.distance)
+            {
+                ground = hit;
+                found = true;
+            }
+        }
+
+        return found;
     }
 
     // Comprueba si una celda se encuentra dentro de los limites de la cuadricula.
@@ -253,13 +291,10 @@ public class MeshGrid : MonoBehaviour
             z
         );
 
-        if (Physics.Raycast(
+        if (TryRaycastGround(
                 rayOrigin,
-                Vector3.down,
-                out RaycastHit hit,
                 raycastHeight * 2f + bounds.size.y,
-                groundLayer,
-                QueryTriggerInteraction.Ignore))
+                out RaycastHit hit))
         {
             return hit.point + Vector3.up * 0.05f;
         }

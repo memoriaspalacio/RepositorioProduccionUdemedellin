@@ -64,15 +64,34 @@ compartirlo.
   El juego ya la hace aparecer 4 beats antes; no hay que adelantarla a mano.
 - `offsetMs` es dónde cae el compás 1:1:1 dentro del mp3. Valores medidos sobre los golpes de
   cada canción: Cementerio 115 ms, Iglesia 140 ms, Crisantia 10 ms, Mazmorra 0 ms.
+- `anclas` (opcional) es para canciones que no se tocaron con metrónomo y cuyo pulso se
+  adelanta o atrasa por tramos, como la de la Iglesia (entre los segundos ~60–95 y ~150–186 va
+  unos 45 ms adelantada). Cada ancla dice el `offsetMs` real alrededor de un beat
+  (`{ "beat": 131.75, "offsetMs": 101 }`); el juego desliza la rejilla entre ellas para que las
+  notas sigan a la música. Salen de analizar los golpes de la canción, no se escriben a mano. El
+  editor las conserva al importar y desplegar (y si el chart no tiene, mantiene las del juego),
+  pero no las dibuja: en esos tramos la rejilla del editor puede verse ~45 ms corrida.
 - Si una escena no tiene su `.json`, el juego usa el patrón de intervalos de siempre.
 
 ## Cómo lo reproduce el juego
 
+- El nivel empieza en negro y se aclara (`fadeFromBlack`, `blackHoldSeconds` y `fadeSeconds`
+  en `BeatManager`). Mientras tanto no se puede jugar y el cronómetro está en pausa. Nada
+  cuesta tiempo hasta que la primera nota llega a la zona del corazón.
+- Unity decodifica los MP3 con 47 ms de silencio extra al principio que el navegador
+  recorta. `BeatManager` lo descuenta con `decoderPaddingMs` (47 por defecto); pon 0 si una
+  canción no es MP3. El `offsetMs` del chart se sigue midiendo aquí, en el navegador.
 - La música no arranca hasta que la canción terminó de cargarse, y el reloj del ritmo se
   mide desde el instante exacto en que suena. Si el chart empieza en los primeros beats, la
   canción espera lo justo para que esas notas lleguen desde el punto de aparición.
 - Si la canción está en bucle, cada vuelta empieza en un beat entero y el chart se repite.
 - Cada nota que pasa el corazón sin tocarla resta `missedNotePenaltySeconds` (1 s por
   defecto, en el inspector de `BeatActionJudge`).
+- La ventana de acierto empieza en la caja BeatWindowZone y termina 0.15 beats después del
+  corazón (caja BeatDestroyZone): pulsar justo en el beat, o un pelo tarde, también cuenta.
+- Cada acierto se califica por la distancia al beat exacto: **PERFECT** a 50 ms o menos,
+  **GOOD** a 110 ms o menos y **BAD** el resto (`perfectWindowSeconds` y `goodWindowSeconds` en
+  `BeatActionJudge`). La calificación solo cambia los efectos (texto, latido y partículas de
+  `EfectosCalificacion` y `HeartBeatFeedback`), no el tiempo.
 - Si las notas se ven adelantadas o atrasadas respecto a lo que suena, ajusta
   `outputLatencyMs` en `BeatManager` (-1 = calcularla sola).
