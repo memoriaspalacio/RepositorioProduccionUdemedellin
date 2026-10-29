@@ -498,10 +498,10 @@ const TPM = TPB * BPMEAS;
 // las cajas BeatWindowZone / BeatDestroyZone del prefab Gametime UI). offsetMs es
 // dónde cae el primer beat dentro del mp3, medido sobre los golpes de cada canción.
 const PRESETS = {
-  cementerio: { nombre: 'Cementerio', cancion: 'Cementerio.mp3',   bpm: 124, offsetMs: 115, early: 1.3153, late: 0, travel: 4 },
-  iglesia:    { nombre: 'Iglesia',    cancion: 'Iglesia.mp3',      bpm: 120, offsetMs: 140, early: 1.0803, late: 0, travel: 4 },
-  mazmorra:   { nombre: 'Mazmorra',   cancion: 'Mazmorra.mp3',     bpm: 120, offsetMs: 0,   early: 0.8095, late: 0, travel: 4 },
-  crisantia:  { nombre: 'Crisantia',  cancion: 'ZonaPastoral.mp3', bpm: 120, offsetMs: 10,  early: 1.3153, late: 0, travel: 4 },
+  cementerio: { nombre: 'Cementerio', cancion: 'Cementerio.mp3',   bpm: 124, offsetMs: 115, early: 1.315,  late: 0.1495, travel: 4 },
+  iglesia:    { nombre: 'Iglesia',    cancion: 'Iglesia.mp3',      bpm: 120, offsetMs: 140, early: 1.0804, late: 0.1495, travel: 4 },
+  mazmorra:   { nombre: 'Mazmorra',   cancion: 'Mazmorra.mp3',     bpm: 120, offsetMs: 0,   early: 0.8095, late: 0.1495, travel: 4 },
+  crisantia:  { nombre: 'Crisantia',  cancion: 'ZonaPastoral.mp3', bpm: 120, offsetMs: 10,  early: 1.315,  late: 0.1495, travel: 4 },
 };
 const PENALTY_DEFAULT = 5;
 const MISS_PENALTY_DEFAULT = 1;
@@ -626,6 +626,7 @@ const st = {
   songName: '', buffer: null, duration: 0,
   analysis: null, tickStr: null, tickEnv: null,
   bpm: 124, offsetMs: 0,
+  anclas: null, // desfases por tramos del chart (los genera el análisis de la canción); se conservan tal cual
   latencyMs: store.get('latencyMs', 0),
   notes: [], set: new Set(), sel: new Set(),
   missed: new Set(),
@@ -716,7 +717,7 @@ function changed() {
 
 function autosave() {
   if (!st.ready) return;
-  const ok = store.set('chart:' + st.scene, { notes: st.notes, bpm: st.bpm, offsetMs: st.offsetMs, at: Date.now() });
+  const ok = store.set('chart:' + st.scene, { notes: st.notes, bpm: st.bpm, offsetMs: st.offsetMs, anclas: st.anclas, at: Date.now() });
   st.dirty = false;
   $('#saveState').textContent = ok
     ? '✓ Guardado ' + new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })
@@ -1654,6 +1655,7 @@ function chartObject() {
     beatsPerMeasure: BPMEAS,
     ticksPerBeat: TPB,
     offsetMs: st.offsetMs,
+    ...(st.anclas ? { anclas: st.anclas } : {}),
     notes: st.notes.map(fmtMBT),
   };
 }
@@ -1678,6 +1680,7 @@ async function importChart(text, origin) {
   snapshot();
   if (typeof o.bpm === 'number' && o.bpm > 0) st.bpm = o.bpm;
   if (typeof o.offsetMs === 'number') st.offsetMs = Math.max(0, o.offsetMs);
+  st.anclas = Array.isArray(o.anclas) && o.anclas.length ? o.anclas : null;
   syncInputs();
   computeTickFeatures();
   setNotes(ticks);
@@ -1716,7 +1719,7 @@ async function deploy() {
     setMode('sim');
     return;
   }
-  const json = chartJSON();
+  let json = chartJSON();
   const name = st.scene + '.json';
   if (!window.showDirectoryPicker) {
     download(json, name);
@@ -1727,6 +1730,16 @@ async function deploy() {
   try {
     const dir = await chartsDir(false);
     if (!dir) return;
+    // Un chart sin anclas (p. ej. un autoguardado anterior a ellas) no borra las que ya tiene el juego
+    if (!st.anclas) {
+      try {
+        const actual = JSON.parse(await (await (await dir.getFileHandle(name)).getFile()).text());
+        if (Array.isArray(actual.anclas) && actual.anclas.length) {
+          st.anclas = actual.anclas;
+          json = chartJSON();
+        }
+      } catch (e) { /* no hay chart previo en el juego */ }
+    }
     const fh = await dir.getFileHandle(name, { create: true });
     const w = await fh.createWritable();
     await w.write(json);
@@ -1780,6 +1793,7 @@ async function switchScene(name) {
   const saved = store.get('chart:' + name, null);
   st.bpm = saved && saved.bpm ? saved.bpm : p.bpm;
   st.offsetMs = saved && typeof saved.offsetMs === 'number' ? saved.offsetMs : p.offsetMs;
+  st.anclas = saved && Array.isArray(saved.anclas) ? saved.anclas : null;
   hist.undo = [];
   hist.redo = [];
   st.loop.on = false;

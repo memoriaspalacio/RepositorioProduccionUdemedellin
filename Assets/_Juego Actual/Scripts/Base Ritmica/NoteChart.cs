@@ -29,7 +29,16 @@ public class NoteChart {
         public int beatsPerMeasure = 4;
         public int ticksPerBeat = 4;
         public float offsetMs;
+        public Anchor[] anclas;
         public string[] notes;
+    }
+
+    // Where the beat really falls in one stretch of a song whose timing wanders: from this
+    // beat on, beat N sits offsetMs into its own beat instead of the chart's offsetMs.
+    [Serializable]
+    private class Anchor {
+        public float beat;
+        public float offsetMs;
     }
 
     /// <summary>Asset the chart was read from, for logs.</summary>
@@ -40,6 +49,17 @@ public class NoteChart {
 
     /// <summary>Where the chart's 1:1:1 sits inside the audio file, in seconds.</summary>
     public double OffsetSeconds { get; private set; }
+
+    /// <summary>
+    /// Optional ("anclas" in the JSON): for songs that weren't played to a click, beats where
+    /// the music sits at a different offset than OffsetSeconds. BeatManager slides the beat
+    /// grid between them so the notes follow the music. Null when the chart has none.
+    /// Ascending, same length as AnchorOffsetSeconds.
+    /// </summary>
+    public double[] AnchorBeats { get; private set; }
+
+    /// <summary>The offset at each of AnchorBeats, in seconds of audio (like OffsetSeconds).</summary>
+    public double[] AnchorOffsetSeconds { get; private set; }
 
     public int NoteCount => slots.Count;
 
@@ -117,7 +137,29 @@ public class NoteChart {
             return null;
         }
 
+        ReadAnchors(chart, data, file);
         return chart;
+    }
+
+    private static void ReadAnchors(NoteChart chart, ChartFile data, TextAsset file) {
+        if (data.anclas == null || data.anclas.Length == 0) return;
+
+        List<Anchor> anchors = new List<Anchor>(data.anclas);
+        anchors.RemoveAll(a => a == null || a.beat < 0f);
+        anchors.Sort((a, b) => a.beat.CompareTo(b.beat));
+
+        if (anchors.Count == 0) {
+            Debug.LogWarning($"NoteChart: {file.name} has an empty \"anclas\" list.", file);
+            return;
+        }
+
+        chart.AnchorBeats = new double[anchors.Count];
+        chart.AnchorOffsetSeconds = new double[anchors.Count];
+
+        for (int i = 0; i < anchors.Count; i++) {
+            chart.AnchorBeats[i] = anchors[i].beat;
+            chart.AnchorOffsetSeconds[i] = Math.Max(0f, anchors[i].offsetMs) / 1000.0;
+        }
     }
 
     /// <summary>"12:3:2" -> ticks since 1:1:1.</summary>

@@ -10562,6 +10562,8 @@ MonoBehaviour:
   idleTrigger: Idle
   attackTrigger: onAttack
   cooldownTrigger: Cooldown
+  preparationTime: 0.5
+  hitDelay: 0.5
   reloadTime: 2
   attackDuration: 0.5
   playerHealth: {fileID: 1792752532}
@@ -10790,11 +10792,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 435971787}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.2131499, z: 0}
+  m_LocalRotation: {x: 0.000000023278085, y: -0, z: -0.01637071, w: 0.999866}
+  m_LocalPosition: {x: 0, y: -1.221186, z: 0}
   m_LocalScale: {x: 2.8, y: 1, z: 2.8}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1607760752}
   m_Father: {fileID: 1792752527}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &475086733 stripped
@@ -12135,7 +12138,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1476223623718612070, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 18.8
+      value: 14.3
       objectReference: {fileID: 0}
     - target: {fileID: 1917602078452645560, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchorMax.y
@@ -12145,13 +12148,17 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 2521028516836949071, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -53.72
+      objectReference: {fileID: 0}
     - target: {fileID: 2671328518192151799, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_Name
       value: Gametime UI (1)
       objectReference: {fileID: 0}
     - target: {fileID: 6102761456098161839, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 44.781776
+      value: -210
       objectReference: {fileID: 0}
     - target: {fileID: 8075253062828422866, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_fontAsset
@@ -12203,11 +12210,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 305.15
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 155
+      value: -140
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16981,6 +16988,8 @@ MonoBehaviour:
   barPrefab: {fileID: 1763768325479063683, guid: ee83b12492d592d499d90b08e2d2a06c, type: 3}
   barParent: {fileID: 675132970}
   travelBeats: 4
+  mirrorTrack: 1
+  colorDelayBeats: 0.5
   idleColor: {r: 0.42, g: 0.17, b: 0.17, a: 1}
   windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   windowClosingColor: {r: 0.6, g: 0.2, b: 0.15, a: 1}
@@ -17928,12 +17937,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfc661b33e28ed4418a9f6ad6790c92b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
+  useNoteChart: 1
+  noteChartFile: {fileID: 0}
   noteInterval: 2
   midBeatNoteChance: 0.09375
   halfBeatNoteChance: 0.046875
   earlyTolerance: 0.5
   lateTolerance: 0.25
-  penaltyNoteCount: 0
+  penaltySeconds: 5
+  hitPenaltySeconds: 5
+  penalizeMissedNotes: 0
   logActions: 1
 --- !u!1 &1156747903
 GameObject:
@@ -21883,7 +21896,7 @@ Transform:
   m_GameObject: {fileID: 1450164162}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.000023945177, y: 0.04249634, z: -9.865503}
+  m_LocalPosition: {x: -0.000023945177, y: 0.39951938, z: -9.865503}
   m_LocalScale: {x: 20.000378, y: 39.8032, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -22531,6 +22544,133 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 364610524}
   m_SourcePrefab: {fileID: 100100000, guid: 69b06c83d7cb922439f54b7a2f8153c2, type: 3}
+--- !u!1 &1607760751
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1607760752}
+  - component: {fileID: 1607760753}
+  - component: {fileID: 1607760754}
+  m_Layer: 0
+  m_Name: RhythmFeedbackLight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1607760752
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607760751}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.6, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 435971790}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!108 &1607760753
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607760751}
+  m_Enabled: 1
+  serializedVersion: 12
+  m_Type: 2
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
+  m_Range: 5
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
+  m_CookieSize2D: {x: 0.5, y: 0.5}
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
+  m_ForceVisible: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+  m_LightUnit: 1
+  m_LuxAtDistance: 1
+  m_EnableSpotReflector: 1
+--- !u!114 &1607760754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607760751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalLightData
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_CustomShadowLayers: 0
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
+  m_RenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ShadowRenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_Version: 4
+  m_LightLayerMask: 1
+  m_ShadowLayerMask: 1
+  m_RenderingLayers: 1
+  m_ShadowRenderingLayers: 1
 --- !u!1 &1609262914
 GameObject:
   m_ObjectHideFlags: 0
@@ -24173,6 +24313,8 @@ MonoBehaviour:
   playerMovement: {fileID: 0}
   tiempoEntreSonidosDano: 0.5
   lifeBar: {fileID: 675132973}
+  groundIndicator: {fileID: 0}
+  beatJudge: {fileID: 0}
 --- !u!114 &1792752533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24199,10 +24341,19 @@ MonoBehaviour:
   visualRenderer: {fileID: 435971788}
   fillDurationBeats: 1
   adaptToNoteInterval: 1
+  nextNoteWarnBeats: 1
   hitFeedbackDuration: 0.32
   hitPunchScale: 1.2
   enableMissFeedback: 1
   missFeedbackDuration: 0.22
+  missShrinkScale: 0.88
+  damageFeedbackDuration: 0.55
+  enableFeedbackLight: 1
+  hitLightColor: {r: 1, g: 0.78, b: 0.25, a: 1}
+  damageLightColor: {r: 0.95, g: 0.06, b: 0.12, a: 1}
+  feedbackLightIntensity: 9
+  feedbackLightRange: 5
+  feedbackLightHeight: 0.6
   OnNoteHitSuccess:
     m_PersistentCalls:
       m_Calls: []
@@ -33474,7 +33625,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4668336584716827273}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
