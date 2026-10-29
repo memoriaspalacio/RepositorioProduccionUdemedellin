@@ -26,6 +26,11 @@ public class PlayerHealth : MonoBehaviour
 
     private bool muerto = false;
 
+    public bool EstaMuerto => muerto;
+
+    /// <summary>Al recuperar vida (RecompensasRitmo); lleva la vida que de verdad se sumo.</summary>
+    public event System.Action<float> AlCurar;
+
     // Nota (contador del juez) en la que entro el ultimo golpe, y cuanto dano se aplico en ella
     private int notaDelUltimoGolpe = -1;
     private float danoEnEstaNota = 0f;
@@ -99,6 +104,33 @@ public class PlayerHealth : MonoBehaviour
         {
             Death();
         }
+    }
+
+    /// <summary>
+    /// Suma vida sin pasar del maximo y devuelve cuanta se sumo de verdad (0 si ya estaba llena,
+    /// si murio o si el nivel termino).
+    /// </summary>
+    public float Curar(float cantidad)
+    {
+        if (muerto || cantidad <= 0f)
+            return 0f;
+
+        if (ControladorContrarreloj.Instancia != null &&
+            !ControladorContrarreloj.Instancia.EstaContando)
+            return 0f;
+
+        float antes = currentLife;
+        currentLife = Mathf.Min(maxLife, currentLife + cantidad);
+        float sumada = currentLife - antes;
+
+        if (sumada <= 0f)
+            return 0f;
+
+        if (lifeBar != null)
+            lifeBar.value = currentLife;
+
+        AlCurar?.Invoke(sumada);
+        return sumada;
     }
 
     // Un golpe por nota: hasta que entra una nueva nota a la zona del corazon solo cuenta

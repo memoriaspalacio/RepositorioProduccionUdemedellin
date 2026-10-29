@@ -1,5 +1,5 @@
 
-using System.Collections;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -31,45 +31,18 @@ public class ControladorContrarreloj : MonoBehaviour
     [Header("Interfaz")]
     [SerializeField] private TMP_Text textoTiempo;
 
-    [Header("Penalizacion (fallar el ritmo)")]
-    [Tooltip("Color al que destella el cronometro, y color del texto flotante, al perder tiempo.")]
-    [SerializeField] private Color colorPenalizacion = new Color(1f, 0.22f, 0.18f, 1f);
-
-    [Tooltip("Segundos que dura el destello, el golpe de escala y el temblor del cronometro.")]
-    [Min(0.05f)]
-    [SerializeField] private float duracionPenalizacion = 0.6f;
-
-    [Tooltip("Cuanto crece el cronometro en el golpe (1 = nada).")]
-    [Range(1f, 2f)]
-    [SerializeField] private float escalaGolpePenalizacion = 1.3f;
-
-    [Tooltip("Amplitud del temblor del cronometro, en pixeles de UI.")]
-    [Range(0f, 30f)]
-    [SerializeField] private float temblorPenalizacion = 6f;
-
-    [Tooltip("Muestra un texto flotante con los segundos perdidos (p. ej. \"-5\") junto al cronometro.")]
-    [SerializeField] private bool mostrarTextoPenalizacion = true;
-
-    [Tooltip("Donde aparece el texto flotante, relativo al cronometro (pixeles de UI).")]
-    [SerializeField] private Vector2 desplazamientoTextoPenalizacion = new Vector2(0f, -40f);
-
-    [Tooltip("Cuanto se desliza el texto flotante mientras se desvanece (pixeles de UI).")]
-    [SerializeField] private Vector2 recorridoTextoPenalizacion = new Vector2(0f, -30f);
-
-    [Tooltip("Segundos que tarda el texto flotante en desvanecerse.")]
-    [Min(0.1f)]
-    [SerializeField] private float duracionTextoPenalizacion = 1.2f;
-
     private float tiempoRestante, tiempoRestanteEntreEscenas;
     private bool contando = false;
     private bool terminado = false;
 
-    // Estado del cronometro antes del destello, para devolverlo intacto al terminar
-    private Coroutine animacionPenalizacion;
-    private TMP_Text textoAnimado;
-    private Color colorBaseTexto;
-    private Vector3 escalaBaseTexto;
-    private Vector2 posicionBaseTexto;
+    // Lo que se ve del cronometro (estilo, latido, efectos al ganar o perder tiempo)
+    private CronometroVivo cronometroVivo;
+
+    /// <summary>
+    /// Cada vez que el tiempo sube o baja por algo del juego (no por el paso del tiempo): positivo al
+    /// ganar segundos, negativo al perderlos. CronometroVivo lo usa para sus efectos.
+    /// </summary>
+    public static event Action<float> AlCambiarTiempo;
 
     public float TiempoRestante => tiempoRestante;
     public bool EstaContando => contando;
@@ -160,10 +133,23 @@ public class ControladorContrarreloj : MonoBehaviour
             return;
 
         // Si llega a cero, Update se encarga de Perder() en el siguiente fotograma
+        float antes = tiempoRestante;
         tiempoRestante = Mathf.Max(0f, tiempoRestante - restar);
 
         ActualizarTexto();
-        MostrarPenalizacion(restar);
+        AlCambiarTiempo?.Invoke(tiempoRestante - antes);
+    }
+
+    // Suma tiempo como recompensa (enemigos derrotados, ver RecompensasRitmo) y lo muestra en el cronometro
+    public void AgregarTiempo(float sumar)
+    {
+        if (!contando || terminado || sumar <= 0f)
+            return;
+
+        tiempoRestante += sumar;
+
+        ActualizarTexto();
+        AlCambiarTiempo?.Invoke(sumar);
     }
 
     // Detiene el cronometro sin terminar la partida (pantallas de ganar/perder del nivel).
@@ -221,118 +207,11 @@ public class ControladorContrarreloj : MonoBehaviour
 
     void ActualizarTexto()
     {
-        if (textoTiempo == null)
+        // Con CronometroVivo el texto lo escribe el (con los numeros rodando y decimas al final)
+        if (textoTiempo == null || cronometroVivo != null)
             return;
 
-        int totalSegundos = Mathf.CeilToInt(tiempoRestante);
-
-        int minutosActuales = totalSegundos / 60;
-        int segundosActuales = totalSegundos % 60;
-
-        textoTiempo.text =
-            $"{minutosActuales:00}:{segundosActuales:00}";
-    }
-
-    // Destello rojo, golpe de escala y temblor del cronometro, mas un texto flotante "-X"
-    void MostrarPenalizacion(float segundosPerdidos)
-    {
-        // Si llega otra penalizacion a mitad del destello, se parte del estado original
-        RestaurarTextoAnimado();
-
-        if (textoTiempo == null)
-            return;
-
-        if (mostrarTextoPenalizacion)
-            StartCoroutine(AnimarTextoFlotante(textoTiempo, segundosPerdidos));
-
-        textoAnimado = textoTiempo;
-        colorBaseTexto = textoAnimado.color;
-        escalaBaseTexto = textoAnimado.rectTransform.localScale;
-        posicionBaseTexto = textoAnimado.rectTransform.anchoredPosition;
-
-        animacionPenalizacion = StartCoroutine(AnimarCronometroPenalizado());
-    }
-
-    IEnumerator AnimarCronometroPenalizado()
-    {
-        RectTransform rect = textoAnimado.rectTransform;
-        float tiempo = 0f;
-
-        while (tiempo < duracionPenalizacion)
-        {
-            // La escena cambio y el texto ya no existe
-            if (textoAnimado == null)
-                break;
-
-            tiempo += Time.unscaledDeltaTime;
-
-            // 1 al recibir la penalizacion, 0 al terminar
-            float fuerza = 1f - Mathf.Clamp01(tiempo / duracionPenalizacion);
-
-            // El rojo se sostiene un poco antes de apagarse; el golpe y el temblor caen rapido
-            textoAnimado.color = Color.Lerp(colorBaseTexto, colorPenalizacion, Mathf.Sqrt(fuerza));
-            rect.localScale = escalaBaseTexto * (1f + (escalaGolpePenalizacion - 1f) * fuerza * fuerza);
-            rect.anchoredPosition = posicionBaseTexto + Random.insideUnitCircle * (temblorPenalizacion * fuerza);
-
-            yield return null;
-        }
-
-        animacionPenalizacion = null;
-        RestaurarTextoAnimado();
-    }
-
-    void RestaurarTextoAnimado()
-    {
-        if (animacionPenalizacion != null)
-        {
-            StopCoroutine(animacionPenalizacion);
-            animacionPenalizacion = null;
-        }
-
-        if (textoAnimado != null)
-        {
-            textoAnimado.color = colorBaseTexto;
-            textoAnimado.rectTransform.localScale = escalaBaseTexto;
-            textoAnimado.rectTransform.anchoredPosition = posicionBaseTexto;
-        }
-
-        textoAnimado = null;
-    }
-
-    // Copia del cronometro con los segundos perdidos, que se desliza y se desvanece
-    IEnumerator AnimarTextoFlotante(TMP_Text origen, float segundosPerdidos)
-    {
-        TMP_Text flotante = Instantiate(origen, origen.transform.parent);
-        flotante.name = "PenalizacionContrarreloj"; // para que BuscarTextoTiempo no la confunda
-        flotante.text = $"-{segundosPerdidos:0.#}";
-        flotante.raycastTarget = false;
-
-        RectTransform rect = flotante.rectTransform;
-        Vector2 inicio = origen.rectTransform.anchoredPosition + desplazamientoTextoPenalizacion;
-        float tiempo = 0f;
-
-        while (tiempo < duracionTextoPenalizacion)
-        {
-            // La escena cambio y la copia ya no existe
-            if (flotante == null)
-                yield break;
-
-            tiempo += Time.unscaledDeltaTime;
-            float progreso = Mathf.Clamp01(tiempo / duracionTextoPenalizacion);
-
-            // Arranca rapido y frena; se mantiene visible y se apaga al final
-            float deslizamiento = 1f - (1f - progreso) * (1f - progreso);
-            rect.anchoredPosition = inicio + recorridoTextoPenalizacion * deslizamiento;
-
-            Color color = colorPenalizacion;
-            color.a *= 1f - progreso * progreso;
-            flotante.color = color;
-
-            yield return null;
-        }
-
-        if (flotante != null)
-            Destroy(flotante.gameObject);
+        textoTiempo.text = CronometroVivo.Formatear(tiempoRestante, false);
     }
 
     void EscenaCargada(Scene escena, LoadSceneMode modo)
@@ -375,6 +254,10 @@ public class ControladorContrarreloj : MonoBehaviour
         {
             textoTiempo = null;
         }
+
+        cronometroVivo = null;
+        if (textoTiempo != null && !textoTiempo.TryGetComponent(out cronometroVivo))
+            cronometroVivo = textoTiempo.gameObject.AddComponent<CronometroVivo>();
     }
 
     public void OnDestroy()

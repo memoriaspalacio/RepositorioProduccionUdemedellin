@@ -14,6 +14,12 @@ public class EnemyHealth : MonoBehaviour
     public string hurtTrigger = "onHurt";
     public string deathTrigger = "onDeath";
 
+    /// <summary>
+    /// Al morir un enemigo de verdad (no las cruces del Monk, que tambien tienen EnemyHealth).
+    /// RecompensasRitmo da tiempo y vida por cada uno.
+    /// </summary>
+    public static event System.Action<EnemyHealth> AlMorirEnemigo;
+
     // Evita repetir la muerte si llegan dos golpes en el mismo frame.
     private bool muerto;
     // Desde donde llego el ultimo golpe; el efecto de muerte empuja las particulas lejos de ahi.
@@ -86,6 +92,10 @@ public class EnemyHealth : MonoBehaviour
         {
             Debug.LogException(error, this);
         }
+        // Antes del contador, que destruye al enemigo
+        if (GetComponent<MonkCrossBehaviour>() == null)
+            AlMorirEnemigo?.Invoke(this);
+
         // Las cruces del Monk tienen EnemyHealth pero no cuentan como enemigos del contador.
         if (contador != null)
             contador.EnemyDied(gameObject);
