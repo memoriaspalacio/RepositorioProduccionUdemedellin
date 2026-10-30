@@ -24,13 +24,17 @@ public static class ConstructorUI
     static TMP_FontAsset fuente;
 
     /// <summary>
-    /// La tipografia de texto del juego (Rijusans) si ya esta cargada por el HUD o el menu;
-    /// si no, la de TextMesh Pro por defecto.
+    /// La tipografia de texto del juego: la de EstiloMenu, o Rijusans si ya esta cargada por el
+    /// HUD o el menu; si no, la de TextMesh Pro por defecto.
     /// </summary>
     public static TMP_FontAsset Fuente
     {
         get
         {
+            if (fuente != null)
+                return fuente;
+
+            fuente = EstiloMenu.Actual.fuenteTexto;
             if (fuente != null)
                 return fuente;
 
@@ -144,6 +148,61 @@ public static class ConstructorUI
 
         TextMeshProUGUI etiqueta = CrearTexto("Texto", fondo.transform, texto, tamanoTexto, ColorTexto, TextAlignmentOptions.Center);
         Llenar(etiqueta.rectTransform, 4f);
+        return boton;
+    }
+
+    /// <summary>Boton con la pincelada de EstiloMenu y texto claro, como los del menu principal.</summary>
+    public static Button CrearBotonPincelada(string nombre, Transform padre, string texto, float tamanoTexto, UnityAction alPulsar)
+    {
+        EstiloMenu estilo = EstiloMenu.Actual;
+        if (estilo.pincelada == null)
+            return CrearBoton(nombre, padre, texto, tamanoTexto, alPulsar);
+
+        Image fondo = CrearImagen(nombre, padre, Color.white);
+        fondo.sprite = estilo.pincelada;
+
+        Button boton = fondo.gameObject.AddComponent<Button>();
+        ColorBlock colores = boton.colors;
+        colores.normalColor = new Color(0.86f, 0.86f, 0.86f, 1f);
+        colores.highlightedColor = Color.white;
+        colores.selectedColor = Color.white;
+        colores.pressedColor = new Color(0.6f, 0.6f, 0.6f, 1f);
+        colores.disabledColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+        colores.colorMultiplier = 1.15f;
+        colores.fadeDuration = 0.08f;
+        boton.colors = colores;
+
+        if (alPulsar != null)
+            boton.onClick.AddListener(alPulsar);
+
+        TextMeshProUGUI etiqueta = CrearTexto("Texto", fondo.transform, texto, tamanoTexto, estilo.textoBoton, TextAlignmentOptions.Center);
+        Llenar(etiqueta.rectTransform, 4f);
+        return boton;
+    }
+
+    /// <summary>Boton que es solo texto (las flechas de las filas): el color del texto marca el estado.</summary>
+    public static Button CrearBotonTexto(string nombre, Transform padre, string texto, float tamanoTexto, Color color, UnityAction alPulsar)
+    {
+        // Imagen invisible para recibir los clics en toda el area del boton
+        Image area = CrearImagen(nombre, padre, new Color(0f, 0f, 0f, 0f));
+
+        TextMeshProUGUI etiqueta = CrearTexto("Texto", area.transform, texto, tamanoTexto, Color.white, TextAlignmentOptions.Center);
+        Llenar(etiqueta.rectTransform);
+
+        Button boton = area.gameObject.AddComponent<Button>();
+        boton.targetGraphic = etiqueta;
+        ColorBlock colores = boton.colors;
+        colores.normalColor = color * new Color(1f, 1f, 1f, 0.75f);
+        colores.highlightedColor = color;
+        colores.selectedColor = color;
+        colores.pressedColor = color * 0.6f;
+        colores.disabledColor = new Color(color.r, color.g, color.b, 0.18f);
+        colores.fadeDuration = 0.08f;
+        boton.colors = colores;
+
+        if (alPulsar != null)
+            boton.onClick.AddListener(alPulsar);
+
         return boton;
     }
 

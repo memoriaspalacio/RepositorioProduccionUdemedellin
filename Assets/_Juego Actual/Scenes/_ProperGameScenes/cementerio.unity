@@ -12489,17 +12489,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
   useNoteChart: 1
-  noteChartFile: {fileID: 0}
+  noteChartFile: {fileID: 4900000, guid: 405372c2a02ad584fbf724ea1b7693f3, type: 3}
   noteInterval: 2
   midBeatNoteChance: 0.09375
   halfBeatNoteChance: 0.046875
   earlyTolerance: 0.05
   lateTolerance: 0.05
-  perfectWindowSeconds: 0.05
-  goodWindowSeconds: 0.11
+  perfectWindowSeconds: 0.109871626
+  goodWindowSeconds: 0.22974329
   penaltySeconds: 5
   hitPenaltySeconds: 5
   missedNotePenaltySeconds: 1
+  missedNoteGraceSeconds: 3
   chartLeadInBeats: 1
   logActions: 0
 --- !u!114 &1150939307
