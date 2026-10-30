@@ -17,6 +17,8 @@ public class MenuOpciones : MonoBehaviour
 {
     const float AltoMaximo = 1000f;
     const float AltoFila = 56f;
+    const float AnchoFlecha = 52f;
+    const float AnchoValor = 300f;
 
     class Fila
     {
@@ -26,6 +28,10 @@ public class MenuOpciones : MonoBehaviour
         public TextMeshProUGUI valor;
         public Button izquierda;
         public Button derecha;
+        public Image[] pasos;
+        // Lo que eligen el teclado y el mando: la fila entera, no una flecha, porque una flecha
+        // apagada en un extremo no se puede seleccionar
+        public Selectable selector;
     }
 
     /// <summary>Avisa al menu cuando el puntero (false) o la seleccion de teclado o mando (true) llegan a una fila.</summary>
@@ -94,6 +100,8 @@ public class MenuOpciones : MonoBehaviour
 
         TextMeshProUGUI textoTitulo = ConstructorUI.CrearTexto("Titulo", interior, titulo, 60f, estilo.titulo, TextAlignmentOptions.Center);
         textoTitulo.font = estilo.FuenteTitulo(titulo);
+        // A este tamano la linea es mas alta que la franja; con Ellipsis TextMeshPro la ocultaba entera
+        textoTitulo.overflowMode = TextOverflowModes.Overflow;
         Franja(textoTitulo.rectTransform, 0f, 68f, true);
 
         textoEstado = ConstructorUI.CrearTexto("Estado", interior, string.Empty, 22f, estilo.tenue, TextAlignmentOptions.Center);
@@ -102,7 +110,9 @@ public class MenuOpciones : MonoBehaviour
         CrearLista(108f, 132f);
         for (int i = 0; i < opciones.Count; i++)
         {
-            if (opciones[i].EsSeccion)
+            if (opciones[i].EsLeyenda)
+                CrearLeyenda(contenido, opciones[i]);
+            else if (opciones[i].EsSeccion)
                 CrearSeccion(contenido, opciones[i]);
             else
                 CrearFila(contenido, opciones[i]);
@@ -121,7 +131,7 @@ public class MenuOpciones : MonoBehaviour
         {
             Senalar(filas[0]);
             if (EventSystem.current != null)
-                EventSystem.current.SetSelectedGameObject(filas[0].derecha.gameObject);
+                EventSystem.current.SetSelectedGameObject(filas[0].selector.gameObject);
         }
     }
 
@@ -251,6 +261,39 @@ public class MenuOpciones : MonoBehaviour
         rectFilete.anchoredPosition = Vector2.zero;
     }
 
+    /// <summary>
+    /// Linea encima de las flechas que dice a donde lleva cada una, alineada con ellas: el texto de
+    /// la izquierda arranca sobre la flecha izquierda y el de la derecha acaba sobre la derecha.
+    /// </summary>
+    void CrearLeyenda(RectTransform contenido, OpcionMenu opcion)
+    {
+        RectTransform fila = ConstructorUI.CrearRect("Leyenda", contenido);
+        ConstructorUI.Medidas(fila, -1f, 30f);
+
+        HorizontalLayoutGroup linea = fila.gameObject.AddComponent<HorizontalLayoutGroup>();
+        linea.padding = new RectOffset(24, 14, 0, 0);
+        linea.spacing = 6f;
+        linea.childAlignment = TextAnchor.MiddleLeft;
+        linea.childControlWidth = true;
+        linea.childControlHeight = true;
+        linea.childForceExpandWidth = false;
+        linea.childForceExpandHeight = false;
+
+        RectTransform hueco = ConstructorUI.CrearRect("Hueco", fila);
+        ConstructorUI.Medidas(hueco, -1f, 26f, 1f);
+
+        RectTransform zona = ConstructorUI.CrearRect("Flechas", fila);
+        ConstructorUI.Medidas(zona, AnchoFlecha * 2f + AnchoValor + 12f, 26f);
+
+        TextMeshProUGUI izquierda = ConstructorUI.CrearTexto("Izquierda", zona, opcion.izquierda, 20f, estilo.tenue, TextAlignmentOptions.MidlineLeft);
+        ConstructorUI.Llenar(izquierda.rectTransform);
+        izquierda.fontStyle = FontStyles.Italic;
+
+        TextMeshProUGUI derecha = ConstructorUI.CrearTexto("Derecha", zona, opcion.derecha, 20f, estilo.tenue, TextAlignmentOptions.MidlineRight);
+        ConstructorUI.Llenar(derecha.rectTransform);
+        derecha.fontStyle = FontStyles.Italic;
+    }
+
     void CrearFila(RectTransform contenido, OpcionMenu opcion)
     {
         Fila fila = new Fila { opcion = opcion };
@@ -273,16 +316,22 @@ public class MenuOpciones : MonoBehaviour
         ConstructorUI.Medidas(fila.nombre, -1f, AltoFila - 4f, 1f);
 
         fila.izquierda = ConstructorUI.CrearBotonTexto("Anterior", fila.fondo.transform, "<", 38f, estilo.valor, () => Cambiar(fila, -1));
-        ConstructorUI.Medidas(fila.izquierda, 52f, AltoFila - 6f);
+        ConstructorUI.Medidas(fila.izquierda, AnchoFlecha, AltoFila - 6f);
         // Las flechas no se navegan: con teclado o mando se elige la fila y se cambia con izquierda/derecha
         fila.izquierda.navigation = new Navigation { mode = Navigation.Mode.None };
 
         fila.valor = ConstructorUI.CrearTexto("Valor", fila.fondo.transform, string.Empty, 28f, estilo.valor, TextAlignmentOptions.Center);
-        ConstructorUI.Medidas(fila.valor, 300f, AltoFila - 4f);
+        ConstructorUI.Medidas(fila.valor, AnchoValor, AltoFila - 4f);
+        fila.valor.margin = new Vector4(0f, 0f, 0f, 10f);
+        fila.pasos = CrearPasos(fila.valor.rectTransform, opcion.valores.Length);
 
         fila.derecha = ConstructorUI.CrearBotonTexto("Siguiente", fila.fondo.transform, ">", 38f, estilo.valor, () => Cambiar(fila, 1));
-        ConstructorUI.Medidas(fila.derecha, 52f, AltoFila - 6f);
-        fila.derecha.navigation = new Navigation { mode = Navigation.Mode.Vertical };
+        ConstructorUI.Medidas(fila.derecha, AnchoFlecha, AltoFila - 6f);
+        fila.derecha.navigation = new Navigation { mode = Navigation.Mode.None };
+
+        fila.selector = fila.fondo.gameObject.AddComponent<Selectable>();
+        fila.selector.transition = Selectable.Transition.None;
+        fila.selector.navigation = new Navigation { mode = Navigation.Mode.Vertical };
 
         Action<bool> senalar = porSeleccion =>
         {
@@ -297,6 +346,39 @@ public class MenuOpciones : MonoBehaviour
         fila.derecha.gameObject.AddComponent<AvisoFila>().alSenalar = senalar;
 
         filas.Add(fila);
+    }
+
+    /// <summary>
+    /// Marcas bajo el valor, una por opcion: las encendidas hasta la actual dicen en que punto de
+    /// la escala estas y que la derecha es "mas".
+    /// </summary>
+    Image[] CrearPasos(RectTransform valor, int cantidad)
+    {
+        RectTransform zona = ConstructorUI.CrearRect("Pasos", valor);
+        zona.anchorMin = new Vector2(0.5f, 0f);
+        zona.anchorMax = new Vector2(0.5f, 0f);
+        zona.pivot = new Vector2(0.5f, 0f);
+        float ancho = Mathf.Min(AnchoValor - 60f, cantidad * 34f);
+        zona.sizeDelta = new Vector2(ancho, 6f);
+        zona.anchoredPosition = new Vector2(0f, 4f);
+
+        HorizontalLayoutGroup linea = zona.gameObject.AddComponent<HorizontalLayoutGroup>();
+        linea.spacing = 5f;
+        linea.childControlWidth = true;
+        linea.childControlHeight = true;
+        linea.childForceExpandWidth = true;
+        linea.childForceExpandHeight = true;
+
+        Image[] pasos = new Image[cantidad];
+        for (int i = 0; i < cantidad; i++)
+        {
+            pasos[i] = ConstructorUI.CrearImagen("Paso " + i, zona, estilo.valor);
+            pasos[i].sprite = SpritesProcedurales.Capsula;
+            pasos[i].type = Image.Type.Sliced;
+            pasos[i].raycastTarget = false;
+        }
+
+        return pasos;
     }
 
     void CrearBotones((string texto, Action accion)[] botones)
@@ -421,7 +503,8 @@ public class MenuOpciones : MonoBehaviour
 
         for (int i = 0; i < filas.Count; i++)
         {
-            if (filas[i].derecha.gameObject == seleccionado || filas[i].izquierda.gameObject == seleccionado)
+            if (filas[i].selector.gameObject == seleccionado ||
+                filas[i].derecha.gameObject == seleccionado || filas[i].izquierda.gameObject == seleccionado)
                 return filas[i];
         }
 
@@ -479,8 +562,15 @@ public class MenuOpciones : MonoBehaviour
             fila.valor.text = fila.opcion.Texto;
             fila.valor.color = disponible ? estilo.valor : estilo.tenue;
             fila.nombre.color = disponible ? estilo.texto : estilo.tenue;
-            fila.izquierda.interactable = disponible;
-            fila.derecha.interactable = disponible;
+            // En un extremo la flecha de ese lado se apaga: no da la vuelta
+            fila.izquierda.interactable = fila.opcion.PuedeIr(-1);
+            fila.derecha.interactable = fila.opcion.PuedeIr(1);
+
+            int indice = fila.opcion.Indice;
+            Color encendido = disponible ? estilo.valor : estilo.tenue;
+            Color apagado = new Color(estilo.tenue.r, estilo.tenue.g, estilo.tenue.b, 0.25f);
+            for (int p = 0; p < fila.pasos.Length; p++)
+                fila.pasos[p].color = p <= indice ? encendido : apagado;
         }
 
         siguienteEstado = 0f;

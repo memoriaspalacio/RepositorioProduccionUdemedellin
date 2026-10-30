@@ -80,7 +80,8 @@ public class EstiloMenu : ScriptableObject
 
     public TMP_FontAsset FuenteTitulo(string titulo)
     {
-        if (fuenteTitulo != null && fuenteTitulo.HasCharacters(titulo))
+        // tryAddCharacter: en una build el atlas dinamico empieza vacio y hay que generar los glifos
+        if (fuenteTitulo != null && fuenteTitulo.HasCharacters(titulo, out _, false, true))
             return fuenteTitulo;
 
         return ConstructorUI.Fuente;
