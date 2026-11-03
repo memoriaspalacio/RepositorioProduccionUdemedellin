@@ -3343,6 +3343,8 @@ MonoBehaviour:
   barPrefab: {fileID: 1763768325479063683, guid: ee83b12492d592d499d90b08e2d2a06c, type: 3}
   barParent: {fileID: 1092442724}
   travelBeats: 4
+  mirrorTrack: 1
+  colorDelayBeats: 0.5
   idleColor: {r: 0.79622644, g: 0.7616732, b: 0.7616732, a: 1}
   windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   windowClosingColor: {r: 0.6, g: 0.2, b: 0.15, a: 1}
@@ -3705,12 +3707,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfc661b33e28ed4418a9f6ad6790c92b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
+  useNoteChart: 1
+  noteChartFile: {fileID: 0}
   noteInterval: 2
   midBeatNoteChance: 0.1875
   halfBeatNoteChance: 0.09375
   earlyTolerance: 0.5
   lateTolerance: 0.25
-  penaltyNoteCount: 1
+  penaltySeconds: 5
+  hitPenaltySeconds: 5
+  penalizeMissedNotes: 0
   logActions: 1
 --- !u!1 &1158727593
 GameObject:
@@ -4331,7 +4337,12 @@ MonoBehaviour:
   animator: {fileID: 99553682}
   attackTrigger: Attack
   hurtTriggerAfterWarp: onHurt
+  prayerWindup: 0.35
+  minimumPrayerDuration: 1.2
+  stopMovementWhilePraying: 1
+  visualTurnSpeed: 540
   stunDurationAfterDamage: 1
+  appearanceLockDuration: 1.2
   crossPrefab: {fileID: 1979680862}
   crossCount: 4
   possessedCrossHeight: 1.5

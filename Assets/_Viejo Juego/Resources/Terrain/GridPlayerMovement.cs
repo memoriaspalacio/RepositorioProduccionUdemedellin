@@ -14,10 +14,10 @@ private bool isDead = false;
 [Header("Ritmo")]
 [SerializeField] private BeatActionJudge beatJudge;
 
-// Altura adicional aplicada al centro de cada celda.
+// Altura adicional aplicada al centro de cada celda: de la superficie del suelo a la raiz
+// del personaje. Se usa igual al aparecer y al moverse, para que nunca nazca bajo tierra.
 [Header("Jugador")]
 [SerializeField] private float heightOffset = 1f;
-[SerializeField] private float startHightOffset = -0.5f;
 
 // Indica si el jugador debe mirar hacia la direccion de movimiento.
 [SerializeField] private bool rotateTowardsMovement = true;
@@ -130,7 +130,7 @@ private void Start()
     transform.position =
         grid.CellToWorldCenter(
             currentCell,
-            startHightOffset
+            heightOffset
         );
 }
 

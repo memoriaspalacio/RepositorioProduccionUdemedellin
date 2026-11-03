@@ -4,8 +4,9 @@ using UnityEngine.UI;
 
 /// <summary>
 /// El menu de graficos: un MenuOpciones con las filas de OpcionesGraficas. Se abre con F1
-/// en cualquier escena, con el boton "Graficos" de las escenas de GestorGraficos.EscenasConBoton
-/// o desde cualquier boton que tenga un BotonAbrirGraficos.
+/// en cualquier escena, con la fila "Graficos" de los paneles de opciones (FilaGraficosOpciones),
+/// con el boton de las escenas de GestorGraficos.EscenasConBoton o desde cualquier boton que
+/// tenga un BotonAbrirGraficos.
 /// </summary>
 public static class MenuGraficos
 {
@@ -18,7 +19,7 @@ public static class MenuGraficos
         if (abierto != null)
             return;
 
-        abierto = MenuOpciones.Crear("Gráficos", OpcionesGraficas.Crear(), OpcionesGraficas.Estado,
+        abierto = MenuOpciones.Crear("Calidad visual", OpcionesGraficas.Crear(), OpcionesGraficas.Estado,
             ("Detectar automático", () => GestorGraficos.UsarNivel(GestorGraficos.DetectarNivel())));
 
         // Si algo cambia los ajustes con el menu abierto, las filas lo reflejan
@@ -60,7 +61,7 @@ public static class MenuGraficos
         RectTransform zona = ConstructorUI.CrearRect("Zona segura", canvas.transform);
         ConstructorUI.AjustarAZonaSegura(zona);
 
-        Button boton = ConstructorUI.CrearBoton("Graficos", zona, "Gráficos", 30f, Abrir);
+        Button boton = ConstructorUI.CrearBotonPincelada("Graficos", zona, "Gráficos", 30f, Abrir);
         RectTransform rect = (RectTransform)boton.transform;
         rect.anchorMin = new Vector2(1f, 1f);
         rect.anchorMax = new Vector2(1f, 1f);

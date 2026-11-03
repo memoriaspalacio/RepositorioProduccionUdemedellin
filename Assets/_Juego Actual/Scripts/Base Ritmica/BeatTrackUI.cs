@@ -44,20 +44,22 @@ public class BeatTrackUI : MonoBehaviour {
     /// <summary>Read by BeatWindowZone/BeatDestroyZone to convert their box edges into beats.</summary>
     public float TravelBeats => travelBeats;
 
-    [Header("Colors")]
-    [Tooltip("How many beats after the window opens before a note starts changing color. " +
-             "Only the color waits - the window still opens on time and input works as normal. " +
-             "If this is as long as the window itself, the color never shows.")]
-    [SerializeField, Min(0f)] private float colorDelayBeats = 0.5f;
+    [Header("Mirror")]
+    [Tooltip("Every note travels in from both sides at once and the two copies meet at the heart. " +
+             "The second side is the spawn point mirrored across the heart, so it needs no setup of its own. " +
+             "BeatWindowZone / BeatDestroyZone are still measured on the original side.")]
+    [SerializeField] private bool mirrorTrack = true;
 
-    [Tooltip("Before the beat's window opens.")]
+    /// <summary>Read by BeatTrackLane to draw the second lane.</summary>
+    public bool MirrorTrack => mirrorTrack;
+
+    [Header("Colors")]
+    [Tooltip("Before the beat's window opens. Inside the window a note takes the color of the grade a press " +
+             "would get right then (ColoresCalificacion): BAD, then GOOD, then PERFECT on the beat.")]
     [SerializeField] private Color idleColor = new Color(0.42f, 0.17f, 0.17f, 1f);
 
-    [Tooltip("The moment the window opens.")]
-    [SerializeField] private Color windowOpenColor = new Color(1f, 0.85f, 0.3f, 1f);
-
-    [Tooltip("The moment the window closes - the bar degrades to this across the window.")]
-    [SerializeField] private Color windowClosingColor = new Color(0.6f, 0.2f, 0.15f, 1f);
+    [Tooltip("How many beats a note takes to blend from idleColor into the BAD color as the window opens.")]
+    [SerializeField, Min(0f)] private float colorBlendBeats = 0.15f;
 
     [Tooltip("A beat the player successfully hit.")]
     [SerializeField] private Color successColor = new Color(0.95f, 0.3f, 0.25f, 1f);
@@ -131,6 +133,11 @@ public class BeatTrackUI : MonoBehaviour {
         // to show, so it gets no bar at all.
         if (beatJudge.IsBeatResolved(targetBeat)) return;
 
+        CreateBar(targetBeat, false);
+        if (mirrorTrack) CreateBar(targetBeat, true);
+    }
+
+    private void CreateBar(float targetBeat, bool mirrored) {
         BeatBar bar;
 
         if (pool.Count > 0) {
@@ -144,13 +151,16 @@ public class BeatTrackUI : MonoBehaviour {
             if (bar == null) bar = instance.AddComponent<BeatBar>();
         }
 
-        bar.Initialize(targetBeat);
+        bar.Initialize(targetBeat, mirrored);
         activeBars.Add(bar);
     }
 
     private void UpdateBars(float nowBeat) {
         Vector2 spawnPosition = spawnPoint.anchoredPosition;
         Vector2 heartPosition = heartPoint.anchoredPosition;
+
+        // The mirrored side starts just as far from the heart, on the other side of it.
+        Vector2 mirroredSpawnPosition = new Vector2(2f * heartPosition.x - spawnPosition.x, spawnPosition.y);
 
         float earlyTolerance = beatJudge.EarlyTolerance;
         float lateTolerance = beatJudge.LateTolerance;
@@ -169,7 +179,7 @@ public class BeatTrackUI : MonoBehaviour {
             float progress = 1f + (beatsPastTarget / travelBeats);
 
             bar.SetAnchoredPosition(
-                Vector2.LerpUnclamped(spawnPosition, heartPosition, progress)
+                Vector2.LerpUnclamped(bar.Mirrored ? mirroredSpawnPosition : spawnPosition, heartPosition, progress)
             );
 
             bar.SetColor(ResolveColor(bar, beatsPastTarget, earlyTolerance, lateTolerance));
@@ -177,52 +187,42 @@ public class BeatTrackUI : MonoBehaviour {
     }
 
     /// <summary>
-    /// Picks a bar's color from timing alone: neutral until its color starts, then
-    /// degrading from open to closing color until the window closes, or the success
-    /// color once the player has claimed it. The window is asymmetric - it opens
-    /// earlyTolerance before the beat and closes lateTolerance after it - so it has
-    /// to be read from the judge rather than assumed symmetric.
-    ///
-    /// The color starts colorDelayBeats AFTER the window opens. That delay is purely
-    /// visual: the judge still accepts input from the moment the window opens.
+    /// Picks a bar's color from timing alone: neutral until its window opens, then the
+    /// color of the grade a press would get at this moment (BAD far from the beat, GOOD
+    /// closer, PERFECT on it), or the success color once the player has claimed it. The
+    /// window is asymmetric - it opens earlyTolerance before the beat and closes
+    /// lateTolerance after it - so it has to be read from the judge rather than assumed.
     /// </summary>
     private Color ResolveColor(BeatBar bar, float beatsPastTarget, float earlyTolerance, float lateTolerance) {
         if (bar.Consumed) return successColor;
 
-        // The window opens at -earlyTolerance, but the color waits colorDelayBeats longer.
-        float colorStart = -earlyTolerance + colorDelayBeats;
+        if (beatsPastTarget < -earlyTolerance || beatsPastTarget > lateTolerance) return idleColor;
 
-        // A delay as long as the window leaves no time to show any color.
-        if (colorStart >= lateTolerance) return idleColor;
+        Color grade = ColoresCalificacion.De(beatJudge.Grade(beatsPastTarget));
 
-        if (beatsPastTarget < colorStart || beatsPastTarget > lateTolerance) return idleColor;
-
-        // 0 when the color starts, 1 as the window closes - so it still ends on the
-        // closing color exactly when the window does, instead of popping in half-blended.
-        float colorProgress = (beatsPastTarget - colorStart) / (lateTolerance - colorStart);
-
-        return Color.Lerp(windowOpenColor, windowClosingColor, colorProgress);
+        // Blend in as the window opens instead of popping
+        float blend = colorBlendBeats > 0f ? Mathf.Clamp01((beatsPastTarget + earlyTolerance) / colorBlendBeats) : 1f;
+        return Color.Lerp(idleColor, grade, blend);
     }
 
     private void HandleBeatConsumed(float beat) {
-        for (int i = activeBars.Count - 1; i >= 0; i--) {
-            if (Mathf.Approximately(activeBars[i].TargetBeat, beat)) {
-                Recycle(activeBars[i], i);
-                return;
-            }
-        }
+        RecycleBarsOf(beat);
     }
 
     /// <summary>
-    /// Removes the bar for a beat the judge just destroyed because it expired. If no
+    /// Removes the bars for a beat the judge just destroyed because it expired. If no
     /// bar exists yet for this beat, SpawnBar's IsBeatResolved check will simply skip
     /// spawning it later.
     /// </summary>
     private void HandleNoteDestroyed(float beat, DestroyReason reason) {
+        RecycleBarsOf(beat);
+    }
+
+    // A mirrored track has two bars per beat, so every match goes, not just the first.
+    private void RecycleBarsOf(float beat) {
         for (int i = activeBars.Count - 1; i >= 0; i--) {
             if (Mathf.Approximately(activeBars[i].TargetBeat, beat)) {
                 Recycle(activeBars[i], i);
-                return;
             }
         }
     }

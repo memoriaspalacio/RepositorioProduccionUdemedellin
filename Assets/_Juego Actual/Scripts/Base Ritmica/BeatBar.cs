@@ -14,6 +14,9 @@ public class BeatBar : MonoBehaviour {
     /// <summary>True once the player successfully claimed this bar's beat.</summary>
     public bool Consumed { get; private set; }
 
+    /// <summary>True for the copy that travels in from the mirrored side of the track.</summary>
+    public bool Mirrored { get; private set; }
+
     private RectTransform rect;
     private Image image;
 
@@ -27,11 +30,12 @@ public class BeatBar : MonoBehaviour {
     }
 
     /// <summary>Prepares this bar (fresh or reused from the pool) for a new beat.</summary>
-    public void Initialize(float targetBeat) {
+    public void Initialize(float targetBeat, bool mirrored = false) {
         CacheComponents();
 
         TargetBeat = targetBeat;
         Consumed = false;
+        Mirrored = mirrored;
     }
 
     /// <summary>Marks this bar as successfully hit, so it renders in the success color.</summary>

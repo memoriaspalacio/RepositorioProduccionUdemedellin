@@ -31,20 +31,31 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _TexturaPiedra:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TexturaSenda:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _AlternarLadrillo: 0
+    - _AnchoSenda: 0.35
     - _Astillas: 0
     - _BeatPulse: 1
     - _Bisel: 0.06
     - _DesgasteGrid: 0.35
     - _Divisiones: 2
+    - _EscalaSenda: 1.5
     - _EscalaTextura: 1.5
     - _EstiloGrid: 0
     - _FilasLadrillo: 4
     - _GridSize: 2
     - _Grietas: 0
     - _IntensidadGrid: 1
+    - _IrregularSenda: 0.6
     - _Irregularidad: 0.8
     - _Junta: 0.04
     - _LadrillosFila: 2
@@ -63,12 +74,17 @@ Material:
     - _RotarTextura: 1
     - _Suavidad: 0.35
     - _SuavidadRevelado: 2
+    - _TamanoMojon: 0.3
     - _UsarLuzSuelo: 0
     - _VariacionColor: 0.18
+    - _VariacionParcela: 0.5
     m_Colors:
     - _BaseColor: {r: 0.82, g: 0.8, b: 0.78, a: 1}
     - _CentroRevelado: {r: 0, g: 0, b: 0, a: 0}
     - _ColorJunta: {r: 0.35, g: 0.34, b: 0.33, a: 1}
+    - _ColorPiedra: {r: 0.6, g: 0.6, b: 0.62, a: 1}
+    - _ColorSeco: {r: 0.62, g: 0.54999995, b: 0.31999996, a: 1}
+    - _ColorSenda: {r: 1, g: 1, b: 1, a: 1}
     - _GridColor: {r: 0.95, g: 0.92, b: 0.85, a: 1}
     - _GridOrigin: {r: 0, g: 0, b: 0, a: 0}
     - _LuzSueloRect: {r: 0, g: 0, b: 0, a: 0}

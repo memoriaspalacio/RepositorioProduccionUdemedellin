@@ -3190,7 +3190,11 @@ MonoBehaviour:
   animator: {fileID: 0}
   idleTrigger: Idle
   attackTrigger: onAttack
+  cooldownTrigger: Cooldown
+  preparationTime: 0.5
+  hitDelay: 0.5
   reloadTime: 2
+  attackDuration: 0.5
   playerHealth: {fileID: 0}
 --- !u!114 &406492266
 MonoBehaviour:
@@ -5308,6 +5312,8 @@ MonoBehaviour:
   barPrefab: {fileID: 1763768325479063683, guid: ee83b12492d592d499d90b08e2d2a06c, type: 3}
   barParent: {fileID: 2018902622}
   travelBeats: 4
+  mirrorTrack: 1
+  colorDelayBeats: 0.5
   idleColor: {r: 0.42, g: 0.17, b: 0.17, a: 1}
   windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   windowClosingColor: {r: 0.6, g: 0.2, b: 0.15, a: 1}
@@ -5941,12 +5947,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfc661b33e28ed4418a9f6ad6790c92b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
+  useNoteChart: 1
+  noteChartFile: {fileID: 0}
   noteInterval: 2
   midBeatNoteChance: 0.0937
   halfBeatNoteChance: 0.0468
   earlyTolerance: 0.5
   lateTolerance: 0.25
-  penaltyNoteCount: 1
+  penaltySeconds: 5
+  hitPenaltySeconds: 5
+  penalizeMissedNotes: 0
   logActions: 1
 --- !u!1 &1158727593
 GameObject:
@@ -8405,7 +8415,11 @@ MonoBehaviour:
   animator: {fileID: 0}
   idleTrigger: Idle
   attackTrigger: onAttack
+  cooldownTrigger: Cooldown
+  preparationTime: 0.5
+  hitDelay: 0.5
   reloadTime: 2
+  attackDuration: 0.5
   playerHealth: {fileID: 0}
 --- !u!4 &1792752527 stripped
 Transform:
@@ -9801,11 +9815,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1476223623718612070, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 348.38712
+      value: -2.32385
       objectReference: {fileID: 0}
     - target: {fileID: 1476223623718612070, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 160.72105
+      value: -140
       objectReference: {fileID: 0}
     - target: {fileID: 1917602078452645560, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchorMax.y
@@ -9817,11 +9831,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2521028516836949071, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 275.52182
+      value: -75.18915
       objectReference: {fileID: 0}
     - target: {fileID: 2521028516836949071, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 159.20305
+      value: -140
       objectReference: {fileID: 0}
     - target: {fileID: 2671328518192151799, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_Name
@@ -9829,7 +9843,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6102761456098161839, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -46
+      value: -396.71097
       objectReference: {fileID: 0}
     - target: {fileID: 8075253062828422866, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_fontAsset
@@ -9845,7 +9859,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8244709572362194178, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 155
+      value: -140
       objectReference: {fileID: 0}
     - target: {fileID: 8519113622942411241, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_fontAsset
@@ -9877,11 +9891,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 381.40002
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 235
+      value: -140
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

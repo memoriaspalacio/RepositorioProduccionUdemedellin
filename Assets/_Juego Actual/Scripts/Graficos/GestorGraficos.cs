@@ -34,7 +34,10 @@ public class GestorGraficos : MonoBehaviour
     /// <summary>Nombre del nivel de Quality Settings de cada NivelGrafico, en el mismo orden.</summary>
     public static readonly string[] NombresNiveles = { "PC", "Medio", "Bajo", "Muy bajo" };
 
-    /// <summary>Escenas con el boton "Graficos" en pantalla. En las demas: F1 o un BotonAbrirGraficos.</summary>
+    /// <summary>
+    /// Escenas con el boton "Graficos" en la esquina si no tienen un panel de opciones donde
+    /// agregar la fila (FilaGraficosOpciones). En las demas: F1 o un BotonAbrirGraficos.
+    /// </summary>
     public static readonly string[] EscenasConBoton = { "menu" };
 
     public static GestorGraficos Instancia { get; private set; }
@@ -145,7 +148,8 @@ public class GestorGraficos : MonoBehaviour
         AplicarPipeline();
         AplicarEscena();
 
-        if (Array.IndexOf(EscenasConBoton, escena.name) >= 0)
+        bool hayOpciones = FilaGraficosOpciones.Integrar(escena);
+        if (!hayOpciones && Array.IndexOf(EscenasConBoton, escena.name) >= 0)
             MenuGraficos.CrearBotonFlotante(escena);
     }
 

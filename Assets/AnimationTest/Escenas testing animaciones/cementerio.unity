@@ -2254,6 +2254,8 @@ MonoBehaviour:
   currentLife: 10
   anim: {fileID: 361842210}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!114 &361842213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2294,7 +2296,11 @@ MonoBehaviour:
   animator: {fileID: 1023868644}
   idleTrigger: Idle
   attackTrigger: Attack
+  cooldownTrigger: Cooldown
+  preparationTime: 0.5
+  hitDelay: 0.5
   reloadTime: 2
+  attackDuration: 0.5
   playerHealth: {fileID: 1792752532}
 --- !u!114 &408210701
 MonoBehaviour:
@@ -3069,7 +3075,7 @@ PrefabInstance:
       objectReference: {fileID: 1032602251}
     - target: {fileID: 6102761456098161839, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 93.35863
+      value: -257.35234
       objectReference: {fileID: 0}
     - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_Pivot.x
@@ -3097,11 +3103,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 305.15002
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 155
+      value: -140
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4507,6 +4513,8 @@ MonoBehaviour:
   barPrefab: {fileID: 1763768325479063683, guid: ee83b12492d592d499d90b08e2d2a06c, type: 3}
   barParent: {fileID: 1092442724}
   travelBeats: 4
+  mirrorTrack: 1
+  colorDelayBeats: 0.5
   idleColor: {r: 0.79622644, g: 0.7616732, b: 0.7616732, a: 1}
   windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   windowClosingColor: {r: 0.6, g: 0.2, b: 0.15, a: 1}
@@ -5026,12 +5034,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfc661b33e28ed4418a9f6ad6790c92b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
+  useNoteChart: 1
+  noteChartFile: {fileID: 0}
   noteInterval: 2
   midBeatNoteChance: 0.09375
   halfBeatNoteChance: 0.046875
   earlyTolerance: 0.05
   lateTolerance: 0.05
-  penaltyNoteCount: 1
+  penaltySeconds: 5
+  hitPenaltySeconds: 5
+  penalizeMissedNotes: 0
   logActions: 0
 --- !u!114 &1150939307
 MonoBehaviour:
@@ -6400,6 +6412,8 @@ MonoBehaviour:
   currentLife: 10
   anim: {fileID: 1739370771}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!114 &1739370774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6440,7 +6454,11 @@ MonoBehaviour:
   animator: {fileID: 1356268099}
   idleTrigger: Idle
   attackTrigger: Attack
+  cooldownTrigger: Cooldown
+  preparationTime: 0.5
+  hitDelay: 0.5
   reloadTime: 2
+  attackDuration: 0.5
   playerHealth: {fileID: 1792752532}
 --- !u!1 &1760784772
 GameObject:
@@ -7230,6 +7248,8 @@ MonoBehaviour:
   currentLife: 10
   anim: {fileID: 1966416173}
   contador: {fileID: 1983170459}
+  hurtTrigger: onHurt
+  deathTrigger: onDeath
 --- !u!114 &1966416176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7270,7 +7290,11 @@ MonoBehaviour:
   animator: {fileID: 1059130817}
   idleTrigger: Idle
   attackTrigger: Attack
+  cooldownTrigger: Cooldown
+  preparationTime: 0.5
+  hitDelay: 0.5
   reloadTime: 2
+  attackDuration: 0.5
   playerHealth: {fileID: 1792752532}
 --- !u!1 &1983170454
 GameObject:

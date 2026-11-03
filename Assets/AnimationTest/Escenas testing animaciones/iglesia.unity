@@ -1757,7 +1757,11 @@ MonoBehaviour:
   animator: {fileID: 0}
   idleTrigger: Idle
   attackTrigger: onAttack
+  cooldownTrigger: Cooldown
+  preparationTime: 0.5
+  hitDelay: 0.5
   reloadTime: 2
+  attackDuration: 0.5
   playerHealth: {fileID: 1792752532}
 --- !u!114 &406492266
 MonoBehaviour:
@@ -2579,7 +2583,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6102761456098161839, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 44.781776
+      value: -305.929194
       objectReference: {fileID: 0}
     - target: {fileID: 8075253062828422866, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_fontAsset
@@ -2631,11 +2635,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 305.15
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9001235614139377887, guid: b2ce30b82a5356c43af4d88b57e21fca, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 155
+      value: -140
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4851,6 +4855,8 @@ MonoBehaviour:
   barPrefab: {fileID: 1763768325479063683, guid: ee83b12492d592d499d90b08e2d2a06c, type: 3}
   barParent: {fileID: 675132970}
   travelBeats: 4
+  mirrorTrack: 1
+  colorDelayBeats: 0.5
   idleColor: {r: 0.42, g: 0.17, b: 0.17, a: 1}
   windowOpenColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   windowClosingColor: {r: 0.6, g: 0.2, b: 0.15, a: 1}
@@ -5151,12 +5157,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfc661b33e28ed4418a9f6ad6790c92b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatActionJudge
+  useNoteChart: 1
+  noteChartFile: {fileID: 0}
   noteInterval: 2
   midBeatNoteChance: 0.1875
   halfBeatNoteChance: 0.09375
   earlyTolerance: 0.5
   lateTolerance: 0.25
-  penaltyNoteCount: 1
+  penaltySeconds: 5
+  hitPenaltySeconds: 5
+  penalizeMissedNotes: 0
   logActions: 1
 --- !u!1 &1158727593
 GameObject:
@@ -7054,6 +7064,8 @@ MonoBehaviour:
   playerMovement: {fileID: 0}
   tiempoEntreSonidosDano: 0.5
   lifeBar: {fileID: 675132973}
+  groundIndicator: {fileID: 0}
+  beatJudge: {fileID: 0}
 --- !u!1 &1878608292
 GameObject:
   m_ObjectHideFlags: 0

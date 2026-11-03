@@ -12,7 +12,7 @@ Mesh:
   - serializedVersion: 2
     firstByte: 0
     indexCount: 18
-    topology: 5
+    topology: 0
     baseVertex: 0
     firstVertex: 0
     vertexCount: 18
