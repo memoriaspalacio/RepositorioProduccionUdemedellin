@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: M_Suelo_Mazmorra
+  m_Shader: {fileID: 4800000, guid: 084ad9d1f7de8574ba059d1dc48bf380, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: ca84ea8628c2b21429d7bdf0d5c129df, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LuzSuelo:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AlternarLadrillo: 0
+    - _Astillas: 0.3
+    - _BeatPulse: 1
+    - _Bisel: 0.035
+    - _DesgasteGrid: 0
+    - _Divisiones: 2
+    - _EscalaTextura: 2.5
+    - _EstiloGrid: 0
+    - _FilasLadrillo: 8
+    - _GridSize: 2
+    - _Grietas: 0.18
+    - _IntensidadGrid: 1
+    - _Irregularidad: 0.8
+    - _Junta: 0.05
+    - _LadrillosFila: 4
+    - _LargoMarca: 0.15
+    - _LineThickness: 0.03
+    - _MargenGrid: 0.08
+    - _MezclaGrid: 1
+    - _MezclaTextura: 1
+    - _Oclusion: 0.65
+    - _Patron: 0
+    - _RadioEsquina: 0.04
+    - _RadioRevelado: 0
+    - _ReaccionBeat: 1
+    - _Relieve: 1
+    - _RelieveGrabado: 1
+    - _RotarTextura: 1
+    - _Suavidad: 0.2
+    - _SuavidadRevelado: 2
+    - _UsarLuzSuelo: 0
+    - _VariacionColor: 0.35
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _CentroRevelado: {r: 0, g: 0, b: 0, a: 0}
+    - _ColorJunta: {r: 0.09, g: 0.08, b: 0.075, a: 1}
+    - _GridColor: {r: 1.6, g: 0.5, b: 0.12, a: 1}
+    - _GridOrigin: {r: 0, g: 0, b: 0, a: 0}
+    - _LuzSueloRect: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

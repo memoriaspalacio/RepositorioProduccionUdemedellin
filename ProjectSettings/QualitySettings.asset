@@ -110,9 +110,163 @@ QualitySettings:
     terrainBillboardStart: 50
     terrainFadeLength: 5
     terrainMaxTrees: 50
-    excludedTargetPlatforms:
-    - Android
-    - iPhone
+    excludedTargetPlatforms: []
+  - serializedVersion: 4
+    name: Medio
+    pixelLightCount: 2
+    shadows: 2
+    shadowResolution: 1
+    shadowProjection: 1
+    shadowCascades: 2
+    shadowDistance: 30
+    shadowNearPlaneOffset: 3
+    shadowCascade2Split: 0.33333334
+    shadowCascade4Split: {x: 0.06666667, y: 0.2, z: 0.46666667}
+    shadowmaskMode: 1
+    skinWeights: 4
+    globalTextureMipmapLimit: 0
+    textureMipmapLimitSettings: []
+    anisotropicTextures: 1
+    antiAliasing: 0
+    softParticles: 0
+    softVegetation: 1
+    realtimeReflectionProbes: 0
+    billboardsFaceCameraPosition: 1
+    useLegacyDetailDistribution: 1
+    adaptiveVsync: 0
+    vSyncCount: 0
+    realtimeGICPUUsage: 100
+    adaptiveVsyncExtraA: 0
+    adaptiveVsyncExtraB: 0
+    lodBias: 1.5
+    maximumLODLevel: 0
+    enableLODCrossFade: 1
+    streamingMipmapsActive: 0
+    streamingMipmapsAddAllCameras: 1
+    streamingMipmapsMemoryBudget: 512
+    streamingMipmapsRenderersPerFrame: 512
+    streamingMipmapsMaxLevelReduction: 2
+    streamingMipmapsMaxFileIORequests: 1024
+    particleRaycastBudget: 128
+    asyncUploadTimeSlice: 2
+    asyncUploadBufferSize: 16
+    asyncUploadPersistentBuffer: 1
+    resolutionScalingFixedDPIFactor: 1
+    customRenderPipeline: {fileID: 11400000, guid: 5fafde139205469d841ad8e77b7dfcbe, type: 2}
+    terrainQualityOverrides: 0
+    terrainPixelError: 1
+    terrainDetailDensityScale: 1
+    terrainBasemapDistance: 1000
+    terrainDetailDistance: 80
+    terrainTreeDistance: 5000
+    terrainBillboardStart: 50
+    terrainFadeLength: 5
+    terrainMaxTrees: 50
+    excludedTargetPlatforms: []
+  - serializedVersion: 4
+    name: Bajo
+    pixelLightCount: 2
+    shadows: 2
+    shadowResolution: 1
+    shadowProjection: 1
+    shadowCascades: 1
+    shadowDistance: 20
+    shadowNearPlaneOffset: 3
+    shadowCascade2Split: 0.33333334
+    shadowCascade4Split: {x: 0.06666667, y: 0.2, z: 0.46666667}
+    shadowmaskMode: 0
+    skinWeights: 2
+    globalTextureMipmapLimit: 1
+    textureMipmapLimitSettings: []
+    anisotropicTextures: 0
+    antiAliasing: 0
+    softParticles: 0
+    softVegetation: 1
+    realtimeReflectionProbes: 0
+    billboardsFaceCameraPosition: 1
+    useLegacyDetailDistribution: 1
+    adaptiveVsync: 0
+    vSyncCount: 0
+    realtimeGICPUUsage: 100
+    adaptiveVsyncExtraA: 0
+    adaptiveVsyncExtraB: 0
+    lodBias: 1
+    maximumLODLevel: 0
+    enableLODCrossFade: 0
+    streamingMipmapsActive: 0
+    streamingMipmapsAddAllCameras: 1
+    streamingMipmapsMemoryBudget: 512
+    streamingMipmapsRenderersPerFrame: 512
+    streamingMipmapsMaxLevelReduction: 2
+    streamingMipmapsMaxFileIORequests: 1024
+    particleRaycastBudget: 64
+    asyncUploadTimeSlice: 2
+    asyncUploadBufferSize: 16
+    asyncUploadPersistentBuffer: 1
+    resolutionScalingFixedDPIFactor: 1
+    customRenderPipeline: {fileID: 11400000, guid: dddfc49dc2c34576980e55803eb7eec3, type: 2}
+    terrainQualityOverrides: 0
+    terrainPixelError: 1
+    terrainDetailDensityScale: 1
+    terrainBasemapDistance: 1000
+    terrainDetailDistance: 80
+    terrainTreeDistance: 5000
+    terrainBillboardStart: 50
+    terrainFadeLength: 5
+    terrainMaxTrees: 50
+    excludedTargetPlatforms: []
+  - serializedVersion: 4
+    name: Muy bajo
+    pixelLightCount: 2
+    shadows: 0
+    shadowResolution: 1
+    shadowProjection: 1
+    shadowCascades: 1
+    shadowDistance: 20
+    shadowNearPlaneOffset: 3
+    shadowCascade2Split: 0.33333334
+    shadowCascade4Split: {x: 0.06666667, y: 0.2, z: 0.46666667}
+    shadowmaskMode: 0
+    skinWeights: 2
+    globalTextureMipmapLimit: 2
+    textureMipmapLimitSettings: []
+    anisotropicTextures: 0
+    antiAliasing: 0
+    softParticles: 0
+    softVegetation: 1
+    realtimeReflectionProbes: 0
+    billboardsFaceCameraPosition: 1
+    useLegacyDetailDistribution: 1
+    adaptiveVsync: 0
+    vSyncCount: 0
+    realtimeGICPUUsage: 100
+    adaptiveVsyncExtraA: 0
+    adaptiveVsyncExtraB: 0
+    lodBias: 0.7
+    maximumLODLevel: 0
+    enableLODCrossFade: 0
+    streamingMipmapsActive: 0
+    streamingMipmapsAddAllCameras: 1
+    streamingMipmapsMemoryBudget: 512
+    streamingMipmapsRenderersPerFrame: 512
+    streamingMipmapsMaxLevelReduction: 2
+    streamingMipmapsMaxFileIORequests: 1024
+    particleRaycastBudget: 16
+    asyncUploadTimeSlice: 2
+    asyncUploadBufferSize: 16
+    asyncUploadPersistentBuffer: 1
+    resolutionScalingFixedDPIFactor: 1
+    customRenderPipeline: {fileID: 11400000, guid: 770a2831d2ab496093840fa8839c2f4c, type: 2}
+    terrainQualityOverrides: 0
+    terrainPixelError: 1
+    terrainDetailDensityScale: 1
+    terrainBasemapDistance: 1000
+    terrainDetailDistance: 80
+    terrainTreeDistance: 5000
+    terrainBillboardStart: 50
+    terrainFadeLength: 5
+    terrainMaxTrees: 50
+    excludedTargetPlatforms: []
   m_TextureMipmapLimitGroupNames: []
   m_PerPlatformDefaultQuality:
     Android: 0

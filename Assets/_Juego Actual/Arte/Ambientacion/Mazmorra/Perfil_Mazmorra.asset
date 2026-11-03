@@ -1,0 +1,149 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 575afeb747574bb4c8ba1bd0c18d8a86, type: 3}
+  m_Name: Perfil_Mazmorra
+  m_EditorClassIdentifier: Assembly-CSharp::PerfilAmbientacion
+  rutaEscena: Assets/_Juego Actual/Scenes/_ProperGameScenes/mazmorra.unity
+  prefijosLimite:
+  - Wall
+  desactivarObjetos:
+  - Luz Area Mazmorra
+  objetosEstaticos: []
+  modelosLightmap: []
+  skybox: {fileID: 2100000, guid: 91181ce30decf224db548e3a0a8c059d, type: 2}
+  intensidadReflejos: 0.5
+  ambienteCielo: {r: 0.12, g: 0.1, b: 0.22, a: 1}
+  ambienteHorizonte: {r: 0.22, g: 0.11, b: 0.08, a: 1}
+  ambienteSuelo: {r: 0.04, g: 0.03, b: 0.035, a: 1}
+  colorLuna: {r: 1, g: 0.52, b: 0.22, a: 1}
+  intensidadLuna: 1.6
+  elevacionLuna: 22
+  azimutLuna: 0
+  fuerzaSombras: 0.85
+  modoLuna: 1
+  niebla: 1
+  modoNiebla: 3
+  colorNiebla: {r: 0.16, g: 0.09, b: 0.1, a: 1}
+  densidadNiebla: 0.022
+  lucesAcento:
+  - prefijoObjeto: Antorchas2
+    excluirPrefijos: []
+    color: {r: 1, g: 0.5, b: 0.18, a: 1}
+    intensidad: 4
+    rango: 7
+    alturaRelativa: 0.7
+    separacionInterior: 0
+    modo: 2
+    emision: 0
+  - prefijoObjeto: Arco2
+    excluirPrefijos: []
+    color: {r: 1, g: 0.35, b: 0.1, a: 1}
+    intensidad: 14
+    rango: 16
+    alturaRelativa: 0.6
+    separacionInterior: 2
+    modo: 2
+    emision: 0
+  - prefijoObjeto: Arco
+    excluirPrefijos:
+    - Arco2
+    color: {r: 0.35, g: 0.45, b: 1, a: 1}
+    intensidad: 8
+    rango: 13
+    alturaRelativa: 0.6
+    separacionInterior: 2
+    modo: 2
+    emision: 0
+  materialesEmisivos:
+  - material: {fileID: 2100000, guid: 2a1566a38fd89634d99ee6fe2efb6c0c, type: 2}
+    color: {r: 5, g: 2.25, b: 0.59999996, a: 5}
+    usarTextura: 1
+  haces:
+    activo: 1
+    modo: 1
+    material: {fileID: 2100000, guid: e6f39dbb0e3ecfb4a8091cf2d7e7b335, type: 2}
+    materialVentanas: {fileID: 0}
+    color: {r: 1, g: 0.5, b: 0.2, a: 1}
+    opacidad: 0.09
+    largo: 9
+    inclinacion: 38
+    apertura: 1.3
+    cantidadCielo: 5
+    alturaCielo: 6
+    anchoCielo: {x: 2, y: 4}
+    semilla: 66
+    crearLuces: 1
+    intensidadLuz: 30
+    rangoLuz: 13
+    anguloLuz: 50
+  nieblaParticulas: 1
+  materialNiebla: {fileID: 2100000, guid: 23bf57a2b6b473940b805547d3e095cc, type: 2}
+  colorParticulas: {r: 0.4, g: 0.3, b: 0.3, a: 1}
+  alturaNieblaSuelo: 1
+  particulasSuelo: 50
+  tamanoSuelo: {x: 5, y: 9}
+  opacidadSuelo: 0.25
+  particulasExterior: 45
+  tamanoExterior: {x: 10, y: 18}
+  opacidadExterior: 0.6
+  alturaExterior: 4
+  radioExterior: 1.15
+  particulasPolvo: 240
+  materialPolvo: {fileID: 2100000, guid: 2e92261c713c58442bcc593c15861bfd, type: 2}
+  colorPolvo: {r: 5, g: 1.7, b: 0.35, a: 1}
+  tamanoPolvo: {x: 0.03, y: 0.08}
+  alturaPolvo: 7
+  subidaPolvo: {x: 0.25, y: 0.8}
+  viento: {x: 0.15, y: 0.05}
+  zonasVivas:
+  - prefijoObjeto: Antorchas2
+    luciernagas: 50
+    radio: 0.6
+    tamano: {x: 0.03, y: 0.07}
+    emitirDesdeLuces: 1
+    velocidadSubida: 0.7
+    lucesReales: 0
+    colorLuz: {r: 1, g: 0.72, b: 0.35, a: 1}
+    intensidadLuz: 1.6
+    rangoLuz: 2.2
+    hazDelCielo: 0
+    anchoHaz: 2.2
+  materialLuciernagas: {fileID: 2100000, guid: cc7c0edea9bf30a44aec1b84f6932a25, type: 2}
+  colorLuciernagas: {r: 6, g: 2.2, b: 0.45, a: 1}
+  luzPersonajes: 1
+  colorRellenoPersonajes: {r: 1, g: 0.95, b: 0.88, a: 1}
+  intensidadRellenoPersonajes: 0.6
+  colorContornoPersonajes: {r: 0.65, g: 0.8, b: 1, a: 1}
+  intensidadContornoPersonajes: 1.8
+  datosOjos: {fileID: 4900000, guid: b3e8ffe837697284da733d8873c5c3cb, type: 3}
+  materialOjos: {fileID: 2100000, guid: 7c9170b492a5a0b479a8c064b9e087e0, type: 2}
+  colorOjos: {r: 0.5, g: 1.3, b: 4, a: 1}
+  tamanoOjos: 1
+  lucesPilares: 1
+  colorLucesPilares: {r: 0.4, g: 0.6, b: 1, a: 1}
+  intensidadLucesPilares: 2.5
+  rangoLucesPilares: 4.5
+  postProceso: 1
+  perfilVolumen: {fileID: 11400000, guid: db5ad0be7f605674093fa709d3e3faf9, type: 2}
+  ajustesHorneado: {fileID: 4890085278179872738, guid: 05e6fec4b7f99b2409716745b92492ed, type: 2}
+  texelesPorUnidad: 16
+  tamanoAtlas: 2048
+  oclusionAmbiental: 1
+  rebotes: 2
+  separacionSondas: 3
+  alturasSondas:
+  - 0.3
+  - 1.5
+  - 3
+  calidadesSinParticulas: 
+  calidadesSinPostProceso: 
+  calidadesSinVolumetricos: 
