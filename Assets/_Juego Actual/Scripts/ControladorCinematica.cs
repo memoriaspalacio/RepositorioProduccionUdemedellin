@@ -1,4 +1,5 @@
 
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Video;
 using TMPro;
@@ -12,6 +13,9 @@ public class ControladorCinematica : MonoBehaviour
     [Header("Configuracion")]
     [SerializeField] private bool permitirOmitir = true;
     [SerializeField] private float tiempoParaOmitir = 1f;
+    [Tooltip("Segundos del fundido desde negro al empezar la cinematica.")]
+    [Min(0f)]
+    [SerializeField] private float duracionEntrada = 1.2f;
 
     [Header("Interfaz")]
     [SerializeField] private TextMeshProUGUI textoOmitir;
@@ -54,6 +58,9 @@ public class ControladorCinematica : MonoBehaviour
             audioMenu.loop = true;
             audioMenu.Stop();
         }
+
+        // Negro hasta que el video este listo; de ahi un fundido simple hacia la cinematica
+        TransicionCorazon.Instancia.CubrirAlInstante(TransicionCorazon.Fundido.Negro);
     }
 
     void Start()
@@ -90,7 +97,10 @@ public class ControladorCinematica : MonoBehaviour
     void VideoPreparado(VideoPlayer vp)
     {
         if (!cinematicaTerminada)
+        {
             vp.Play();
+            TransicionCorazon.Instancia.Descubrir(duracionEntrada);
+        }
     }
 
     void VideoTerminado(VideoPlayer vp)
@@ -111,12 +121,18 @@ public class ControladorCinematica : MonoBehaviour
 
         cinematicaTerminada = true;
 
+        if (textoOmitir != null)
+            textoOmitir.gameObject.SetActive(false);
+
+        // El corazon funde a negro y, con la pantalla cubierta, cambia el video por el menu
+        TransicionCorazon.Instancia.Reproducir(TransicionCorazon.Fundido.Negro, MostrarMenu);
+    }
+
+    IEnumerator MostrarMenu()
+    {
         // Detener y ocultar video
         videoPlayer.Stop();
         videoPlayer.enabled = false;
-
-        if (textoOmitir != null)
-            textoOmitir.gameObject.SetActive(false);
 
         // Mostrar menu principal
         if (menuPrincipal != null)
@@ -141,6 +157,8 @@ public class ControladorCinematica : MonoBehaviour
                 aumentandoVolumen = true;
             }
         }
+
+        yield break;
     }
 
     void ActualizarFade()

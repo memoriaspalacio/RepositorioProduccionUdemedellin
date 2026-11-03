@@ -20,7 +20,8 @@ public static class MenuGraficos
             return;
 
         abierto = MenuOpciones.Crear("Calidad visual", OpcionesGraficas.Crear(), OpcionesGraficas.Estado,
-            ("Detectar automático", () => GestorGraficos.UsarNivel(GestorGraficos.DetectarNivel())));
+            ("Detectar automático", () => GestorGraficos.UsarNivel(GestorGraficos.DetectarNivel())),
+            ("Filtros de color", MenuFiltros.Abrir));
 
         // Si algo cambia los ajustes con el menu abierto, las filas lo reflejan
         GestorGraficos.AlCambiar += Refrescar;

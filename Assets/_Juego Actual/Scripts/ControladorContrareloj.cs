@@ -113,7 +113,8 @@ public class ControladorContrarreloj : MonoBehaviour
         terminado = true;
         contando = false;
 
-        SceneManager.LoadScene(escenaVictoria);
+        // Fundido a blanco, cinematica final, fundido a negro y escena de victoria
+        CinematicaFinal.Reproducir(escenaVictoria);
     }
 
     public void Perder()

@@ -27,6 +27,11 @@ public class EnemyHealth : MonoBehaviour
 
     public void Damage(float damage, Vector3? attackerPosition = null)
     {
+        // El Monk no se inmuta mientras le queden cruces: el golpe rebota en su escudo divino.
+        MonkBehaviour monk = GetComponent<MonkBehaviour>();
+        if (monk != null && monk.BlockHit(attackerPosition))
+            return;
+
         currentLife = currentLife - damage;
         bool golpeLetal = currentLife <= 0;
 

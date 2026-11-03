@@ -46,6 +46,7 @@ public class MenuOpciones : MonoBehaviour
     public event Action AlCerrar;
 
     readonly List<Fila> filas = new List<Fila>();
+    readonly List<OpcionMenu> personalizadas = new List<OpcionMenu>();
     Func<string> estado;
     EstiloMenu estilo;
     Fila senalada;
@@ -110,7 +111,9 @@ public class MenuOpciones : MonoBehaviour
         CrearLista(108f, 132f);
         for (int i = 0; i < opciones.Count; i++)
         {
-            if (opciones[i].EsLeyenda)
+            if (opciones[i].EsPersonalizada)
+                CrearPersonalizada(contenido, opciones[i]);
+            else if (opciones[i].EsLeyenda)
                 CrearLeyenda(contenido, opciones[i]);
             else if (opciones[i].EsSeccion)
                 CrearSeccion(contenido, opciones[i]);
@@ -238,6 +241,14 @@ public class MenuOpciones : MonoBehaviour
         desplazamiento.scrollSensitivity = 40f;
         desplazamiento.verticalScrollbar = barra;
         desplazamiento.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
+    }
+
+    void CrearPersonalizada(RectTransform contenido, OpcionMenu opcion)
+    {
+        RectTransform bloque = ConstructorUI.CrearRect("Bloque " + opcion.nombre, contenido);
+        ConstructorUI.Medidas(bloque, -1f, opcion.alto);
+        opcion.construir(bloque);
+        personalizadas.Add(opcion);
     }
 
     void CrearSeccion(RectTransform contenido, OpcionMenu opcion)
@@ -572,6 +583,9 @@ public class MenuOpciones : MonoBehaviour
             for (int p = 0; p < fila.pasos.Length; p++)
                 fila.pasos[p].color = p <= indice ? encendido : apagado;
         }
+
+        for (int i = 0; i < personalizadas.Count; i++)
+            personalizadas[i].refrescar?.Invoke();
 
         siguienteEstado = 0f;
     }

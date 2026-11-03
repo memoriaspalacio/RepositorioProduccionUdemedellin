@@ -410,6 +410,11 @@ public class GestorGraficos : MonoBehaviour
         for (int i = 0; i < volumenes.Length; i++)
         {
             Volume volumen = volumenes[i];
+
+            // El filtro de color solo trae color: no hay nada que abaratar
+            if (GestorFiltros.EsVolumenFiltro(volumen))
+                continue;
+
             LiberarPerfil(volumen);
 
             if (!rebajar || volumen.sharedProfile == null)

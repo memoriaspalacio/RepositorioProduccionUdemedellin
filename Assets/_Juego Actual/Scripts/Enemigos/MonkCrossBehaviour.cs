@@ -70,6 +70,24 @@ namespace UdeM.Characters
         [SerializeField] private Renderer crossRenderer;
         [SerializeField] private Color teleportHighlightColor = Color.cyan;
 
+        // Define cuanto tarda la cruz en volver volando junto al Monk al ser recuperada.
+        [Min(0.05f)]
+        [SerializeField] private float returnDuration = 0.45f;
+
+        // Define cuanto se inclina la cruz hacia adelante mientras vuela hacia el jugador.
+        [Range(0f, 60f)]
+        [SerializeField] private float flightTiltAngle = 25f;
+
+        // Guarda el componente que anima la cruz (aparecer, flotar, cargar, volar, romperse).
+        private MonkCrossVisual visual;
+
+        // Indica si la cruz esta volviendo hacia el Monk despues de ser recuperada.
+        private bool returning = false;
+
+        // Guarda desde donde y cuando empezo la vuelta hacia el Monk.
+        private Vector3 returnStartPosition;
+        private float returnStartTime;
+
         // Expone si la cruz se encuentra actualmente en posesion del Monk.
         public bool IsPossessed =>
             currentState == CrossState.Possessed;
@@ -89,6 +107,25 @@ namespace UdeM.Characters
         // Expone la celda logica actual de la cruz.
         public Vector2Int CurrentCell =>
             currentCell;
+
+        // Expone si la cruz sigue volviendo hacia el Monk (todavia no puede atacar).
+        public bool IsReturning =>
+            returning;
+
+        // Expone si la cruz poseida tiene registrada su casilla alrededor del Monk.
+        public bool HasPossessedSlot =>
+            IsPossessed &&
+            cellRegistered;
+
+        // Expone la casilla que ocupa la cruz poseida junto al Monk.
+        public Vector2Int PossessedSlot =>
+            currentCell;
+
+        // Expone el centro visible de la cruz, usado por el enlace divino con el Monk.
+        public Vector3 CentroVisual =>
+            visual != null
+                ? visual.Centro
+                : transform.position;
 
         // Configura las referencias iniciales y coloca la cruz bajo el Monk.
         public void Initialize(
@@ -113,12 +150,25 @@ namespace UdeM.Characters
                 true
             );
 
+            // Sus casillas no bloquean al Monk: puede caminar donde esta su propia cruz.
+            grid.SetOccupantOwner(
+                gameObject,
+                monk.gameObject
+            );
+
             // Convierte todos los colliders en triggers para que no levanten fisicamente a los personajes
             Collider[] colliders = GetComponentsInChildren<Collider>();
             for (int i = 0; i < colliders.Length; i++)
             {
                 colliders[i].isTrigger = true;
             }
+
+            visual = GetComponent<MonkCrossVisual>();
+            if (visual == null)
+                visual = gameObject.AddComponent<MonkCrossVisual>();
+
+            visual.Inicializar(index);
+            visual.AlAparecer();
         }
 
         // Actualiza la posicion y celda logica mientras la cruz permanece poseida.
@@ -131,17 +181,63 @@ namespace UdeM.Characters
             if (grid == null)
                 return;
 
-            transform.position =
-                position;
+            if (returning)
+            {
+                // Vuelve en arco hacia su puesto alrededor del Monk.
+                float progress =
+                    Mathf.Clamp01(
+                        (Time.time - returnStartTime) /
+                        returnDuration
+                    );
 
-            currentCell =
-                grid.WorldToCell(
-                    transform.position
-                );
+                float eased =
+                    1f - Mathf.Pow(1f - progress, 3f);
+
+                transform.position =
+                    Vector3.Lerp(
+                        returnStartPosition,
+                        position,
+                        eased
+                    ) +
+                    Vector3.up * (Mathf.Sin(progress * Mathf.PI) * 0.8f);
+
+                if (progress >= 1f)
+                {
+                    returning = false;
+
+                    if (visual != null)
+                        visual.AlTerminarVuelta();
+                }
+            }
+            else
+            {
+                // Sigue suave a su casilla cuando el Monk se mueve o cambia de puesto.
+                transform.position =
+                    Vector3.Lerp(
+                        transform.position,
+                        position,
+                        1f - Mathf.Exp(-14f * Time.deltaTime)
+                    );
+            }
+
+            // Con casilla registrada la logica usa esa casilla, no la posicion visual.
+            if (!cellRegistered)
+            {
+                currentCell =
+                    grid.WorldToCell(
+                        transform.position
+                    );
+            }
+
+            float rotationMultiplier =
+                visual != null
+                    ? visual.MultiplicadorGiro
+                    : 1f;
 
             transform.Rotate(
                 Vector3.up,
                 possessedRotationSpeed *
+                rotationMultiplier *
                 Time.deltaTime,
                 Space.World
             );
@@ -152,6 +248,10 @@ namespace UdeM.Characters
             GameObject player)
         {
             if (IsDead)
+                return false;
+
+            // Mientras vuelve hacia el Monk todavia no esta lista para atacar.
+            if (returning)
                 return false;
 
             if (player == null)
@@ -169,7 +269,8 @@ namespace UdeM.Characters
                 currentCell;
 
             if (IsPossessed &&
-                owner != null)
+                owner != null &&
+                !cellRegistered)
             {
                 attackOriginCell =
                     grid.WorldToCell(
@@ -244,6 +345,16 @@ namespace UdeM.Characters
                 }
             }
 
+            // Suelta ya no pertenece al Monk: si el pisara su casilla se la quitaria y quedaria
+            // sin casilla, imposible de golpear.
+            grid.SetOccupantOwner(
+                gameObject,
+                null
+            );
+
+            if (visual != null)
+                visual.AlDespegar();
+
             List<Vector2Int> attackPath =
                 BuildStraightCellPath(
                     currentCell,
@@ -259,6 +370,10 @@ namespace UdeM.Characters
                 SnapToCurrentCell();
 
                 isAttacking = false;
+
+                if (visual != null)
+                    visual.AlAterrizar();
+
                 yield break;
             }
 
@@ -330,6 +445,9 @@ namespace UdeM.Characters
             SnapToCurrentCell();
 
             isAttacking = false;
+
+            if (visual != null)
+                visual.AlAterrizar();
         }
 
         // Cambia la cruz a no poseida e intenta registrar su celda actual.
@@ -337,6 +455,20 @@ namespace UdeM.Characters
         {
             if (!IsPossessed)
                 return true;
+
+            // Si ya ocupa su casilla junto al Monk, sale desde ahi.
+            if (OwnsCell(currentCell))
+            {
+                currentState =
+                    CrossState.Unpossessed;
+
+                transform.SetParent(
+                    null,
+                    true
+                );
+
+                return true;
+            }
 
             currentCell =
                 grid.WorldToCell(
@@ -447,10 +579,16 @@ namespace UdeM.Characters
             if (direction.sqrMagnitude >
                 0.001f)
             {
+                // Vuela inclinada hacia adelante; MonkCrossVisual la endereza al aterrizar.
                 transform.rotation =
                     Quaternion.LookRotation(
                         direction.normalized,
                         Vector3.up
+                    ) *
+                    Quaternion.Euler(
+                        flightTiltAngle,
+                        0f,
+                        0f
                     );
             }
 
@@ -709,6 +847,115 @@ namespace UdeM.Characters
                 );
         }
 
+        // Indica si la celda sigue registrada a nombre de esta cruz.
+        public bool OwnsCell(
+            Vector2Int cell)
+        {
+            return cellRegistered &&
+                   currentCell == cell &&
+                   grid != null &&
+                   grid.GetCellOccupant(cell) == gameObject;
+        }
+
+        // Registra la cruz poseida en una casilla junto al Monk: asi no se solapa con nadie
+        // y el jugador puede golpearla.
+        public bool TryClaimPossessedSlot(
+            Vector2Int cell)
+        {
+            if (!IsPossessed ||
+                grid == null)
+            {
+                return false;
+            }
+
+            if (OwnsCell(cell))
+                return true;
+
+            if (!grid.IsCellInside(cell) ||
+                grid.IsCellOccupiedByOther(
+                    cell,
+                    gameObject))
+            {
+                return false;
+            }
+
+            ReleaseOccupiedCell();
+
+            if (!grid.TryOccupyCell(
+                    cell,
+                    gameObject))
+            {
+                return false;
+            }
+
+            currentCell = cell;
+            cellRegistered = true;
+            return true;
+        }
+
+        // Si la cruz suelta perdio su casilla (otro se la quito), registra la libre mas cercana
+        // para que el jugador siempre la pueda golpear.
+        public void EnsureCellRegistered()
+        {
+            if (!IsUnpossessed ||
+                isAttacking ||
+                grid == null)
+            {
+                return;
+            }
+
+            if (OwnsCell(currentCell))
+                return;
+
+            cellRegistered = false;
+
+            Vector2Int here =
+                grid.WorldToCell(
+                    transform.position
+                );
+
+            Vector2Int[] offsets =
+            {
+                Vector2Int.zero,
+                Vector2Int.up,
+                Vector2Int.right,
+                Vector2Int.down,
+                Vector2Int.left,
+                new Vector2Int(1, 1),
+                new Vector2Int(1, -1),
+                new Vector2Int(-1, -1),
+                new Vector2Int(-1, 1)
+            };
+
+            for (int i = 0;
+                 i < offsets.Length;
+                 i++)
+            {
+                Vector2Int candidate =
+                    here + offsets[i];
+
+                if (!grid.IsCellInside(candidate) ||
+                    grid.IsCellOccupiedByOther(
+                        candidate,
+                        gameObject))
+                {
+                    continue;
+                }
+
+                if (!grid.TryOccupyCell(
+                        candidate,
+                        gameObject))
+                {
+                    continue;
+                }
+
+                currentCell = candidate;
+                cellRegistered = true;
+                SnapToCurrentCell();
+                return;
+            }
+        }
+
         // Libera la celda actualmente registrada por esta cruz.
         public void ReleaseOccupiedCell()
         {
@@ -733,6 +980,9 @@ namespace UdeM.Characters
             if (IsDead)
                 return;
 
+            bool wasPossessed =
+                IsPossessed;
+
             CancelCurrentAttack();
 
             ReleaseOccupiedCell();
@@ -742,6 +992,12 @@ namespace UdeM.Characters
 
             if (owner != null)
             {
+                // De nuevo junto al Monk: el puede pasar por su casilla.
+                grid.SetOccupantOwner(
+                    gameObject,
+                    owner.gameObject
+                );
+
                 transform.SetParent(
                     owner.transform,
                     true
@@ -751,6 +1007,17 @@ namespace UdeM.Characters
                     grid.WorldToCell(
                         owner.transform.position
                     );
+            }
+
+            // Si estaba suelta por el mapa, vuelve volando en vez de aparecer de golpe junto al Monk.
+            if (!wasPossessed)
+            {
+                returning = true;
+                returnStartPosition = transform.position;
+                returnStartTime = Time.time;
+
+                if (visual != null)
+                    visual.AlVolver();
             }
         }
 
@@ -765,8 +1032,33 @@ namespace UdeM.Characters
             playerHitThisAttack =
                 false;
 
+            if (visual != null)
+                visual.DetenerEstela();
+
             if (IsUnpossessed)
                 SnapToCurrentCell();
+        }
+
+        // El Monk empieza a rezar para lanzar esta cruz: la cruz carga su ataque.
+        public void PrepareAttack(
+            float duration)
+        {
+            if (visual != null)
+                visual.PrepararAtaque(duration);
+        }
+
+        // La cruz invoca al Monk para que salga del suelo en su celda.
+        public void StartSummon()
+        {
+            if (visual != null)
+                visual.Invocar();
+        }
+
+        // Termina la invocacion cuando el Monk ya salio.
+        public void EndSummon()
+        {
+            if (visual != null)
+                visual.TerminarInvocacion();
         }
 
         // Marca la cruz como muerta, libera su celda y ordena recuperar las restantes.
@@ -778,6 +1070,11 @@ namespace UdeM.Characters
             CancelCurrentAttack();
 
             ReleaseOccupiedCell();
+
+            returning = false;
+
+            if (visual != null)
+                visual.AlMorir();
 
             currentState =
                 CrossState.Dead;
@@ -798,6 +1095,14 @@ namespace UdeM.Characters
         private void OnDestroy()
         {
             ReleaseOccupiedCell();
+
+            if (grid != null)
+            {
+                grid.SetOccupantOwner(
+                    gameObject,
+                    null
+                );
+            }
         }
 
         // Ejecuta un destello visual cuando el Monje se teletransporta hacia esta cruz.
@@ -809,8 +1114,13 @@ namespace UdeM.Characters
 
         private IEnumerator TeleportFlashRoutine()
         {
-            if (crossRenderer == null)
-                crossRenderer = GetComponentInChildren<Renderer>();
+            // La raiz de la cruz trae un cubo deshabilitado: hay que usar la malla que se ve.
+            if (crossRenderer == null || !crossRenderer.enabled)
+            {
+                Renderer[] visibles = RecursosSacerdote.RenderersVisibles(transform);
+                if (visibles.Length > 0)
+                    crossRenderer = visibles[0];
+            }
 
             if (crossRenderer != null && crossRenderer.material != null)
             {

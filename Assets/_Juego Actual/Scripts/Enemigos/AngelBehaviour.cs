@@ -49,6 +49,9 @@ namespace UdeM.Characters
         // Indica si este angel ya dejo de patrullar para participar en el combate.
         private bool lockedInCombat = false;
 
+        // Indica si el angel esta en plena carga: solto su casilla y aun no reclama la de destino.
+        private bool charging = false;
+
         // Indica si este angel pertenece actualmente a una tanda de ataque.
         private bool isCurrentBatchMember = false;
 
@@ -306,6 +309,8 @@ namespace UdeM.Characters
                     continue;
 
                 angel.StopAllCoroutines();
+                // Cortar la carga a medias lo dejaba sin casilla y otros podian ponerse encima.
+                angel.RecoverFromInterruptedCharge();
                 angel.isCurrentBatchMember = false;
                 angel.playerHitThisCharge = false;
                 angel.hasCompletedAttack = false;
@@ -734,6 +739,7 @@ namespace UdeM.Characters
                 );
 
             ReleaseGridOccupancy();
+            charging = true;
 
             bool navigatorWasEnabled =
                 _navigator != null &&
@@ -789,6 +795,8 @@ namespace UdeM.Characters
                 );
             }
 
+            charging = false;
+
             if (_navigator != null)
             {
                 _navigator.ResetPath();
@@ -813,6 +821,42 @@ namespace UdeM.Characters
                         );
                     }
                 }
+            }
+        }
+
+        // Si la carga se corto a medias (StopAllCoroutines), lo deja en la casilla libre mas
+        // cercana y la vuelve a registrar, y devuelve el modelo a su sitio si estaba saltando.
+        private void RecoverFromInterruptedCharge()
+        {
+            ResetVisualMovement();
+
+            if (!charging || isDead || Grid == null)
+                return;
+
+            charging = false;
+
+            Vector2Int currentCell =
+                Grid.WorldToCell(
+                    transform.position
+                );
+
+            Vector2Int cell =
+                GetAvailableCellOrSelf(
+                    currentCell
+                );
+
+            transform.position =
+                Grid.CellToWorldCenter(
+                    cell,
+                    0f
+                );
+
+            if (!ClaimGridCell(cell))
+            {
+                Debug.LogWarning(
+                    $"El angel corto su carga en {cell} y no pudo registrar ninguna casilla libre.",
+                    this
+                );
             }
         }
 

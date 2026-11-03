@@ -29,8 +29,15 @@ public class OpcionMenu
     /// <summary>Reemplaza el texto del valor actual (por ejemplo "Personalizado").</summary>
     public Func<string> textoActual;
 
+    /// <summary>Bloque libre (una imagen, una muestra...): lo dibuja construir y se actualiza con refrescar.</summary>
+    public readonly float alto;
+    public readonly Action<UnityEngine.RectTransform> construir;
+    public Action refrescar;
+
     /// <summary>Las secciones son solo un titulo entre filas.</summary>
-    public bool EsSeccion => valores == null && izquierda == null;
+    public bool EsSeccion => valores == null && izquierda == null && construir == null;
+
+    public bool EsPersonalizada => construir != null;
 
     /// <summary>La leyenda es una linea sobre las flechas que dice hacia donde lleva cada una.</summary>
     public bool EsLeyenda => izquierda != null;
@@ -55,8 +62,10 @@ public class OpcionMenu
     }
 
     OpcionMenu(string nombre, string ayuda, string[] valores, Func<int> leer, Action<int> escribir,
-        string izquierda = null, string derecha = null)
+        string izquierda = null, string derecha = null, float alto = 0f, Action<UnityEngine.RectTransform> construir = null)
     {
+        this.alto = alto;
+        this.construir = construir;
         this.nombre = nombre;
         this.ayuda = ayuda;
         this.valores = valores;
@@ -69,7 +78,7 @@ public class OpcionMenu
     /// <summary>True si hay un valor mas hacia ese lado (-1 izquierda, 1 derecha).</summary>
     public bool PuedeIr(int direccion)
     {
-        if (EsSeccion || EsLeyenda || !Disponible || valores.Length == 0)
+        if (EsSeccion || EsLeyenda || EsPersonalizada || !Disponible || valores.Length == 0)
             return false;
 
         int siguiente = Indice + direccion;
@@ -92,6 +101,12 @@ public class OpcionMenu
     public static OpcionMenu Leyenda(string izquierda, string derecha)
     {
         return new OpcionMenu(string.Empty, null, null, null, null, izquierda, derecha);
+    }
+
+    /// <summary>Bloque libre de la altura dada. construir recibe el rect donde dibujar.</summary>
+    public static OpcionMenu Personalizada(string nombre, float alto, Action<UnityEngine.RectTransform> construir, Action refrescar)
+    {
+        return new OpcionMenu(nombre, null, null, null, null, null, null, alto, construir) { refrescar = refrescar };
     }
 
     public static OpcionMenu Lista(string nombre, string ayuda, string[] valores, Func<int> leer, Action<int> escribir)
