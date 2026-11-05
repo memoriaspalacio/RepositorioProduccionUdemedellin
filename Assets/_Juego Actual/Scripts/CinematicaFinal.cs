@@ -19,8 +19,15 @@ public class CinematicaFinal : MonoBehaviour
     private RenderTexture textura;
     private bool videoTerminado;
 
+    // La que esta en curso: el boton de ganar de Crisantia llama dos veces a TiempoGanar y sin esto
+    // salian dos cinematicas a la vez (doble transicion y ningun video).
+    private static CinematicaFinal enCurso;
+
     public static void Reproducir(string escenaSiguiente)
     {
+        if (enCurso != null)
+            return;
+
         VideoClip clip = Resources.Load<VideoClip>(RutaVideo);
         if (clip == null)
         {
@@ -32,6 +39,7 @@ public class CinematicaFinal : MonoBehaviour
         GameObject objeto = new GameObject("CinematicaFinal");
         DontDestroyOnLoad(objeto);
         CinematicaFinal cinematica = objeto.AddComponent<CinematicaFinal>();
+        enCurso = cinematica;
         cinematica.StartCoroutine(cinematica.Secuencia(clip, escenaSiguiente));
     }
 
@@ -133,6 +141,8 @@ public class CinematicaFinal : MonoBehaviour
 
     void OnDestroy()
     {
+        if (enCurso == this)
+            enCurso = null;
         if (textura != null)
             Destroy(textura);
     }
