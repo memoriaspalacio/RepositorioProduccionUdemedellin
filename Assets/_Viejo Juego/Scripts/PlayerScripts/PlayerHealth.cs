@@ -72,8 +72,6 @@ public class PlayerHealth : MonoBehaviour
         if (lifeBar != null)
             lifeBar.value = currentLife;
 
-        Debug.Log("Player fue herido " + currentLife);
-
         if (anim != null)
             anim.SetTrigger("onHurt");
 

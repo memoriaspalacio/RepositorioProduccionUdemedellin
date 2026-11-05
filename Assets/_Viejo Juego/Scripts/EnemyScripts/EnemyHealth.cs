@@ -39,10 +39,10 @@ public class EnemyHealth : MonoBehaviour
         if (anim != null)
             anim.SetTrigger(hurtTrigger);
 
-        // Retroalimentacion de golpe estilo Minecraft (Flash rojo + shake/tilt)
+        // Retroalimentacion Visual de golpe estilo Minecraft (Flash rojo + shake/tilt)
         MinecraftHitFeedback hitFeedback = GetComponent<MinecraftHitFeedback>();
-        if (hitFeedback == null)
-        {
+
+        if (hitFeedback == null) {
             hitFeedback = gameObject.AddComponent<MinecraftHitFeedback>();
         }
 
@@ -63,7 +63,7 @@ public class EnemyHealth : MonoBehaviour
                 hitFeedback.PlayHitFeedback();
         }
 
-        GetComponent<MonkCrossBehaviour>()?.SetDead();
+        
         // El golpe letal no teletransporta al Monk: muere (y arde) donde lo golpearon.
         if (!golpeLetal)
             GetComponent<MonkBehaviour>()?.NotifyMonkDamaged();
@@ -75,6 +75,7 @@ public class EnemyHealth : MonoBehaviour
         if (golpeLetal)
         {
             Death();
+            GetComponent<MonkCrossBehaviour>()?.SetDead();
         }
     }
 

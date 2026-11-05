@@ -131,11 +131,14 @@ MonoBehaviour:
   attackDamage: 4
   travelTimePerCell: 0.12
   attackHopHeight: 0.6
+  minimumAttackCellDistance: 2
   unpossessedHeightOffset: 0.5
   possessedRotationSpeed: 90
   playerHealth: {fileID: 0}
   crossRenderer: {fileID: 0}
   teleportHighlightColor: {r: 0, g: 1, b: 1, a: 1}
+  returnDuration: 0.45
+  flightTiltAngle: 25
 --- !u!114 &-447072630256678296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,8 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e05b8e2759a98ea48bbee85f6b3d0331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxLife: 7
-  currentLife: 7
+  maxLife: 30
+  currentLife: 30
   anim: {fileID: -3434982810493667782}
   contador: {fileID: 0}
   hurtTrigger: onHurt

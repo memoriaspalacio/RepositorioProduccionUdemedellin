@@ -8887,7 +8887,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   attackTrigger: onAttack
   idleTrigger: onIdle
-  preparationTime: 2
+  preparationTime: 2.5
   expansionInterval: 1
   attackCooldown: 1
   attackRange: 2
@@ -10097,7 +10097,7 @@ MonoBehaviour:
   animator: {fileID: 755863152}
   attackTrigger: onAttack
   idleTrigger: onIdle
-  preparationTime: 2
+  preparationTime: 2.5
   expansionInterval: 1
   attackCooldown: 1
   attackRange: 2
@@ -14051,7 +14051,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   attackTrigger: onAttack
   idleTrigger: onIdle
-  preparationTime: 2
+  preparationTime: 2.5
   expansionInterval: 1
   attackCooldown: 1
   attackRange: 2
@@ -15385,7 +15385,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0.27404305, y: 0, z: 0, w: 0.9617174}
-  m_LocalPosition: {x: -0.75, y: 5.943785, z: -34.986744}
+  m_LocalPosition: {x: -0.75, y: 6.198655, z: -35.904366}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -16561,7 +16561,7 @@ MonoBehaviour:
   animator: {fileID: 1470777755}
   attackTrigger: onAttack
   idleTrigger: onIdle
-  preparationTime: 2
+  preparationTime: 2.5
   expansionInterval: 1
   attackCooldown: 1
   attackRange: 2
@@ -18219,18 +18219,6 @@ MonoBehaviour:
     Time: 0
     Smoothing: 0
     IgnoreY: 0
---- !u!114 &1158727597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1158727593}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0948fe1db03a413a92c192138f752366, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CamaraEntorno
 --- !u!114 &1158727595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18283,12 +18271,38 @@ Transform:
   m_GameObject: {fileID: 1158727593}
   serializedVersion: 2
   m_LocalRotation: {x: 0.27404305, y: 0, z: 0, w: 0.9617174}
-  m_LocalPosition: {x: -0.75, y: 5.943785, z: -34.986744}
+  m_LocalPosition: {x: -0.75, y: 6.198655, z: -35.904366}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1731232081}
   m_LocalEulerAnglesHint: {x: 31.81, y: 0, z: 0}
+--- !u!114 &1158727597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158727593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0948fe1db03a413a92c192138f752366, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CamaraEntorno
+  alejamiento: 1.5
+  adelanto: 1.2
+  segundosParaCentrar: 2
+  suavizadoSeguimiento: 0.18
+  suavizadoAdelanto: 0.6
+  casillasAlrededor: 1
+  radioEnemigos: 9
+  alturaEnemigos: 1.6
+  margenLateral: 0.06
+  margenInferior: 0.12
+  margenSuperior: 0.1
+  zonaVisible: {fileID: 0}
+  margen: 0
+  alturaComprobada: 0.7
 --- !u!1 &1165234018 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 69b06c83d7cb922439f54b7a2f8153c2, type: 3}
@@ -21280,7 +21294,7 @@ MonoBehaviour:
   animator: {fileID: 1434187465}
   attackTrigger: onAttack
   idleTrigger: onIdle
-  preparationTime: 2
+  preparationTime: 2.5
   expansionInterval: 1
   attackCooldown: 1
   attackRange: 2

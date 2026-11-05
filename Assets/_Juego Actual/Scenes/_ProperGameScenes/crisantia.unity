@@ -20556,7 +20556,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 5.03, y: 7.8760924, z: -7.612093}
+  m_LocalPosition: {x: 5.03, y: 8.877262, z: -8.732244}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -21480,7 +21480,7 @@ MonoBehaviour:
   missedNotePenaltySeconds: 1
   missedNoteGraceSeconds: 1.5
   chartLeadInBeats: 1
-  logActions: 1
+  logActions: 0
 --- !u!1 &1158727593
 GameObject:
   m_ObjectHideFlags: 0
@@ -21531,18 +21531,6 @@ MonoBehaviour:
     Time: 0
     Smoothing: 0
     IgnoreY: 0
---- !u!114 &1158727597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1158727593}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0948fe1db03a413a92c192138f752366, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CamaraEntorno
 --- !u!114 &1158727595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21595,12 +21583,38 @@ Transform:
   m_GameObject: {fileID: 1158727593}
   serializedVersion: 2
   m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 5.03, y: 7.8760924, z: -7.612093}
+  m_LocalPosition: {x: 5.03, y: 8.877262, z: -8.732244}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1731232081}
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+--- !u!114 &1158727597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158727593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0948fe1db03a413a92c192138f752366, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CamaraEntorno
+  alejamiento: 1.5
+  adelanto: 1.2
+  segundosParaCentrar: 2
+  suavizadoSeguimiento: 0.18
+  suavizadoAdelanto: 0.6
+  casillasAlrededor: 1
+  radioEnemigos: 9
+  alturaEnemigos: 1.6
+  margenLateral: 0.06
+  margenInferior: 0.12
+  margenSuperior: 0.1
+  zonaVisible: {fileID: 0}
+  margen: 0
+  alturaComprobada: 0.7
 --- !u!1 &1158926529
 GameObject:
   m_ObjectHideFlags: 0
@@ -23156,10 +23170,14 @@ MonoBehaviour:
   minimumPrayerDuration: 1.2
   stopMovementWhilePraying: 1
   visualTurnSpeed: 540
-  stunDurationAfterDamage: 1
+  stunDurationAfterDamage: 0
   appearanceLockDuration: 1.2
+  protectedByCrosses: 1
+  relocateWhenCrossDies: 1
+  descentDuration: 1
+  summonDelay: 0.35
+  hitsToKillWhenExposed: 3
   crossPrefab: {fileID: -6669077028413135792, guid: 72af5a6dcd0f5be4fb3c8259a41a1bc7, type: 3}
-  crossCount: 4
   possessedCrossHeight: 1.5
   timeBetweenInitialLaunches: 0.6
   timeBetweenCrossSpawns: 0.5

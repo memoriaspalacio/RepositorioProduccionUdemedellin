@@ -1086,9 +1086,7 @@ namespace UdeM.Characters
                 );
             }
 
-            gameObject.SetActive(
-                false
-            );
+            gameObject.SetActive(false);
         }
 
         // Libera cualquier ocupacion existente cuando el objeto es destruido.

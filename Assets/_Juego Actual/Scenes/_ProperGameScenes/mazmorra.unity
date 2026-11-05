@@ -885,7 +885,7 @@ MonoBehaviour:
   flyParameter: Fly
   reloadTime: 2
   chargeTimePerCell: 0.12
-  attackDamage: 5
+  attackDamage: 10
   timeBetweenBatches: 1
   playerHealth: {fileID: 0}
 --- !u!114 &33352308
@@ -1887,7 +1887,7 @@ MonoBehaviour:
   flyParameter: Fly
   reloadTime: 2
   chargeTimePerCell: 0.12
-  attackDamage: 5
+  attackDamage: 10
   timeBetweenBatches: 1
   playerHealth: {fileID: 0}
 --- !u!23 &220502382
@@ -2612,7 +2612,7 @@ MonoBehaviour:
   flyParameter: Fly
   reloadTime: 2
   chargeTimePerCell: 0.12
-  attackDamage: 5
+  attackDamage: 10
   timeBetweenBatches: 1
   playerHealth: {fileID: 0}
 --- !u!23 &288291714
@@ -2751,7 +2751,7 @@ MonoBehaviour:
   flyParameter: Fly
   reloadTime: 2
   chargeTimePerCell: 0.12
-  attackDamage: 5
+  attackDamage: 10
   timeBetweenBatches: 1
   playerHealth: {fileID: 0}
 --- !u!23 &294559527
@@ -6734,7 +6734,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0.27899113, y: 0, z: 0, w: 0.9602937}
-  m_LocalPosition: {x: -0.75, y: 5.8063035, z: -24.340797}
+  m_LocalPosition: {x: -0.75, y: 5.9675236, z: -26.015043}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11702,7 +11702,7 @@ MonoBehaviour:
   flyParameter: Fly
   reloadTime: 2
   chargeTimePerCell: 0.12
-  attackDamage: 5
+  attackDamage: 10
   timeBetweenBatches: 1
   playerHealth: {fileID: 0}
 --- !u!23 &968820350
@@ -17328,18 +17328,6 @@ MonoBehaviour:
     Time: 0
     Smoothing: 0
     IgnoreY: 0
---- !u!114 &1158727597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1158727593}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0948fe1db03a413a92c192138f752366, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CamaraEntorno
 --- !u!114 &1158727595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17392,12 +17380,38 @@ Transform:
   m_GameObject: {fileID: 1158727593}
   serializedVersion: 2
   m_LocalRotation: {x: 0.27899113, y: 0, z: 0, w: 0.9602937}
-  m_LocalPosition: {x: -0.75, y: 5.8063035, z: -24.340797}
+  m_LocalPosition: {x: -0.75, y: 5.9675236, z: -26.015043}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1731232081}
   m_LocalEulerAnglesHint: {x: 32.4, y: 0, z: 0}
+--- !u!114 &1158727597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158727593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0948fe1db03a413a92c192138f752366, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CamaraEntorno
+  alejamiento: 1.5
+  adelanto: 1.2
+  segundosParaCentrar: 2
+  suavizadoSeguimiento: 0.18
+  suavizadoAdelanto: 0.6
+  casillasAlrededor: 1
+  radioEnemigos: 9
+  alturaEnemigos: 1.6
+  margenLateral: 0.06
+  margenInferior: 0.12
+  margenSuperior: 0.1
+  zonaVisible: {fileID: 0}
+  margen: 0
+  alturaComprobada: 0.7
 --- !u!1 &1207939732
 GameObject:
   m_ObjectHideFlags: 0
@@ -23269,7 +23283,7 @@ MonoBehaviour:
   flyParameter: Fly
   reloadTime: 2
   chargeTimePerCell: 0.12
-  attackDamage: 5
+  attackDamage: 10
   timeBetweenBatches: 1
   playerHealth: {fileID: 0}
 --- !u!23 &1374914592
@@ -25044,7 +25058,7 @@ MonoBehaviour:
   flyParameter: Fly
   reloadTime: 2
   chargeTimePerCell: 0.12
-  attackDamage: 5
+  attackDamage: 10
   timeBetweenBatches: 1
   playerHealth: {fileID: 0}
 --- !u!114 &1637367263
@@ -34797,7 +34811,10 @@ MonoBehaviour:
   cellCheckScale: 0.98
   showOccupiedCells: 1
   occupiedCellCount: 3
-  occupiedCells: []
+  occupiedCells:
+  - {x: 3, y: 20}
+  - {x: 4, y: 20}
+  - {x: 5, y: 20}
 --- !u!1 &5728468949786732397
 GameObject:
   m_ObjectHideFlags: 0
