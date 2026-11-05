@@ -4,10 +4,11 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Agrega la fila "Graficos" a los paneles de opciones del juego: los que tienen el slider de
-/// ControlVolumen (el panel Opciones del menu principal y el prefab Opciones). La fila copia la
-/// etiqueta "Volumen" y el boton del propio panel, asi que se ve igual que lo demas, y queda
-/// justo debajo del volumen. El boton muestra la calidad en uso y abre el menu de graficos.
+/// Agrega las filas "Graficos" y "Filtros" a los paneles de opciones del juego: los que tienen
+/// el slider de ControlVolumen (el panel Opciones del menu principal y el prefab Opciones). Las
+/// filas copian la etiqueta "Volumen" y el boton del propio panel, asi que se ven igual que lo
+/// demas, y quedan debajo del volumen. Los botones muestran la calidad y el filtro en uso y
+/// abren su menu.
 ///
 /// Se hace al cargar la escena en vez de guardarla en ella para no tocar escenas que edita
 /// todo el equipo. Si alguien pone a mano un boton con BotonAbrirGraficos en el panel, no se
@@ -15,8 +16,8 @@ using UnityEngine.UI;
 /// </summary>
 public static class FilaGraficosOpciones
 {
-    /// <summary>Distancia entre la fila del volumen y la de graficos, en unidades del panel.</summary>
-    const float Separacion = 58f;
+    /// <summary>Distancia entre filas (volumen, graficos, filtros), en unidades del panel. Con 50 las dos filas caben sobre el boton de volver del prefab Opciones.</summary>
+    const float Separacion = 50f;
 
     /// <summary>Devuelve true si la escena tiene algun panel de opciones (con o sin fila nueva).</summary>
     public static bool Integrar(Scene escena)
@@ -37,23 +38,50 @@ public static class FilaGraficosOpciones
             return false;
 
         Transform panel = slider.parent;
-        if (panel.GetComponentInChildren<BotonAbrirGraficos>(true) != null)
+        bool tieneGraficos = panel.GetComponentInChildren<BotonAbrirGraficos>(true) != null;
+        bool tieneFiltros = panel.GetComponentInChildren<BotonAbrirFiltros>(true) != null;
+        if (tieneGraficos && tieneFiltros)
             return true;
 
         TMP_Text etiqueta = BuscarEtiqueta(panel, slider);
         Button modelo = BuscarBoton(panel, slider);
         if (etiqueta == null || modelo == null)
-            return false;
+            return tieneGraficos;
 
-        RectTransform rectEtiqueta = etiqueta.rectTransform;
+        if (!tieneGraficos)
+        {
+            GameObject graficos = CrearFila(panel, etiqueta, modelo, slider, "Gráficos", "Graficos", 1);
+            BotonAbrirGraficos abrir = graficos.AddComponent<BotonAbrirGraficos>();
+            abrir.textoNivel = TextoBoton(graficos, OpcionesGraficas.NombreCalidad(GestorGraficos.Ajustes));
+        }
+
+        // Los filtros van debajo de graficos, antes del boton de volver
+        if (!tieneFiltros)
+        {
+            GameObject filtros = CrearFila(panel, etiqueta, modelo, slider, "Filtros", "Filtros", 2);
+            BotonAbrirFiltros abrir = filtros.AddComponent<BotonAbrirFiltros>();
+            abrir.textoFiltro = TextoBoton(filtros, MenuFiltros.NombreActual);
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Copia la etiqueta y el boton del panel en la fila numero 'puesto' bajo el volumen. El boton
+    /// va donde el slider, centrado en la altura de su etiqueta. Devuelve el boton.
+    /// </summary>
+    static GameObject CrearFila(Transform panel, TMP_Text etiqueta, Button modelo, RectTransform slider,
+        string texto, string nombre, int puesto)
+    {
+        float bajada = Separacion * puesto;
+
         TMP_Text nuevaEtiqueta = Object.Instantiate(etiqueta.gameObject, panel).GetComponent<TMP_Text>();
-        nuevaEtiqueta.name = "Texto graficos";
-        nuevaEtiqueta.text = "Gráficos";
-        nuevaEtiqueta.rectTransform.anchoredPosition = rectEtiqueta.anchoredPosition - new Vector2(0f, Separacion);
+        nuevaEtiqueta.name = "Texto " + nombre.ToLowerInvariant();
+        nuevaEtiqueta.text = texto;
+        nuevaEtiqueta.rectTransform.anchoredPosition = etiqueta.rectTransform.anchoredPosition - new Vector2(0f, bajada);
 
-        // El boton va donde el slider, centrado en la altura de la etiqueta nueva
         GameObject objetoBoton = Object.Instantiate(modelo.gameObject, panel);
-        objetoBoton.name = "Graficos";
+        objetoBoton.name = nombre;
         Button boton = objetoBoton.GetComponent<Button>();
         boton.onClick = new Button.ButtonClickedEvent();
 
@@ -63,24 +91,27 @@ public static class FilaGraficosOpciones
         rectBoton.anchorMax = slider.anchorMax;
         rectBoton.pivot = new Vector2(0.5f, 0.5f);
         rectBoton.sizeDelta = new Vector2(Mathf.Max(tamano.x * 0.85f, slider.rect.width), tamano.y);
-        rectBoton.anchoredPosition = new Vector2(slider.anchoredPosition.x, slider.anchoredPosition.y - Separacion);
+        rectBoton.anchoredPosition = new Vector2(slider.anchoredPosition.x, slider.anchoredPosition.y - bajada);
 
-        BotonAbrirGraficos abrir = objetoBoton.AddComponent<BotonAbrirGraficos>();
-        abrir.textoNivel = objetoBoton.GetComponentInChildren<TMP_Text>(true);
-        if (abrir.textoNivel != null)
-        {
-            abrir.textoNivel.enableAutoSizing = true;
-            abrir.textoNivel.fontSizeMax = abrir.textoNivel.fontSize;
-            abrir.textoNivel.fontSizeMin = abrir.textoNivel.fontSize * 0.6f;
-            abrir.textoNivel.text = OpcionesGraficas.NombreCalidad(GestorGraficos.Ajustes);
-        }
-
-        // Con teclado o mando se llega del slider al boton nuevo y de este al de volver
+        // Con teclado o mando se llega del slider a los botones nuevos y de estos al de volver
         Navigation navegacion = boton.navigation;
         navegacion.mode = Navigation.Mode.Automatic;
         boton.navigation = navegacion;
 
-        return true;
+        return objetoBoton;
+    }
+
+    static TMP_Text TextoBoton(GameObject boton, string inicial)
+    {
+        TMP_Text texto = boton.GetComponentInChildren<TMP_Text>(true);
+        if (texto == null)
+            return null;
+
+        texto.enableAutoSizing = true;
+        texto.fontSizeMax = texto.fontSize;
+        texto.fontSizeMin = texto.fontSize * 0.6f;
+        texto.text = inicial;
+        return texto;
     }
 
     /// <summary>El texto "Volumen" del panel (o el primer texto suelto si lo renombraron).</summary>

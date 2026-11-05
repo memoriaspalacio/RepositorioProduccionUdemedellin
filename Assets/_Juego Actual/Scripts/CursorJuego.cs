@@ -60,8 +60,7 @@ public static class CursorJuego
         Texture2D destino = new Texture2D(lado, lado, TextureFormat.RGBA32, false)
         {
             name = "CursorPuntero " + lado,
-            wrapMode = TextureWrapMode.Clamp,
-            alphaIsTransparency = true
+            wrapMode = TextureWrapMode.Clamp
         };
 
         const int Muestras = 4;

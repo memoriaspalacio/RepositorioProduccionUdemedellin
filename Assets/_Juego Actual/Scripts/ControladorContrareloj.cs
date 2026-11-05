@@ -113,7 +113,8 @@ public class ControladorContrarreloj : MonoBehaviour
         terminado = true;
         contando = false;
 
-        SceneManager.LoadScene(escenaVictoria);
+        // Fundido a blanco, cinematica final, fundido a negro y escena de victoria
+        CinematicaFinal.Reproducir(escenaVictoria);
     }
 
     public void Perder()
@@ -160,6 +161,13 @@ public class ControladorContrarreloj : MonoBehaviour
     public void PausarContrarreloj()
     {
         contando = false;
+    }
+
+    // Vuelve a contar despues de PausarContrarreloj (el menu de pausa), si la partida sigue
+    public void ReanudarContrarreloj()
+    {
+        if (!terminado)
+            contando = true;
     }
 
     public void GuardarTiempoEntreEscena() {

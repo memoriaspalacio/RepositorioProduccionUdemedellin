@@ -42,15 +42,33 @@ namespace UdeM.Characters
         [Min(0f)]
         [SerializeField] private float appearanceLockDuration = 1.2f;
 
+        [Header("Proteccion de las cruces")]
+        // Indica si el Monk es invulnerable mientras le quede alguna cruz (los golpes rebotan en su escudo).
+        [SerializeField] private bool protectedByCrosses = true;
+
+        // Indica si el Monk baja al infierno y lo invoca otra cruz cada vez que le rompen una.
+        [SerializeField] private bool relocateWhenCrossDies = true;
+
+        // Define cuanto tarda el Monk en hundirse en el infierno.
+        [Min(0.1f)]
+        [SerializeField] private float descentDuration = 1f;
+
+        // Define cuanto tiempo lo invoca la cruz, ya bajo tierra, antes de que salga del suelo.
+        [Min(0f)]
+        [SerializeField] private float summonDelay = 0.35f;
+
+        // Define cuantos golpes aguanta el Monk cuando ya no le quedan cruces.
+        [Min(1)]
+        [SerializeField] private int hitsToKillWhenExposed = 3;
+
         [Header("Efectos Visuales")]
         // Trail logic has been removed.
 
         // Guarda el prefab utilizado para crear las cruces.
         [SerializeField] private MonkCrossBehaviour crossPrefab;
 
-        // Define el numero de cruces (Maximo 4 para evitar que se superpongan en la misma casilla).
-        [Range(1, 4)]
-        [SerializeField] private int crossCount = 4;
+        // El Monk siempre tiene 4 cruces, una en cada casilla a su alrededor.
+        private const int CrossCount = 4;
 
         // Define la altura a la que flotan las cruces mientras estan en posesion.
         [SerializeField] private float possessedCrossHeight = 1.5f;
@@ -136,6 +154,30 @@ namespace UdeM.Characters
         // Identifica la tanda de ataques actual; cambia al recuperar las cruces para invalidar corrutinas viejas.
         private int attackSequenceId = 0;
 
+        // Guarda los efectos del infierno (hundirse y salir del suelo).
+        private SacerdoteInfierno hellEffect;
+
+        // Guarda el enlace divino con las cruces y el escudo que lo protege.
+        private EnlaceDivino divineLink;
+
+        // Indica si el Monk esta bajando al infierno o saliendo en otra cruz.
+        private bool relocating = false;
+
+        // Indica si el Monk perdio todas sus cruces y quedo expuesto a los golpes.
+        private bool exposed = false;
+
+        // Cuenta los golpes recibidos desde que quedo expuesto.
+        private int exposedHitsTaken = 0;
+
+        // Casillas de reserva (diagonales) para las cruces cuando una vecina esta ocupada.
+        private readonly Vector2Int[] fallbackDirections =
+        {
+            new Vector2Int(1, 1),
+            new Vector2Int(1, -1),
+            new Vector2Int(-1, -1),
+            new Vector2Int(-1, 1)
+        };
+
         // Inicializa referencias y crea las cruces pertenecientes al Monk.
         protected override void Start()
         {
@@ -162,7 +204,33 @@ namespace UdeM.Characters
             visualFacingDirection = transform.forward;
             lastRootPosition = transform.position;
 
+            SetupEffects();
             SpawnCrosses();
+        }
+
+        // Agrega (si faltan) los efectos del infierno y del enlace divino con las cruces.
+        private void SetupEffects()
+        {
+            // Sin un modelo hijo no se puede hundir: los efectos se quedan sin cuerpo que mover.
+            Transform model =
+                visualModel != null && visualModel != transform
+                    ? visualModel
+                    : null;
+
+            hellEffect = GetComponent<SacerdoteInfierno>();
+            if (hellEffect == null)
+                hellEffect = gameObject.AddComponent<SacerdoteInfierno>();
+
+            hellEffect.Configurar(model);
+
+            divineLink = GetComponent<EnlaceDivino>();
+            if (divineLink == null)
+                divineLink = gameObject.AddComponent<EnlaceDivino>();
+
+            divineLink.Configurar(
+                model,
+                crosses
+            );
         }
 
         // Actualiza la oracion, la orientacion del modelo y las cruces en posesion.
@@ -176,6 +244,15 @@ namespace UdeM.Characters
             UpdatePrayerState();
             UpdateVisualFacing();
             UpdatePossessedCrossPositions();
+            KeepLooseCrossesRegistered();
+
+            if (divineLink != null)
+            {
+                divineLink.ActualizarFuerza(
+                    CountLivingCrosses(),
+                    CrossCount
+                );
+            }
         }
 
         // Usa el Animator del modelo hijo; el Animator de la raiz del enemigo no reproduce las animaciones del Monk.
@@ -459,7 +536,7 @@ namespace UdeM.Characters
         private IEnumerator SpawnCrossesRoutine()
         {
             for (int i = 0;
-                 i < crossCount;
+                 i < CrossCount;
                  i++)
             {
                 MonkCrossBehaviour newCross =
@@ -486,11 +563,15 @@ namespace UdeM.Characters
             }
         }
 
-        // Mantiene cada cruz poseida flotando alrededor del Monk segun la cuadricula.
+        // Mantiene cada cruz poseida flotando sobre su propia casilla alrededor del Monk.
+        // Cada cruz ocupa esa casilla: nadie se le pone encima y el jugador la puede golpear.
         private void UpdatePossessedCrossPositions()
         {
             if (Grid == null)
                 return;
+
+            Vector2Int monkCell =
+                CurrentGridCell;
 
             for (int i = 0;
                  i < crosses.Count;
@@ -502,30 +583,121 @@ namespace UdeM.Characters
                 if (cross == null)
                     continue;
 
-                if (!cross.IsPossessed)
+                if (cross.IsDead || !cross.IsPossessed)
                     continue;
 
-                Vector2Int direction =
-                    possessedDirections[
-                        i % possessedDirections.Length
-                    ];
+                Vector2Int slot;
+                if (!TryAssignCrossSlot(cross, i, monkCell, out slot))
+                {
+                    // Sin casilla libre alrededor: se queda en la que tenia o, si nunca tuvo, en su direccion.
+                    slot = cross.HasPossessedSlot
+                        ? cross.PossessedSlot
+                        : monkCell + possessedDirections[i % possessedDirections.Length];
+                }
 
-                Vector3 offset =
-                    new Vector3(
-                        direction.x * Grid.CellSize,
-                        possessedCrossHeight,
-                        direction.y * Grid.CellSize
+                Vector3 slotCenter =
+                    Grid.CellToWorldCenter(
+                        slot,
+                        0f
                     );
 
                 Vector3 targetPosition =
-                    transform.position +
-                    offset;
+                    new Vector3(
+                        slotCenter.x,
+                        transform.position.y + possessedCrossHeight,
+                        slotCenter.z
+                    );
 
                 cross.UpdatePossessedPosition(
                     targetPosition
                 );
             }
+        }
 
+        // Las cruces sueltas por el mapa siempre deben tener casilla: sin ella son intocables.
+        private void KeepLooseCrossesRegistered()
+        {
+            for (int i = 0;
+                 i < crosses.Count;
+                 i++)
+            {
+                MonkCrossBehaviour cross =
+                    crosses[i];
+
+                if (cross == null || cross.IsDead)
+                    continue;
+
+                cross.EnsureCellRegistered();
+            }
+        }
+
+        // Busca para la cruz una casilla libre junto al Monk: primero la suya, luego las otras vecinas y al final las diagonales.
+        private bool TryAssignCrossSlot(
+            MonkCrossBehaviour cross,
+            int index,
+            Vector2Int monkCell,
+            out Vector2Int slot)
+        {
+            Vector2Int preferred =
+                monkCell + possessedDirections[index % possessedDirections.Length];
+
+            // Ya tiene una casilla pegada al Monk: la conserva salvo que pueda volver a la suya.
+            if (cross.HasPossessedSlot &&
+                cross.OwnsCell(cross.PossessedSlot) &&
+                IsAroundCell(cross.PossessedSlot, monkCell))
+            {
+                if (cross.PossessedSlot != preferred &&
+                    cross.TryClaimPossessedSlot(preferred))
+                {
+                    slot = preferred;
+                    return true;
+                }
+
+                slot = cross.PossessedSlot;
+                return true;
+            }
+
+            for (int k = 0;
+                 k < possessedDirections.Length;
+                 k++)
+            {
+                Vector2Int candidate =
+                    monkCell + possessedDirections[(index + k) % possessedDirections.Length];
+
+                if (cross.TryClaimPossessedSlot(candidate))
+                {
+                    slot = candidate;
+                    return true;
+                }
+            }
+
+            for (int k = 0;
+                 k < fallbackDirections.Length;
+                 k++)
+            {
+                Vector2Int candidate =
+                    monkCell + fallbackDirections[(index + k) % fallbackDirections.Length];
+
+                if (cross.TryClaimPossessedSlot(candidate))
+                {
+                    slot = candidate;
+                    return true;
+                }
+            }
+
+            slot = preferred;
+            return false;
+        }
+
+        // Indica si la casilla esta pegada a la del Monk (incluidas las diagonales).
+        private static bool IsAroundCell(
+            Vector2Int cell,
+            Vector2Int center)
+        {
+            Vector2Int difference =
+                cell - center;
+
+            return Mathf.Max(Mathf.Abs(difference.x), Mathf.Abs(difference.y)) == 1;
         }
 
         // Detecta al jugador sin abandonar la patrulla ni perseguirlo directamente.
@@ -539,6 +711,10 @@ namespace UdeM.Characters
 
             detectedPlayer =
                 detectedTarget;
+
+            // Bajo tierra o sin cruces no lanza nada; al terminar vuelve a detectar al jugador.
+            if (relocating || exposed)
+                return;
 
             if (initialLaunchRunning)
                 return;
@@ -709,6 +885,16 @@ namespace UdeM.Characters
 
             UpdatePrayerState();
 
+            // La cruz carga su ataque al ritmo de la oracion.
+            if (cross != null)
+            {
+                cross.PrepareAttack(
+                    alreadyPraying
+                        ? 0.15f
+                        : prayerWindup
+                );
+            }
+
             // Solo la primera cruz de una oracion espera la preparacion; las siguientes salen directo.
             if (!alreadyPraying &&
                 prayerWindup > 0f)
@@ -863,49 +1049,239 @@ namespace UdeM.Characters
             return false;
         }
 
-        // Recupera todas las cruces vivas cuando una de ellas muere.
+        // Reacciona a una cruz rota: sin cruces el Monk queda expuesto; si quedan, baja al infierno y lo invoca otra.
         public void NotifyCrossDied(
             MonkCrossBehaviour deadCross)
         {
-            if (isDead)
+            if (isDead || exposed)
                 return;
+
+            // La secuencia en curso revisa al terminar si todavia quedan cruces.
+            if (relocating)
+                return;
+
+            if (CountLivingCrosses() == 0 &&
+                crosses.Count >= CrossCount)
+            {
+                ExposeMonk();
+                return;
+            }
+
+            if (relocateWhenCrossDies &&
+                TryStartRelocation())
+            {
+                return;
+            }
 
             RecallAllLivingCrosses();
         }
 
-        // Reacciona al dano recibido teletransportandose hasta una cruz y recuperandolas.
+        // Reacciona al dano recibido bajando al infierno y saliendo en una cruz.
+        // Con la proteccion de las cruces activa los golpes rebotan (BlockHit) y no llegan aqui.
         public void NotifyMonkDamaged()
         {
-            if (isDead)
+            if (isDead || relocating)
                 return;
 
             StopMovementFor(stunDurationAfterDamage);
 
-            MonkCrossBehaviour teleportCross =
-                GetRandomUnpossessedCross();
+            if (!TryStartRelocation())
+                RecallAllLivingCrosses();
+        }
 
-            if (teleportCross != null)
+        // Bloquea el golpe mientras alguna cruz lo proteja. Devuelve true si el golpe no le hace nada.
+        public bool BlockHit(Vector3? attackerPosition)
+        {
+            if (isDead)
+                return false;
+
+            // Bajo tierra los golpes no cuentan.
+            if (relocating)
+                return true;
+
+            // Sin cruces que lo protejan, los golpes entran: los primeros lo aturden y el ultimo lo mata.
+            if (exposed)
+                return !TakeExposedHit(attackerPosition);
+
+            if (!protectedByCrosses)
+                return false;
+
+            if (CountLivingCrosses() == 0)
+                return false;
+
+            if (divineLink != null)
+                divineLink.Bloquear(attackerPosition);
+
+            return true;
+        }
+
+        // Cuenta las cruces que siguen vivas.
+        private int CountLivingCrosses()
+        {
+            int living = 0;
+
+            for (int i = 0;
+                 i < crosses.Count;
+                 i++)
             {
-                teleportCross.TriggerTeleportEffect();
-
-                bool teleported =
-                    TeleportToCross(
-                        teleportCross
-                    );
-
-                // Queda quieto mientras sale del suelo para no saltar a medio aparecer.
-                if (teleported)
+                if (crosses[i] != null &&
+                    !crosses[i].IsDead)
                 {
-                    StopMovementFor(
-                        Mathf.Max(
-                            stunDurationAfterDamage,
-                            appearanceLockDuration
-                        )
-                    );
+                    living++;
                 }
             }
 
+            return living;
+        }
+
+        // Empieza a bajar al infierno si hay una cruz suelta que lo pueda invocar.
+        private bool TryStartRelocation()
+        {
+            if (isDead || exposed || relocating || Grid == null)
+                return false;
+
+            MonkCrossBehaviour summoner =
+                GetRandomUnpossessedCross();
+
+            if (summoner == null)
+                return false;
+
+            StartCoroutine(
+                RelocationSequence(
+                    summoner
+                )
+            );
+
+            return true;
+        }
+
+        // Se hunde en el infierno, la cruz lo invoca y sale del suelo en su celda.
+        private IEnumerator RelocationSequence(
+            MonkCrossBehaviour summoner)
+        {
+            relocating = true;
+
+            StopCrossAttacks();
+            CancelVisualMovement();
+            ResetVisualPosition();
+
+            StopMovementFor(
+                descentDuration +
+                summonDelay +
+                appearanceLockDuration +
+                0.2f
+            );
+
+            if (divineLink != null)
+                divineLink.MostrarEscudo(false);
+
+            // La cruz empieza a invocarlo mientras el todavia se hunde.
+            summoner.StartSummon();
+
+            if (hellEffect != null)
+                hellEffect.PrepararInvocacion(summoner.transform.position);
+
+            if (hellEffect != null)
+                yield return hellEffect.Hundirse(descentDuration);
+            else
+                yield return new WaitForSeconds(descentDuration);
+
+            if (summonDelay > 0f)
+                yield return new WaitForSeconds(summonDelay);
+
+            // Si rompieron la cruz que lo invocaba, lo invoca otra; si no queda ninguna suelta, sale donde estaba.
+            if (summoner == null ||
+                summoner.IsDead ||
+                summoner.IsPossessed)
+            {
+                if (summoner != null)
+                    summoner.EndSummon();
+
+                summoner = GetRandomUnpossessedCross();
+            }
+
+            if (summoner != null)
+                TeleportToCross(summoner);
+
+            // Las cruces vuelven volando a rodearlo mientras sale del suelo.
             RecallAllLivingCrosses();
+            PlayAppearAnimation();
+
+            if (summoner != null)
+                summoner.EndSummon();
+
+            if (divineLink != null)
+                divineLink.MostrarEscudo(true);
+
+            if (hellEffect != null)
+                yield return hellEffect.Emerger(appearanceLockDuration);
+            else
+                yield return new WaitForSeconds(appearanceLockDuration);
+
+            relocating = false;
+
+            if (CountLivingCrosses() == 0 &&
+                crosses.Count >= CrossCount)
+            {
+                ExposeMonk();
+            }
+        }
+
+        // Sin cruces se rompe la proteccion: el Monk queda expuesto hasta que el jugador lo golpee.
+        private void ExposeMonk()
+        {
+            if (isDead || exposed)
+                return;
+
+            exposed = true;
+
+            StopCrossAttacks();
+
+            if (divineLink != null)
+                divineLink.Romper();
+
+            // El efecto de muerte copia el cuerpo: tiene que estar visible y sin la capa de fuego.
+            if (hellEffect != null)
+                hellEffect.Restaurar();
+        }
+
+        // Cuenta un golpe ya expuesto. Devuelve true si es el golpe que lo mata: EnemyHealth
+        // sigue con el dano y la muerte. Los anteriores solo lo aturden y lo hacen parpadear.
+        private bool TakeExposedHit(Vector3? attackerPosition)
+        {
+            exposedHitsTaken++;
+
+            EnemyHealth health =
+                GetComponent<EnemyHealth>();
+
+            if (exposedHitsTaken >= hitsToKillWhenExposed)
+            {
+                if (health != null)
+                {
+                    health.currentLife =
+                        Mathf.Min(
+                            health.currentLife,
+                            0f
+                        );
+                }
+
+                return true;
+            }
+
+            StopMovementFor(stunDurationAfterDamage);
+
+            MinecraftHitFeedback hitFeedback =
+                GetComponent<MinecraftHitFeedback>();
+
+            if (hitFeedback == null)
+                hitFeedback = gameObject.AddComponent<MinecraftHitFeedback>();
+
+            if (attackerPosition.HasValue)
+                hitFeedback.PlayHitFeedbackFromAttacker(attackerPosition.Value);
+            else
+                hitFeedback.PlayHitFeedback();
+
+            return false;
         }
 
         // Busca aleatoriamente una cruz viva que actualmente no este en posesion.
@@ -1018,8 +1394,6 @@ namespace UdeM.Characters
             lastRootPosition =
                 transform.position;
 
-            PlayAppearAnimation();
-
             return true;
         }
 
@@ -1046,8 +1420,8 @@ namespace UdeM.Characters
             );
         }
 
-        // Devuelve inmediatamente todas las cruces vivas al estado de posesion.
-        private void RecallAllLivingCrosses()
+        // Corta los ataques en curso (secuencias, cruces en vuelo y oracion) sin recuperar las cruces.
+        private void StopCrossAttacks()
         {
             // Invalida cualquier corrutina de ataque anterior aunque siga en ejecucion.
             attackSequenceId++;
@@ -1072,6 +1446,16 @@ namespace UdeM.Characters
 
             StopAllCrossAttacks();
 
+            initialLaunchRunning = false;
+
+            InterruptPrayer();
+        }
+
+        // Devuelve todas las cruces vivas al estado de posesion; las sueltas vuelven volando.
+        private void RecallAllLivingCrosses()
+        {
+            StopCrossAttacks();
+
             for (int i = 0;
                  i < crosses.Count;
                  i++)
@@ -1087,10 +1471,6 @@ namespace UdeM.Characters
 
                 cross.ReturnToPossession();
             }
-
-            initialLaunchRunning = false;
-
-            InterruptPrayer();
 
             UpdatePossessedCrossPositions();
         }
@@ -1127,9 +1507,35 @@ namespace UdeM.Characters
             autonomousCrossRoutine = null;
             launchRoutine = null;
             initialLaunchRunning = false;
+            relocating = false;
 
             InterruptPrayer();
             StopAllCrossAttacks();
+        }
+
+        // Al destruir al Monk se van con el las cruces que quedaron sueltas por el mapa.
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            if (!gameObject.scene.isLoaded)
+                return;
+
+            for (int i = 0;
+                 i < crosses.Count;
+                 i++)
+            {
+                MonkCrossBehaviour cross =
+                    crosses[i];
+
+                if (cross == null)
+                    continue;
+
+                if (cross.transform.IsChildOf(transform))
+                    continue;
+
+                Destroy(cross.gameObject);
+            }
         }
 
         // Desactiva el ataque adyacente heredado porque el Monk ataca con sus cruces.

@@ -1,7 +1,21 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class OffScreenTarget : MonoBehaviour
 {
+    // Los objetivos activos, para quien necesite saber donde estan (la camara los mete en el encuadre)
+    public static readonly List<OffScreenTarget> Activos = new List<OffScreenTarget>();
+
+    private void OnEnable()
+    {
+        Activos.Add(this);
+    }
+
+    private void OnDisable()
+    {
+        Activos.Remove(this);
+    }
+
     private void Start()
     {
         // Registrar este objeto en el manager cuando se active

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 using System.Collections.Generic;
 
 //ExecuteAlways permite que el script funcione tanto en Play Mode como en el editor de Unity
@@ -22,6 +23,9 @@ public class MeshGrid : MonoBehaviour
 
     private Renderer groundRenderer; //Renderer usado para calcular los límites de la cuadrícula del modelo del terreno
     private readonly Dictionary<Vector2Int, GameObject> occupiedCells = new Dictionary<Vector2Int, GameObject>();
+
+    // Ocupantes que pertenecen a otro (las cruces de un Monk): su dueno puede entrar en esas celdas.
+    private readonly Dictionary<GameObject, GameObject> occupantOwners = new Dictionary<GameObject, GameObject>();
 
     public float CellSize => cellSize; // propiedad de solo lectura,
                                        // => es el equivalente de usar get
@@ -154,7 +158,8 @@ public class MeshGrid : MonoBehaviour
     // y con groundLayer en "Everything" chocaba con la capsula del propio jugador o de un
     // enemigo, y la celda quedaba a la altura de su cabeza (o bajo tierra al restarle).
     // Los personajes son los colliders con CharacterController o con Rigidbody; el suelo
-    // es estatico.
+    // es estatico. Los enemigos no tienen ninguno de los dos (se mueven con NavMeshAgent),
+    // asi que tambien se ignora todo lo que cuelga de un NavMeshAgent.
     private bool TryRaycastGround(
         Vector3 origin,
         float distance,
@@ -177,6 +182,9 @@ public class MeshGrid : MonoBehaviour
             RaycastHit hit = groundHits[i];
 
             if (hit.collider is CharacterController || hit.rigidbody != null)
+                continue;
+
+            if (hit.collider.GetComponentInParent<NavMeshAgent>() != null)
                 continue;
 
             if (!found || hit.distance < ground.distance)
@@ -306,6 +314,31 @@ public class MeshGrid : MonoBehaviour
         );
     }
 
+    // Expone las celdas ocupadas y su ocupante, solo para consultar (diagnostico).
+    public IReadOnlyDictionary<Vector2Int, GameObject> OccupiedCellsView => occupiedCells;
+
+    // Registra que un ocupante pertenece a otro objeto (null lo quita). El dueno no queda
+    // bloqueado por sus propios ocupantes y puede quedarse con sus celdas al moverse.
+    public void SetOccupantOwner(GameObject occupant, GameObject owner)
+    {
+        if (occupant == null)
+            return;
+
+        if (owner == null)
+            occupantOwners.Remove(occupant);
+        else
+            occupantOwners[occupant] = owner;
+    }
+
+    // Indica si el ocupante pertenece al objeto indicado.
+    private bool IsOwnedBy(GameObject occupant, GameObject owner)
+    {
+        return occupant != null &&
+               owner != null &&
+               occupantOwners.TryGetValue(occupant, out GameObject registeredOwner) &&
+               registeredOwner == owner;
+    }
+
     // Comprueba si una celda tiene algun ocupante registrado.
     public bool IsCellOccupied(Vector2Int cell)
     {
@@ -327,7 +360,8 @@ public class MeshGrid : MonoBehaviour
             return false;
         }
 
-        return occupant != requester;
+        return occupant != requester &&
+               !IsOwnedBy(occupant, requester);
     }
 
     // Registra un GameObject como ocupante de una celda disponible.
@@ -347,6 +381,13 @@ public class MeshGrid : MonoBehaviour
                 cell,
                 out GameObject currentOccupant))
         {
+            // El dueno puede quedarse con la celda de uno de sus ocupantes.
+            if (IsOwnedBy(currentOccupant, occupant))
+            {
+                occupiedCells[cell] = occupant;
+                return true;
+            }
+
             return currentOccupant == occupant;
         }
 

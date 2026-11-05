@@ -995,11 +995,16 @@ public static class AplicadorAmbientacion
         if (nueva)
             malla = new Mesh { name = "Puntos " + zona.prefijoObjeto };
         malla.Clear();
+        // Triangulos y no puntos: en una build el modulo Shape rechaza las mallas de puntos ("Mesh
+        // used in Particle System Shape Module is not valid") aunque sean legibles. Como emite desde
+        // los vertices (Vertex), como se unan da igual; se repite el ultimo hasta un multiplo de 3.
+        while (puntos.Count % 3 != 0)
+            puntos.Add(puntos[puntos.Count - 1]);
         malla.SetVertices(puntos);
         int[] indices = new int[puntos.Count];
         for (int i = 0; i < indices.Length; i++)
             indices[i] = i;
-        malla.SetIndices(indices, MeshTopology.Points, 0);
+        malla.SetIndices(indices, MeshTopology.Triangles, 0);
         malla.RecalculateBounds();
         if (nueva)
             AssetDatabase.CreateAsset(malla, ruta);

@@ -852,6 +852,18 @@ namespace UdeM.Characters
             currentCell = newCell;
         }
 
+        // Detiene el salto visual en curso y deja el modelo en su posicion local original.
+        protected void ResetVisualMovement()
+        {
+            CancelVisualMovement();
+
+            if (visualTransform != null &&
+                visualTransform != transform)
+            {
+                visualTransform.localPosition = initialVisualLocalPos;
+            }
+        }
+
         // Permite cancelar una animacion de movimiento en curso.
         protected void CancelVisualMovement()
         {
