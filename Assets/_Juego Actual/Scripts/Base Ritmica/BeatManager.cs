@@ -113,7 +113,9 @@ public class BeatManager : MonoBehaviour {
         get {
             if (!IsPlaying) return 0.0;
 
-            double time = AudioSettings.dspTime - songStartDspTime - LeadInSeconds - outputLatencySeconds;
+            // En pausa el reloj se queda donde estaba aunque dspTime siga corriendo
+            double now = paused ? pausedAtDspTime : AudioSettings.dspTime;
+            double time = now - songStartDspTime - LeadInSeconds - outputLatencySeconds;
             return time - OffsetMapShift(time);
         }
     }
@@ -294,7 +296,7 @@ public class BeatManager : MonoBehaviour {
     bool myFix = true;
 
     private void Update() {
-        if (!IsPlaying) return;
+        if (!IsPlaying || paused) return;
 
         double currentTime = AudioSettings.dspTime;
 
@@ -411,6 +413,51 @@ public class BeatManager : MonoBehaviour {
         if (showDebugLogs) {
             Debug.Log($"🎵 Music scheduled in {wait:F2}s | loop: {(loopBeats > 0 ? loopBeats + " beats" : "no")} | " +
                       $"output latency: {outputLatencySeconds * 1000:F0} ms");
+        }
+    }
+
+    // Pausa del juego (ControladorPausa)
+    private bool paused;
+    private double pausedAtDspTime;
+
+    public bool IsPaused => paused;
+
+    /// <summary>
+    /// Freezes the clock: no beats fire and CurrentSongTime holds still. The audio itself is
+    /// paused by whoever pauses the game (AudioListener.pause), since dspTime keeps running.
+    /// </summary>
+    public void PauseClock() {
+        if (paused) return;
+
+        paused = true;
+        pausedAtDspTime = AudioSettings.dspTime;
+    }
+
+    /// <summary>
+    /// Restarts the clock where it stopped: the whole timeline moves forward by the time
+    /// spent paused, including the plays still waiting on the audio thread.
+    /// </summary>
+    public void ResumeClock() {
+        if (!paused) return;
+
+        paused = false;
+        double shift = AudioSettings.dspTime - pausedAtDspTime;
+        songStartDspTime += shift;
+        nextHalfBeatTime += shift;
+
+        if (voices == null) return;
+
+        double now = AudioSettings.dspTime;
+        // The first play, if the pause caught the pre-roll before it started
+        if (songStartDspTime > now)
+            musicSource.SetScheduledStartTime(songStartDspTime);
+
+        // The next loop, already handed to the audio thread against the old timeline
+        if (loopBeats > 0 && repeatsScheduled > 1) {
+            int next = repeatsScheduled - 1;
+            double start = songStartDspTime + next * LoopSeconds;
+            if (start > now)
+                voices[next % voices.Length].SetScheduledStartTime(start);
         }
     }
 

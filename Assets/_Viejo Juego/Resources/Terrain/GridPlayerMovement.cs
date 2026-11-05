@@ -137,6 +137,10 @@ private void Start()
 // Lee las entradas del jugador y actualiza suavemente su rotacion visual.
 private void Update()
 {
+    // En pausa no se lee ninguna tecla (el tiempo ya esta detenido, pero moverse no depende de el)
+    if (ControladorPausa.EnPausa)
+        return;
+
     ReadRotationInput();
 
     if (!isMoving)

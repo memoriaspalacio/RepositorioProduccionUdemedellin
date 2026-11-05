@@ -163,6 +163,13 @@ public class ControladorContrarreloj : MonoBehaviour
         contando = false;
     }
 
+    // Vuelve a contar despues de PausarContrarreloj (el menu de pausa), si la partida sigue
+    public void ReanudarContrarreloj()
+    {
+        if (!terminado)
+            contando = true;
+    }
+
     public void GuardarTiempoEntreEscena() {
         tiempoRestanteEntreEscenas = Mathf.CeilToInt(tiempoRestante);
 
